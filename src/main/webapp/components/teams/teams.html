@@ -1,0 +1,32 @@
+<section id="teams" class="sections sections-narrow">
+  <div class="container">
+    <div class="action-items pull-right">
+      <div class="action-item pull-right">
+        View as
+        <div class="btn-group">
+          <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-th" aria-hidden="true"></span></a>
+          <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div class="action-item pull-right">
+        Sort by
+        <div class="btn-group">
+          <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
+          <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>
+        </div>
+      </div>
+    </div>
+    <h2 class="sub-header">Clubs</h2>
+    <div class="row">
+      <div class="col-md-3" data-ng-repeat="team in teams">
+        <div class="thumbnail">
+          <a data-ui-sref="teamDetails({id: team.team.id})"><img class="img-thumbnail" width="512px" height="512px" data-ng-src="images/teams/{{team.team.name | lowercase}}-500.png" alt="{{team.team.name}}"></img></a>
+          <div class="caption">
+            <h3 class="caption-heading"><a href="show.html" data-ng-bind="team.team.name"></a></h3>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
