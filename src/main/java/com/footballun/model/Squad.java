@@ -21,6 +21,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "squad")
 @PersistenceContext(type = PersistenceContextType.EXTENDED)
@@ -43,7 +45,8 @@ public class Squad extends BaseEntity implements Serializable {
 	@Column
 	private String generation;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.squad")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.squad", fetch = FetchType.EAGER)
 	private List<MatchupSquad> matchupSquads = new ArrayList<MatchupSquad>();
 	
 	public List<MatchupSquad> getMatchupSquads() {

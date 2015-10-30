@@ -17,6 +17,5 @@ public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squa
 	List<Squad> findByCompetitionAndGeneration(Competition competition, String generation) throws DataAccessException;
 	
 	@Override
-	@Transactional
 	List<Squad> findByCompetitionIdAndGeneration(Integer competitionId, String generation) throws DataAccessException;
 }

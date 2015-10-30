@@ -5,8 +5,8 @@
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
 
-    <display-name>Food For Your Family</display-name>
-    <description>Food For Your Family</description>
+    <display-name>Football For Fun</display-name>
+    <description>Football For Fun For You and For Me</description>
     
    <!--  When using JPA, uncomment the following: -->
    <!--

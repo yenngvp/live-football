@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 
  *
@@ -33,7 +35,8 @@ public class Matchup extends NamedEntity implements Serializable {
 		MatchupResult(int result) {}
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.matchup")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.matchup", fetch = FetchType.EAGER)
 	private List<MatchupSquad> matchupSquads = new ArrayList<MatchupSquad>();
 	
 	@Column(name = "start_at")
