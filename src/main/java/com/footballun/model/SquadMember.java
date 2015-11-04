@@ -38,6 +38,10 @@ public class SquadMember extends BaseEntity {
 	@JoinColumn
 	private Position position;
 
+	/**
+	 * Getters/Setters
+	 */
+	
 	public List<Hero> getHeros() {
 		return heros;
 	}

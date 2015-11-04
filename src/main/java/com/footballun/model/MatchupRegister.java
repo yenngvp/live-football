@@ -33,6 +33,10 @@ public class MatchupRegister extends BaseEntity {
 	@Column(name = "is_lineup")
 	private Boolean isLineup;
 
+	/**
+	 * Getters/Setters
+	 */
+	
 	public SquadMember getSquadMember() {
 		return squadMember;
 	}

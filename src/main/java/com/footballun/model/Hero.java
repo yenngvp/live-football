@@ -46,6 +46,10 @@ public class Hero extends BaseEntity {
 	@Column(name = "alias")
 	private String alias;
 	
+	/**
+	 * Getters/Setters
+	 */
+	
 	public String getFirstName() {
 		return firstName;
 	}

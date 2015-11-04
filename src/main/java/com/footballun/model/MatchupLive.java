@@ -46,6 +46,10 @@ public class MatchupLive extends BaseEntity {
 	@Column(name = "update_minute")
 	private Short updateMinute;
 
+	/**
+	 * Getters/Setters
+	 */
+	
 	public Matchup getMatchup() {
 		return matchup;
 	}
