@@ -35,7 +35,7 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
-				.field( "matchupSquads" ).caption( "Matchup" )
+				.field( "squads" ).caption( "Matchup" )
 				.build();
 	}
 }

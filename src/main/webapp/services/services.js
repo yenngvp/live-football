@@ -1,6 +1,17 @@
 
 var MatchDay = ['$resource','context', function($resource, context) {
-	return $resource(context + '/api/matchdays');
+	return {
+	      matchdays: $resource(context + '/api/matchdays', {}, {
+	        query: {method: 'GET', params: {}, isArray: true}
+	      }),
+	      featuredMatchups: $resource(context + '/api/featured-matchups', {}, {
+	        query: { method: 'GET', params: {}, isArray: true }
+	      })
+	};
+}];
+
+var FeaturedMatchups = ['$resource','context', function($resource, context) {
+	return $resource(context + '/api/featured-matchups');
 }];
 
 var Team = ['$resource','context', function($resource, context) {

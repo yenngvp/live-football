@@ -34,4 +34,10 @@ public class MatchupRestController {
 //		return footballunService.findMatchupByMatchday(CURRENT_MATCDAY);
 		return footballunService.findMatchupByRound("11");
 	}
+	
+	@RequestMapping(value = "/featured-matchups", method = RequestMethod.GET)
+	public List<Matchup> showFeaturedMatchups() {
+		// Understood default competition if it isn't specified
+		return footballunService.findMatchupByFeatured(Boolean.TRUE);
+	}
 }

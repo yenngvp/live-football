@@ -9,4 +9,6 @@ public interface MatchupRepository {
 	List<Matchup> findByMatchday(Integer matchday);
 	
 	List<Matchup> findByRound(String round);
+	
+	List<Matchup> findByFeatured(Boolean featured);
 }

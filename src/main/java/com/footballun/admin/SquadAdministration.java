@@ -36,6 +36,7 @@ public class SquadAdministration extends AdministrationConfiguration<Squad> {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
 				.field( "team" ).caption( "Team" )
+				.field( "matchups" ).caption( "Matchups" )
 				.build();
 	}
 }

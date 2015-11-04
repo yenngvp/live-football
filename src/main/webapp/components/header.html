@@ -15,14 +15,21 @@
     <div id="nav-menu" class="navbar-collapse navbar-left collapse">
       <ul class="nav navbar-nav navbar-menu">
         <li data-ng-class="$state.is('dashboard') ? 'active' : ''"><a href="#" data-ng-click="goHome()">DASHBOARD</a></li>
-        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays">LICH THI DAU</a></li>
-        <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings">BANG XEP HANG</a></li>
-        <li data-ng-class="$state.is('teams') ? 'active' : ''"><a data-ui-sref="teams">CAU LAC BO</a></li>
-        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">THONG KE</a></li>
+        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays">MATCHWEEKS</a></li>
+        <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings">STANDINGS</a></li>
+        <li data-ng-class="$state.is('teams') ? 'active' : ''"><a data-ui-sref="teams">CLUBS</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">STATISTICS</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">LEAGUES</a></li>
         <!-- <li data-ng-class="$state.is('brackets') ? 'active' : ''"><a data-ui-sref="brackets">Brackets</a></li> -->
-      </ul>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">English Premier League</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">UEFA Champions League</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">Bundesliga</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">Laliga</a></li>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">Seri A</a></li>
+       </ul>
     </div><!-- /.navbar-collapse -->
 
+	<!-- User profile section
     <ul class="nav navbar-profile">
       <li><button class="nav-action" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
       <li><button class="nav-action" data-toggle="modal" data-target="#addOwnerModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
@@ -39,5 +46,6 @@
         </ul>
       </li>
     </ul>
+     -->
   </div><!-- /.container-fluid -->
 </nav>

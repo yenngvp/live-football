@@ -19,4 +19,5 @@ public interface FootballunService {
 	 */
 	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
 	List<Matchup> findMatchupByRound(String round) throws DataAccessException;
+	List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException;
 }

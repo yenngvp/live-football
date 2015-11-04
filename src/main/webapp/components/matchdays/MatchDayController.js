@@ -1,12 +1,13 @@
 var MatchDayController = ['$scope', 'MatchDay', function($scope, MatchDay) {
 
+	/*
 	$scope.$on('$viewContentLoaded', function(event){
 		$('html, body').animate({
 		    scrollTop: $("#matchdays").offset().top
 		}, 1000);
-	});
+	});*/
 
-	$scope.matchdays = MatchDay.query();
+	$scope.matchdays = MatchDay.matchdays.query();
 
 }];
 

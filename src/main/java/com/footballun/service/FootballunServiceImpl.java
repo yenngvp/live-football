@@ -42,4 +42,10 @@ public class FootballunServiceImpl implements FootballunService {
 	public List<Matchup> findMatchupByRound(String round) throws DataAccessException {
 		return  matchupRepository.findByRound(round);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException {
+		return  matchupRepository.findByFeatured(featured);
+	}
 }

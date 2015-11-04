@@ -13,15 +13,18 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 	
 	$scope.logout = function() {
 		$scope.$storage.session = null;
-		$state.go('landing');
+		$state.go('dashboard');
 	};
 	
 	$scope.goHome = function() {
+		$state.go('dashboard');
+		
+		/*
 		if ($scope.getSession() == null) {
 			$state.go('landing');
 		} else {
 			$state.go('dashboard');
-		}
+		}*/
 	}
 	
 	
@@ -63,7 +66,7 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 
 		if (requireLogin && $scope.getSession() == null) {
 			event.preventDefault();
-			$state.go('landing');
+			$state.go('dashboard');
 		}
 	});
 }];

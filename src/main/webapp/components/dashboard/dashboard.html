@@ -1,11 +1,55 @@
-<!-- Welcome -->
-<data-ng-include src="'components/dashboard/_welcome.html'"></data-ng-include>
 
-<!-- Owners -->
-<data-ng-include src="'components/dashboard/_owners.html'"></data-ng-include>
+<!-- Headline -->
+<ng-include src="'components/dashboard/_headline.html'"></ng-include>
 
-<!-- Pets -->
-<data-ng-include src="'components/dashboard/_pets.html'"></data-ng-include>
 
-<!-- Vets -->
-<data-ng-include src="'components/dashboard/_vets.html'"></data-ng-include>
+<!-- Dash board highlight content -->
+<div class="container-full section sections-body">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <h2>Matchups this week</h2>
+    </div>
+    <!-- /Page header -->
+
+    <!-- Timeline -->
+    <div class="timeline">
+    
+        <!-- Line component -->
+        <div class="line text-muted"></div>
+
+       
+        <!-- Panel -->
+        <div class="panel panel-primary">
+    
+            <!-- Icon -->
+            <div class="panel-heading thumbnail icon">
+                <i class="glyphicon glyphicon-calendar"></i>
+            </div>
+            <!-- /Icon -->
+    
+            <!-- Heading -->
+            <div class="panel-heading">
+                <h2 class="panel-title">Thu 7 tuan nay luc 6:45 toi:</h2>
+            </div>
+            <!-- /Heading -->
+    
+            <!-- Body -->
+			<div class="panel-body">
+					<my-matchup class="col-md-3 thumbnail matchup-wrapper" ng-repeat="matchup in matchdays" matchup="matchup"></my-matchup>
+			</div>
+			<!-- /Body -->
+
+			<!-- Footer -->
+			<!-- 
+            <div class="panel-footer">
+                <small>Footer is also supported!</small>
+            </div>
+            <!-- /Footer -->
+
+        </div>
+        <!-- /Panel -->
+    </div>
+    <!-- /Timeline -->
+
+</div>

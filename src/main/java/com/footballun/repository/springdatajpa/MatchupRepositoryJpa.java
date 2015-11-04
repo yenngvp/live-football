@@ -15,4 +15,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, Repository<Matc
 	
 	@Override
 	List<Matchup> findByRound(String round);
+	
+	@Override
+	List<Matchup> findByFeatured(Boolean featured);
 }

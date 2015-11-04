@@ -9,10 +9,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * 
@@ -35,9 +38,12 @@ public class Matchup extends NamedEntity implements Serializable {
 		MatchupResult(int result) {}
 	}
 	
-	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.matchup", fetch = FetchType.EAGER)
-	private List<MatchupSquad> matchupSquads = new ArrayList<MatchupSquad>();
+	@ManyToMany(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
+	@JoinTable(name="matchup_squad",
+	joinColumns=@JoinColumn(name = "matchup_id"),
+	inverseJoinColumns=@JoinColumn(name = "squad_id"))
+	@JsonManagedReference
+	private List<Squad> squads = new ArrayList<Squad>();
 	
 	@Column(name = "start_at")
 	private Date startAt;
@@ -49,17 +55,24 @@ public class Matchup extends NamedEntity implements Serializable {
 	private MatchupResult result;
 	
 	@Column(name = "matchday")
-	private int matchday;
+	private Integer matchday;
 	
 	@Column(name = "round")
 	private String round;
 	
-	public List<MatchupSquad> getMatchupSquads() {
-		return matchupSquads;
+	@OneToOne
+	@JoinColumn
+	private Stadium stadium;
+	
+	@Column(name = "featured")
+	private Boolean featured;
+	
+	public List<Squad> getSquads() {
+		return squads;
 	}
 
-	public void setMatchupSquads(List<MatchupSquad> matchupSquads) {
-		this.matchupSquads = matchupSquads;
+	public void setSquads(List<Squad> squads) {
+		this.squads = squads;
 	}
 
 	public Date getStartAt() {
@@ -105,6 +118,22 @@ public class Matchup extends NamedEntity implements Serializable {
 
 	public void setRound(String round) {
 		this.round = round;
+	}
+
+	public Stadium getStadium() {
+		return stadium;
+	}
+
+	public void setStadium(Stadium stadium) {
+		this.stadium = stadium;
+	}
+
+	public Boolean getFeatured() {
+		return featured;
+	}
+
+	public void setFeatured(Boolean featured) {
+		this.featured = featured == null ? Boolean.FALSE : featured;
 	}
 
 	@Override

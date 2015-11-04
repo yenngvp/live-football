@@ -1,4 +1,18 @@
-var app = angular.module('footballun', ['ui.router','ui.router.stateHelper','ngAnimate','ngCookies','ngResource','ngMockE2E','ngStorage']);
+
+var app = angular.module('footballun', ['ui.router',
+                                        'ui.router.stateHelper',
+                                        'ngAnimate',
+                                        'ngCookies',
+                                        'ngResource',
+                                        'ngMockE2E',
+                                        'ngStorage',
+                                        'angular-progress-arc',
+                                        'timer',
+                                    	'ngSanitize',
+                                    	'angular-timeline',
+                                    	'angular-scroll-animate',
+                                    	'ui.bootstrap'
+                                    	]);
 
 
 /** Start of Configurable constants **/
@@ -14,13 +28,13 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 
 	stateHelperProvider.state({
 		name: "landing",
-		url: "/",
+		url: "/landing",
 		templateUrl: "components/landing/landing.html",
 		controller: "MainController",
 		data: { requireLogin : false }
 	}).state({
 		name: "dashboard",
-		url: "/dashboard",
+		url: "/",
 		templateUrl: "components/dashboard/dashboard.html",
 		controller: "DashboardController",
 		data: { requireLogin : false }
@@ -60,15 +74,27 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 
 /** Controllers **/
 app.controller('MainController', MainController);
-app.controller('DashboardController', DashboardController);
 app.controller('MatchDayController', MatchDayController);
 app.controller('TeamController', TeamController);
-app.controller('StandingController', StandingController);
+app.controller('StandingController', StandingController);;
 app.controller('StatsController', StatsController);
 
 app.controller('SearchController', SearchController);
-
 app.controller('TeamDetailsController', TeamDetailsController);
+
+app.controller('DashboardController', ['$scope', 'MatchDay', function($scope, MatchDay) {
+
+	// Query matchdays
+	$scope.matchdays = MatchDay.matchdays.query();
+	// Query featured players
+	$scope.featuredMatchups = MatchDay.featuredMatchups.query();
+	
+	// Carousel directive
+	$scope.myInterval = 5000;
+	$scope.noWrapSlides = false;
+	
+}]);
+
 
 /** Services **/
 app.factory('MatchDay', MatchDay);
@@ -91,6 +117,7 @@ app.directive('scrollToTarget', function() {
 });
 
 app.directive('datePicker', DatePickerDirective);
+app.directive('myMatchup', MatchupDirective);
 
 app.run(function(useMockData, MockService) {
 	MockService.mock(useMockData);

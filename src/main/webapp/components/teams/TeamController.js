@@ -1,10 +1,5 @@
 var TeamController = ['$scope','$state','Team',function($scope,$state,Team) {
-	$scope.$on('$viewContentLoaded', function(event){
-		$('html, body').animate({
-		    scrollTop: $("#teams").offset().top
-		}, 1000);
-	});
-	
+
 	$scope.teams = Team.query();
 }];
 

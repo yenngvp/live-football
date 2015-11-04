@@ -10,18 +10,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "squad")
@@ -44,17 +43,17 @@ public class Squad extends BaseEntity implements Serializable {
 		
 	@Column
 	private String generation;
+		
+	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<Matchup> matchups = new ArrayList<Matchup>();
 	
-	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pk.squad", fetch = FetchType.EAGER)
-	private List<MatchupSquad> matchupSquads = new ArrayList<MatchupSquad>();
-	
-	public List<MatchupSquad> getMatchupSquads() {
-		return matchupSquads;
+	public List<Matchup> getMatchups() {
+		return matchups;
 	}
 
-	public void setMatchupSquads(List<MatchupSquad> matchupSquads) {
-		this.matchupSquads = matchupSquads;
+	public void setMatchups(List<Matchup> matchups) {
+		this.matchups = matchups;
 	}
 
 	public Team getTeam() {
@@ -95,6 +94,6 @@ public class Squad extends BaseEntity implements Serializable {
 				team != null ? team.getName() : "",
 				group != null ? group.getName() : "",
 				competition != null ? competition.getName() : "",
-				matchupSquads.size());
+				matchups.size());
 	}
 }
