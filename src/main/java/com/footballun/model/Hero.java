@@ -14,6 +14,20 @@ import javax.persistence.Table;
 @Table(name = "hero")
 public class Hero extends BaseEntity {
 
+	/**
+	 * Field in relationships
+	 */
+	
+	@OneToOne
+	@JoinColumn
+	private HeroStatus status;
+	
+	@OneToOne
+	private SquadMember squadMember;
+		
+	/**
+	 * Columns
+	 */
 	@Column(name = "first_name")
 	private String firstName;
 	
@@ -31,10 +45,6 @@ public class Hero extends BaseEntity {
 	
 	@Column(name = "alias")
 	private String alias;
-	
-	@OneToOne
-	@JoinColumn
-	private HeroStatus status;
 	
 	public String getFirstName() {
 		return firstName;
@@ -90,5 +100,13 @@ public class Hero extends BaseEntity {
 
 	public void setStatus(HeroStatus status) {
 		this.status = status;
+	}
+
+	public SquadMember getSquadMember() {
+		return squadMember;
+	}
+
+	public void setSquadMember(SquadMember squadMember) {
+		this.squadMember = squadMember;
 	}
 }
