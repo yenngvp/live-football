@@ -1,5 +1,23 @@
 <section id="matchdays" class="sections sections-body">
   <div class="container">
+  	<!-- Formation -->
+  	<div class="outsideWrapper">
+	    <div class="insideWrapper">
+			<!-- Pitch background -->
+	        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
+	        <!-- Players' position -->
+	        <ul>
+	        	<li ng-repeat="p in imagePositions">
+	        		<canvas class="positionCoveringCanvas" ng-style="{'position': 'absolute',
+	        											   			  'left': '{{p[0]}}px',
+	        											   			  'top': '{{p[1]}}px',
+	        											   			  'background-image': 'url(images/heros/the-citizens.png)'}">
+	        		</canvas>
+	        	<li>
+	        </ul>
+	    </div>
+	</div>
+    
     <div class="action-items pull-right">
       <div class="action-item pull-right">
         View as

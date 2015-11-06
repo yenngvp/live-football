@@ -142,3 +142,43 @@
 #table {display: table;}
 #table .row {display: table-row;}
 #table .cell {display: table-cell; padding: 5px 20px;}
+
+
+.outsideWrapper {
+	width: 750px;
+	height: 450px;
+	margin: 20px 60px;
+	border: 1px DarkSeaGreen;
+}
+
+.insideWrapper {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.pitchCoverredImage {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.positionCoveringCanvas {
+	width: 60px;
+	height: 70px;
+	background-color: rgba(255, 0, 0, .1);
+}
+
+li {
+    opacity: 1;
+}
+li.ng-enter {
+    -webkit-transition: 1s;
+    transition: 1s;
+    opacity: 0;
+}
+li.ng-enter-active {
+    opacity: 1;
+}

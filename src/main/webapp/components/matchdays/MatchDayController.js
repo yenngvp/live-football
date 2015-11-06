@@ -25,6 +25,37 @@ var MatchDayController = ['$scope', 'MatchDay','localStorageService', function($
     	);
     }
 
+    /*
+     *  Calulates lineup positions
+     */
+    var lineups = [];
+    lineups.push([5,0]);
+    lineups.push([2,1]);
+    lineups.push([4,1]);
+    lineups.push([6,1]);
+    lineups.push([8,1]);
+    lineups.push([3,2]);
+    lineups.push([7,2]);
+    lineups.push([2,3]);
+    lineups.push([5,3]);
+    lineups.push([8,3]);
+    lineups.push([5,4]);
+    // Maximum pitch image background (in pixels)
+    var imgWidth = 750;
+    var imgHeight = 450;
+    var maxGridX = 10;
+    var maxGridY = 5; 		
+    var imgWidthUnit = imgWidth / maxGridX;
+    var imgHeightUnit = imgHeight / maxGridY;
+    var imagePositions = [];
+    var pos = [];
+    console.log(toString(lineups.length));
+    for (var i = 0; i < lineups.length; i++) {
+    	pos = [imgWidthUnit * lineups[i][0] - 30, imgHeightUnit * lineups[i][1]];
+    	imagePositions.push(pos);
+    }
+    $scope.imagePositions = imagePositions;
+    console.log($scope.imagePositions);
 }];
 
 /*
