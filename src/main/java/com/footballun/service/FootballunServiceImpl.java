@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.footballun.model.Matchup;
 import com.footballun.model.Squad;
+import com.footballun.model.SquadMember;
 import com.footballun.repository.MatchupRepository;
+import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
 import com.footballun.repository.CompetitionRepository;
 
@@ -22,6 +24,8 @@ public class FootballunServiceImpl implements FootballunService {
 	private CompetitionRepository competitionRepository;
 	@Autowired
 	private MatchupRepository matchupRepository;
+	@Autowired
+	private SquadMemberRepository squadMemberRepository;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -48,4 +52,11 @@ public class FootballunServiceImpl implements FootballunService {
 	public List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException {
 		return  matchupRepository.findByFeatured(featured);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<SquadMember> findSquadMembersBySquad(Integer squadId) throws DataAccessException {
+		return squadMemberRepository.findBySquadId(squadId);
+	}
+	
 }

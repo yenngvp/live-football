@@ -28,7 +28,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Squad extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	/**
+	 * Field in relationships
+	 */
+	
+	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<Matchup> matchups = new ArrayList<Matchup>();
+	
 	@OneToOne
 	@JoinColumn
 	private Team team;
@@ -40,13 +48,21 @@ public class Squad extends BaseEntity implements Serializable {
 	@OneToOne
 	@JoinColumn
 	private Competition competition;
+	
+	/*
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "squad", fetch = FetchType.EAGER)
+	private List<SquadMember> members;*/
 		
+	/**
+	 * Columns
+	 */
+	
 	@Column
 	private String generation;
-		
-	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
-	@JsonBackReference
-	private List<Matchup> matchups = new ArrayList<Matchup>();
+	
+	/**
+	 * Getters/Setters
+	 */
 	
 	public List<Matchup> getMatchups() {
 		return matchups;
@@ -87,6 +103,15 @@ public class Squad extends BaseEntity implements Serializable {
 	public void setGeneration(String generation) {
 		this.generation = generation;
 	}
+
+	/*
+	public List<SquadMember> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<SquadMember> members) {
+		this.members = members;
+	}*/
 
 	@Override
 	public String toString() {

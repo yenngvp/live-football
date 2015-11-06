@@ -1,8 +1,6 @@
 /**
- * 
- *
  * @author: yen.nt
- * @created on Oct 30, 2015
+ * @created on Nov 5, 2015
  */
 package com.footballun.admin;
 
@@ -14,28 +12,30 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import com.footballun.model.Team;
+import com.footballun.model.SquadMember;
 
 /**
  * @author yen.nt
  *
  */
-public class TeamAdministration extends AdministrationConfiguration<Team> {
-
+public class SquadMemberAdministration extends AdministrationConfiguration<SquadMember> {
+	
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "Name" ).build();
+		return configurationBuilder.nameField( "Squad" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Team Administration" )
+				.screenName( "SquadMembers Administration" )
 				.build();
 	}
 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
-				.field( "name" ).caption( "Name" )
+				.field( "hero" ).caption( "Hero" )
+				.field( "position" ).caption( "Position" )
+				.field( "squad" ).caption( "Squad" )
 				.build();
 	}
 }

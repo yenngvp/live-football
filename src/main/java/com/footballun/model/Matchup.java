@@ -38,12 +38,24 @@ public class Matchup extends NamedEntity implements Serializable {
 		MatchupResult(int result) {}
 	}
 	
+	/**
+	 * Field in relationships
+	 */
+	
 	@ManyToMany(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
 	@JoinTable(name="matchup_squad",
 	joinColumns=@JoinColumn(name = "matchup_id"),
 	inverseJoinColumns=@JoinColumn(name = "squad_id"))
 	@JsonManagedReference
 	private List<Squad> squads = new ArrayList<Squad>();
+	
+	@OneToOne
+	@JoinColumn
+	private Stadium stadium;
+	
+	/**
+	 * Columns
+	 */
 	
 	@Column(name = "start_at")
 	private Date startAt;
@@ -60,12 +72,18 @@ public class Matchup extends NamedEntity implements Serializable {
 	@Column(name = "round")
 	private String round;
 	
-	@OneToOne
-	@JoinColumn
-	private Stadium stadium;
-	
 	@Column(name = "featured")
 	private Boolean featured;
+	
+	/**
+	 * Getters/Setters
+	 */
+	@Override
+	public String getName() {
+		if (super.getName() != null) return super.getName();
+		if (squads == null || squads.size() < 2) return ""; 
+		return squads.get(0).getTeam().getName() + " v " + squads.get(1).getTeam().getName();
+	}
 	
 	public List<Squad> getSquads() {
 		return squads;

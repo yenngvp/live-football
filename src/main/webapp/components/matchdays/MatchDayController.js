@@ -1,4 +1,4 @@
-var MatchDayController = ['$scope', 'MatchDay', function($scope, MatchDay) {
+var MatchDayController = ['$scope', 'MatchDay','localStorageService', function($scope, MatchDay, localStorageService) {
 
 	/*
 	$scope.$on('$viewContentLoaded', function(event){
@@ -7,7 +7,23 @@ var MatchDayController = ['$scope', 'MatchDay', function($scope, MatchDay) {
 		}, 1000);
 	});*/
 
-	$scope.matchdays = MatchDay.matchdays.query();
+	// Gets localStorage cached
+	var key = 'matchdaysCache'; 
+    $scope.matchdays = localStorageService.get(key);
+    if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
+    	MatchDay.matchdays.query().$promise.then(
+    			//success
+    			function( value ) {
+    				localStorageService.set(key, value);
+    				$scope.matchdays = value;
+    			},
+    			//error
+    			function( error ) {
+    				// TODO: Handle request returns error
+    				console.log("Failed with: " + error);
+    			}
+    	);
+    }
 
 }];
 

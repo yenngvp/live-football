@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "hero")
 public class Hero extends BaseEntity {
@@ -22,7 +24,8 @@ public class Hero extends BaseEntity {
 	@JoinColumn
 	private HeroStatus status;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "hero")
+	@JsonBackReference
 	private SquadMember squadMember;
 		
 	/**
@@ -112,5 +115,10 @@ public class Hero extends BaseEntity {
 
 	public void setSquadMember(SquadMember squadMember) {
 		this.squadMember = squadMember;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Hero [%d, %s %s]", id, firstName, lastName);
 	}
 }

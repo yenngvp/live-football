@@ -23,7 +23,7 @@ import com.footballun.model.Squad;
 public class SquadAdministration extends AdministrationConfiguration<Squad> {
 	
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "ID" ).build();
+		return configurationBuilder.nameField( "Team" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {

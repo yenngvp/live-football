@@ -1,40 +1,45 @@
-var TeamController = ['$scope','$state','Team',function($scope,$state,Team) {
+var TeamController = ['$scope','$state','Team','localStorageService',function($scope,$state,Team,localStorageService) {
 
-	$scope.teams = Team.query();
+	// Gets localStorage cached
+	var key = 'teamsCache'; 
+    $scope.teams = localStorageService.get(key);
+    if (angular.isUndefined($scope.teams) || $scope.teams == null || $scope.teams.length == 0) {
+    	Team.teams.query().$promise.then(
+    			//success
+    			function( value ) {
+    				localStorageService.set(key, value);
+    				$scope.teams = value;
+    			},
+    			//error
+    			function( error ) {
+    				// TODO: Handle request returns error
+    				console.log("Failed with: " + error);
+    			}
+    	);
+    }
+    
 }];
 
 
-var TeamDetailsController = ['$scope','$rootScope','$stateParams','Team', function($scope,$rootScope,$stateParams,Team) {
-
-	var currentId = $stateParams.id;
-	var nextId = parseInt($stateParams.id) + 1;
-	var prevId = parseInt($stateParams.id) - 1;
-
-	$scope.prevTeam = Team.get({id:prevId});
-	$scope.nextTeam = Team.get({id:nextId});
-	$scope.currentTeam = Team.get($stateParams);
-
-	/*
-	$scope.saveTeam = function(){
-		Team = $scope.currentTeam;
-		Team.save(Team);
-	}
+var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactory','Team','localStorageService', function($scope,$rootScope,$stateParams,$cacheFactory,Team,localStorageService) {
 	
-	$scope.addPet = function() {
-		$scope.petFormHeader = "Add a new Pet";
-		$scope.currentPet = {type:{}};
-	}
-	
-	$scope.editPet = function(id) {
-		$scope.petFormHeader = "Edit Pet";
-		for(i = 0;i < $scope.currentTeam.pets.length; i++) {
-			if($scope.currentTeam.pets[i].id == id) {
-				$scope.currentPet = $scope.currentTeam.pets[i];
-				break;
-			}
-		}
-	};
-	 */
+    // Gets localStorage cached
+	var key = 'teamMembersCache_' + $stateParams.id;
+    $scope.teamMembers = localStorageService.get(key);
+    if (angular.isUndefined($scope.teamMembers) || $scope.teamMembers == null || $scope.teamMembers.length == 0) {
+    	Team.teamMembers.query({id: $stateParams.id}).$promise.then(
+    			//success
+    			function( value ) {
+    				localStorageService.set(key, value);
+    				$scope.teamMembers = value;
+    			},
+    			//error
+    			function( error ) {
+    				// TODO: Handle request returns error
+    				console.log("Failed with: " + error);
+    			}
+    	);
+    } 	
 }];
 
 /*

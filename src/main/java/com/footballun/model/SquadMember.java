@@ -5,14 +5,13 @@
 
 package com.footballun.model;
 
-import java.util.List;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "squad_member")
@@ -22,12 +21,13 @@ public class SquadMember extends BaseEntity {
 	 * Field in relationships
 	 */
 	
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn
-	private List<Hero> heros;
-	
 	@OneToOne
 	@JoinColumn
+	@JsonManagedReference
+	private Hero hero;
+	
+	@OneToOne
+	@JoinColumn(name = "hero_role_id")
 	private HeroRole heroRole;
 	
 	@OneToOne
@@ -39,15 +39,20 @@ public class SquadMember extends BaseEntity {
 	private Position position;
 
 	/**
+	 * Columns
+	 */
+	@Column(name = "shirt_number")
+	private Integer shirtNumber;
+	
+	/**
 	 * Getters/Setters
 	 */
-	
-	public List<Hero> getHeros() {
-		return heros;
+	public Hero getHero() {
+		return hero;
 	}
 
-	public void setHeros(List<Hero> heros) {
-		this.heros = heros;
+	public void setHero(Hero hero) {
+		this.hero = hero;
 	}
 
 	public HeroRole getHeroRole() {
@@ -74,5 +79,21 @@ public class SquadMember extends BaseEntity {
 		this.position = position;
 	}
 	
-	
+	public Integer getShirtNumber() {
+		return shirtNumber;
+	}
+
+	public void setShirtNumber(Integer shirtNumber) {
+		this.shirtNumber = shirtNumber;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("SquadMember [%d, %s, Role: %s, Position: %s, %s]",
+				id,
+				hero == null ? "" : hero.toString(),
+				heroRole == null ? "" : heroRole.getName(),
+				position == null ? "" : position.getName(),
+				squad == null ? "" : squad.toString());
+	}
 }

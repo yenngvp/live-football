@@ -1,8 +1,6 @@
 /**
- * 
- *
  * @author: yen.nt
- * @created on Oct 30, 2015
+ * @created on Nov 5, 2015
  */
 package com.footballun.admin;
 
@@ -14,13 +12,13 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import com.footballun.model.Team;
+import com.footballun.model.HeroRole;
 
 /**
  * @author yen.nt
  *
  */
-public class TeamAdministration extends AdministrationConfiguration<Team> {
+public class HeroRoleAdministration extends AdministrationConfiguration<HeroRole> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
 		return configurationBuilder.nameField( "Name" ).build();
@@ -28,7 +26,7 @@ public class TeamAdministration extends AdministrationConfiguration<Team> {
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Team Administration" )
+				.screenName( "HeroRoles Administration" )
 				.build();
 	}
 

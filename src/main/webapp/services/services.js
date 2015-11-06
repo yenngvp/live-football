@@ -5,21 +5,29 @@ var MatchDay = ['$resource','context', function($resource, context) {
 	        query: {method: 'GET', params: {}, isArray: true}
 	      }),
 	      featuredMatchups: $resource(context + '/api/featured-matchups', {}, {
-	        query: { method: 'GET', params: {}, isArray: true }
+	        query: { method: 'GET', params: {}, isArray: true}
 	      })
 	};
 }];
 
-var FeaturedMatchups = ['$resource','context', function($resource, context) {
-	return $resource(context + '/api/featured-matchups');
-}];
 
-var Team = ['$resource','context', function($resource, context) {
-	return $resource(context + '/api/teams');
+var Team = ['$resource','$cacheFactory','context', function($resource, $cacheFactory, context) {
+	var cache = $cacheFactory("Teams");
+	var cache2 = $cacheFactory("TeamDetails");
+	return {
+		teams: $resource(context + '/api/teams', {}, {
+	        query: {method: 'GET', params: {}, isArray: true}
+	     }),
+		teamMembers: $resource(context + '/api/teams/:id/members', {}, {
+	        query: { method: 'GET', params: {id: '@id'}, isArray: true }
+	    })
+	};
 }];
 
 var Standing = ['$resource','context', function($resource, context) {
-	return $resource(context + '/api/standings');
+	return $resource(context + '/api/standings', {}, {
+        query: {method: 'GET', params: {}, isArray: true}
+      });
 }];
 
 var Stats = ['$resource','context', function($resource, context) {
@@ -58,7 +66,6 @@ var MockService = ['$httpBackend', '$http', '$q', 'context', function($httpBacke
 					$httpBackend.whenGET(passThroughRegex).passThrough();
 				});
 			} else {
-				console.log("Setting up passthrough for other urls");
 				var passThroughRegex = new RegExp('/');
 				$httpBackend.whenGET(passThroughRegex).passThrough();			
 				$httpBackend.whenPOST(passThroughRegex).passThrough();
