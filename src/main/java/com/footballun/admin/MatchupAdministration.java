@@ -23,7 +23,7 @@ import com.footballun.model.Matchup;
 public class MatchupAdministration extends AdministrationConfiguration<Matchup> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "ID" ).build();
+		return configurationBuilder.nameField( "Squads" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {

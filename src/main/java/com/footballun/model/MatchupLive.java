@@ -10,7 +10,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author yen.nt
@@ -41,6 +45,7 @@ public class MatchupLive extends BaseEntity {
 	 */
 	
 	@Column(name = "timestamp")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	
 	@Column(name = "update_minute")
@@ -89,4 +94,5 @@ public class MatchupLive extends BaseEntity {
 	public void setUpdateMinute(Short updateMinute) {
 		this.updateMinute = updateMinute;
 	}
+	
 }

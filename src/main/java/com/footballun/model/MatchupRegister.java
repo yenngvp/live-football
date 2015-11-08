@@ -19,7 +19,7 @@ public class MatchupRegister extends BaseEntity {
 	 */
 	
 	@OneToOne
-	@JoinColumn
+	@JoinColumn(name = "squad_member_id")
 	private SquadMember squadMember;
 	
 	@OneToOne

@@ -115,10 +115,6 @@ public class Squad extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Team [Name: %s, Group: %s, Competition: %s, MatchupSquads Count: %d]",
-				team != null ? team.getName() : "",
-				group != null ? group.getName() : "",
-				competition != null ? competition.getName() : "",
-				matchups.size());
+		return String.format("%s (%s)", team == null ? "" : team.toString(), generation == null ? "" : generation);
 	}
 }
