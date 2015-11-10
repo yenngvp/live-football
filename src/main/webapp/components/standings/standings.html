@@ -3,19 +3,30 @@
 	  <div class="row">
 	    <div class="col-md-8 col-md-offset-2">
 	      <div class="text-center">
-	        <h3>Standings</h3>
+	        <h3>Standing</h3>
 	        <p class="section-desc">Live Standing Now</p>
 	      </div>
 	    </div>
 	  </div>
-	  <div class="row" ng-repeat="team in standings">
-	  	<div class="col-md-1">1</div>
+	  <div class="row">
+	  	<div class="col-md-1">#</div>
 	  	<div class="col-md-1">-</div>
-	  	<div class="col-md-4">{{team.team.name}}}</div>
-	  	<div class="col-md-2">Points: 50</div>
-	  	<div class="col-md-2">Played: 22</div>
-	  	<div class="col-md-1">W: 15</div>
-	  	<div class="col-md-1">L: 7</div> 
+	  	<div class="col-md-4">Team</div>
+	  	<div class="col-md-2">Point</div>
+	  	<div class="col-md-1">P</div>
+	  	<div class="col-md-1">W</div>
+	  	<div class="col-md-1">D</div>
+	  	<div class="col-md-1">L</div> 
+	  </div>
+	  <div class="row" ng-repeat="p in standings">
+	  	<div class="col-md-1">{{p.currentPosition}}</div>
+	  	<div class="col-md-1">{{(p.previousPosition * 1) - (p.curentPosition * 1)}}</div>
+	  	<div class="col-md-4">{{p.squad.team.name}}</div>
+	  	<div class="col-md-2">{{p.point}}</div>
+	  	<div class="col-md-1">{{p.played}}</div>
+	  	<div class="col-md-1">{{p.won}}</div>
+	  	<div class="col-md-1">{{p.drawn}}</div>
+	  	<div class="col-md-1">{{p.lost}}</div> 
 	  </div>
 	</div>
 </section>

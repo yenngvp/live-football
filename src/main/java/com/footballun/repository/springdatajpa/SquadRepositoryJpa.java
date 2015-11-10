@@ -9,7 +9,7 @@ import com.footballun.model.Competition;
 import com.footballun.model.Squad;
 import com.footballun.repository.SquadRepository;
 
-public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squad, String> {
+public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squad, Integer> {
 
 	@Override
 	List<Squad> findByCompetitionAndGeneration(Competition competition, String generation) throws DataAccessException;

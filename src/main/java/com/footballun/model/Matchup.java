@@ -21,7 +21,9 @@ import javax.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -38,8 +40,8 @@ public class Matchup extends NamedEntity implements Serializable {
 	private static final short SHORT_NUM_ONE = (short) 1;
 	
 	public enum MatchupResult {
-		SQUAD1_WIN (1),
-		SQUAD1_LOSE (2),
+		WIN (1),
+		LOSE (2),
 		DRAW (0),
 		UNKNOWN (-1);
 		
@@ -54,7 +56,8 @@ public class Matchup extends NamedEntity implements Serializable {
 	@JoinTable(name="matchup_squad",
 	joinColumns=@JoinColumn(name = "matchup_id"),
 	inverseJoinColumns=@JoinColumn(name = "squad_id"))
-	@JsonManagedReference
+//	@JsonManagedReference
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<Squad> squads = new LinkedHashSet<Squad>();
 	
 	@OneToOne
@@ -63,10 +66,14 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
 	@OrderBy("position ASC")
+//	@JsonManagedReference
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<MatchupRegister> matchupRegisters = new LinkedHashSet<MatchupRegister>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
 	@OrderBy("updateMinute DESC, timestamp DESC")
+//	@JsonManagedReference
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<MatchupLive> matchupLives = new LinkedHashSet<MatchupLive>();
 	
 	@OneToOne
@@ -99,7 +106,7 @@ public class Matchup extends NamedEntity implements Serializable {
 	private Short squad2Goal;
 	
 	@Column(name = "result")
-	private MatchupResult result;
+	private Short result;
 	
 	@Column(name = "status")
 	private Short status;
@@ -189,22 +196,13 @@ public class Matchup extends NamedEntity implements Serializable {
 		this.endAt = endAt;
 	}
 	
-	public MatchupResult getResult() {
+	public Short getResult() {
 		refreshResult();
 		return result;
 	}
 	
 	public void setResult(Short result) {
-		switch(result) {
-		case 0: this.result = MatchupResult.DRAW;
-			return;
-		case 1: this.result = MatchupResult.SQUAD1_WIN;
-			return;
-		case 2: this.result = MatchupResult.SQUAD1_LOSE;
-			return;
-		default: this.result = MatchupResult.UNKNOWN;
-			return;
-		}
+		this.result = result;
 	}
 	
 	/**
@@ -323,6 +321,39 @@ public class Matchup extends NamedEntity implements Serializable {
 		} else {
 			// DRAWN
 			setResult((short) 0);
+		}
+	}
+	
+	public MatchupResult getResultBySquad(Squad squad) {
+		if (getSquad1().equals(squad)) {
+			return getMatchupResult();
+		} else if (getSquad2().equals(squad)) {
+			return getOppositeResult(getMatchupResult());
+		}
+		return MatchupResult.UNKNOWN;
+	}
+	
+	private MatchupResult getOppositeResult(MatchupResult r) {
+		if (r == MatchupResult.WIN) {
+			return MatchupResult.LOSE;
+		} else if (r == MatchupResult.LOSE) {
+			return MatchupResult.WIN;
+		} else if (r == MatchupResult.DRAW) {
+			return MatchupResult.DRAW;
+		}
+		return MatchupResult.UNKNOWN;
+	}
+	
+	private MatchupResult getMatchupResult() {
+		switch(this.result) {
+		case 1: 
+			return MatchupResult.WIN;
+		case 2: 
+			return MatchupResult.LOSE;
+		case 0: 
+			return MatchupResult.DRAW;
+		default:
+			return MatchupResult.UNKNOWN;
 		}
 	}
 	

@@ -21,6 +21,8 @@ import javax.persistence.PersistenceContextType;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "squad")
@@ -34,7 +36,8 @@ public class Squad extends BaseEntity implements Serializable {
 	 */
 	
 	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
-	@JsonBackReference
+//	@JsonBackReference
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<Matchup> matchups = new LinkedHashSet<Matchup>();
 	
 	@OneToOne
