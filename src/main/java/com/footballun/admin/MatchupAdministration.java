@@ -36,6 +36,11 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
 				.field( "squads" ).caption( "Matchup" )
+				.field( "result" ).caption( "Result" )
+				.field( "matchupRegisters" ).caption( "Matchup Registers" )
+				.field( "matchupLives" ).caption( "Matchup Lives" )
+				.field( "squad1Goal" ).caption( "Squad1 Goal" )
+				.field( "squad2Goal" ).caption( "Squad2 Goal" )
 				.build();
 	}
 }

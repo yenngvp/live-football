@@ -1,21 +1,25 @@
 package com.footballun.repository.springdatajpa;
 
-import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
 
 import com.footballun.model.Matchup;
 import com.footballun.repository.MatchupRepository;
 
-public interface MatchupRepositoryJpa extends MatchupRepository, Repository<Matchup, Serializable> {
+public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<Matchup, Integer> {
 
 	@Override
-	List<Matchup> findByMatchday(Integer matchday);
+	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByRound(String round);
+	List<Matchup> findByRound(String round) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByFeatured(Boolean featured);
+	List<Matchup> findByFeatured(Boolean featured) throws DataAccessException;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	Matchup save(Matchup matchup) throws DataAccessException;
 }

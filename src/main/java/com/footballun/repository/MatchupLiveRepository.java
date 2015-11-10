@@ -4,10 +4,13 @@
  */
 package com.footballun.repository;
 
+import com.footballun.model.MatchupLive;
+
 /**
  * @author YenNguyen
  *
  */
 public interface MatchupLiveRepository {
 
+	MatchupLive  save(MatchupLive  matchupLive);
 }

@@ -7,12 +7,15 @@ package com.footballun.admin;
 import org.lightadmin.api.config.AdministrationConfiguration;
 import org.lightadmin.api.config.builder.EntityMetadataConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.FieldSetConfigurationUnitBuilder;
+import org.lightadmin.api.config.builder.FiltersConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.ScreenContextConfigurationUnitBuilder;
 import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
+import org.lightadmin.api.config.unit.FiltersConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.MatchupLive;
+import com.footballun.repository.MatchupLiveRepositoryEventListener;
 
 /**
  * @author YenNguyen
@@ -21,12 +24,15 @@ import com.footballun.model.MatchupLive;
 public class MatchupLiveAdministration extends AdministrationConfiguration<MatchupLive> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "Matchup" ).build();
+		return configurationBuilder
+				.nameField( "event" )
+				.repositoryEventListener(MatchupLiveRepositoryEventListener.class)
+				.build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Game Live Administration" )
+				.screenName( "Matchup Live Administration" )
 				.build();
 	}
 
@@ -40,4 +46,8 @@ public class MatchupLiveAdministration extends AdministrationConfiguration<Match
 				.field( "timestamp" ).caption( "Timestamp" )
 				.build();
 	}
+	
+//	public FiltersConfigurationUnit filters(final FiltersConfigurationUnitBuilder filterBuilder) {
+//        return filterBuilder.build();
+//    }
 }

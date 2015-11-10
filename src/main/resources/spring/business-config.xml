@@ -15,6 +15,9 @@
     <!-- import the dataSource definition -->
     <import resource="datasource-config.xml"/>
 
+    <!-- import the spring aop definition -->
+    <import resource="spring-aop.xml"/>
+    
     <context:component-scan
             base-package="com.footballun.service"/>
 
@@ -49,9 +52,6 @@
             <property name="persistenceUnitName" value="footballun"/>
             <property name="packagesToScan" value="com.footballun"/>
         </bean>
-        
-                <bean class="com.footballun.model.Matchup" />
-    			<bean class="com.footballun.model.Squad" />
 
         <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"

@@ -2,6 +2,8 @@ package com.footballun.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,12 @@ public class FootballunServiceImpl implements FootballunService {
 	@Autowired
 	private SquadMemberRepository squadMemberRepository;
 	
+	final Logger logger = LoggerFactory.getLogger("FootballunService");
+
+	/*
+	 * Squad's APIs implements 
+	 */
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Squad> findSquadByCompetitionAndGeneration(Integer competitionId, String generation)
@@ -35,15 +43,21 @@ public class FootballunServiceImpl implements FootballunService {
 		
 	}
 
+	/*
+	 * Matchup's APIs implements
+	 */
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException {
+		
 		return  matchupRepository.findByMatchday(matchday);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByRound(String round) throws DataAccessException {
+		
 		return  matchupRepository.findByRound(round);
 	}
 
@@ -52,6 +66,15 @@ public class FootballunServiceImpl implements FootballunService {
 	public List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException {
 		return  matchupRepository.findByFeatured(featured);
 	}
+	
+	@Override
+	public void saveMatchup(Matchup matchup) throws DataAccessException {
+		matchupRepository.save(matchup);
+	}
+	
+	/*
+	 * Squad Member's APIs implement
+	 */
 	
 	@Override
 	@Transactional(readOnly = true)

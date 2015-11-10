@@ -40,7 +40,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<!-- Lightadmin configuration -->
 	<context-param>
 	  <param-name>light:administration:base-url</param-name>
-	  <param-value>/admin</param-value>
+	  <param-value>/footballking/admin</param-value>
 	</context-param>
 	
 	<context-param>

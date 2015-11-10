@@ -6,12 +6,12 @@ package com.footballun.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,12 +28,12 @@ public class MatchupLive extends BaseEntity {
 	 * Field in relationships
 	 */
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn
 	private Matchup matchup;
 	
 	@OneToOne
-	@JoinColumn
+	@JoinColumn(name = "matchup_register_id")
 	private MatchupRegister matchupRegister;
 	
 	@OneToOne
@@ -95,4 +95,13 @@ public class MatchupLive extends BaseEntity {
 		this.updateMinute = updateMinute;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("MatchupLive [%s %s at minute %d in %s at %s]", 
+				matchupRegister == null ? "" : matchupRegister.toString(),
+				event == null ? "" : event.toString(),
+				updateMinute,
+				matchup == null ? "" : matchup.toString(),
+				timestamp.toString());
+	}
 }

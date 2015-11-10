@@ -15,4 +15,7 @@ import com.footballun.repository.MatchupLiveRepository;
  */
 public interface MatchupLiveRepositoryJpa extends MatchupLiveRepository, CrudRepository<MatchupLive, Integer> {
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public MatchupLive save(MatchupLive matchupLive);
 }

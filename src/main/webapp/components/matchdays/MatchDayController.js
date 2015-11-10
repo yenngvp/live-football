@@ -7,23 +7,29 @@ var MatchDayController = ['$scope', 'MatchDay','localStorageService', function($
 		}, 1000);
 	});*/
 
-	// Gets localStorage cached
-	var key = 'matchdaysCache'; 
-    $scope.matchdays = localStorageService.get(key);
-    if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
-    	MatchDay.matchdays.query().$promise.then(
-    			//success
-    			function( value ) {
-    				localStorageService.set(key, value);
-    				$scope.matchdays = value;
-    			},
-    			//error
-    			function( error ) {
-    				// TODO: Handle request returns error
-    				console.log("Failed with: " + error);
-    			}
-    	);
-    }
+	var enableCache = false;
+
+	if (enableCache) {
+		// Gets localStorage cached
+		var key = 'matchdaysCache'; 
+		$scope.matchdays = localStorageService.get(key);
+		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
+			MatchDay.matchdays.query().$promise.then(
+					//success
+					function( value ) {
+						localStorageService.set(key, value);
+						$scope.matchdays = value;
+					},
+					//error
+					function( error ) {
+						// TODO: Handle request returns error
+						console.log("Failed with: " + error);
+					}
+					);
+		}
+	} else {
+		$scope.matchdays = MatchDay.matchdays.query();
+	}
 
     /*
      *  Calulates lineup positions

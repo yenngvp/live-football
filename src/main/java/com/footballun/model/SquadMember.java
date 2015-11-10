@@ -90,7 +90,7 @@ public class SquadMember extends BaseEntity {
 	@Override
 	public String toString() {
 		return String.format("SquadMember [%d, %s, Role: %s, Position: %s, %s]",
-				id,
+				shirtNumber,
 				hero == null ? "" : hero.toString(),
 				heroRole == null ? "" : heroRole.getName(),
 				position == null ? "" : position.getName(),

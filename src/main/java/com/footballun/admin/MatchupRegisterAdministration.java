@@ -34,6 +34,7 @@ public class MatchupRegisterAdministration extends AdministrationConfiguration<M
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
 				.field( "squadMember" ).caption( "Squad Member" )
+				.field( "matchup" ).caption( "Matchup" )
 				.field( "position" ).caption( "Position" )
 				.field( "isLineup" ).caption( "Lineup" )
 				.build();

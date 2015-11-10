@@ -11,19 +11,20 @@ import com.footballun.model.SquadMember;
 public interface FootballunService {
 
 	/**
-	 * Gets Squads
+	 * Squad's APIs
 	 */
 	List<Squad> findSquadByCompetitionAndGeneration(Integer competitionId, String generation) throws DataAccessException;
 	
 	/**
-	 * Gets Matchups
+	 * Matchup's APIs
 	 */
 	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
 	List<Matchup> findMatchupByRound(String round) throws DataAccessException;
 	List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException;
+	void saveMatchup(Matchup matchup) throws DataAccessException;
 	
 	/**
-	 * Gets Squad Members
+	 * Squad Member's APIs
 	 */
 	List<SquadMember> findSquadMembersBySquad(Integer squadId) throws DataAccessException;
 }

@@ -19,12 +19,16 @@ public class MatchupRegister extends BaseEntity {
 	 */
 	
 	@OneToOne
-	@JoinColumn(name = "squad_member_id")
+	@JoinColumn(name = "squad_member_id", nullable = false)
 	private SquadMember squadMember;
 	
 	@OneToOne
 	@JoinColumn
 	private Position position;
+	
+	@OneToOne
+	@JoinColumn(nullable = false)
+	private Matchup matchup;
 	
 	/**
 	 * Columns
@@ -53,11 +57,28 @@ public class MatchupRegister extends BaseEntity {
 		this.position = position;
 	}
 
+	public Matchup getMatchup() {
+		return matchup;
+	}
+
+	public void setMatchup(Matchup matchup) {
+		this.matchup = matchup;
+	}
+
 	public Boolean getIsLineup() {
 		return isLineup;
 	}
 
 	public void setIsLineup(Boolean isLineup) {
 		this.isLineup = isLineup;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("MatchupRegister [%s, %s, %s, linenup=%b]",
+				squadMember == null ? "" : squadMember.toString(),
+				matchup.toString(),
+				position == null ? "" : position.toString(),
+				isLineup == null ? false : isLineup);
 	}
 }

@@ -7,8 +7,8 @@
 package com.footballun.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +35,7 @@ public class Squad extends BaseEntity implements Serializable {
 	
 	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
 	@JsonBackReference
-	private List<Matchup> matchups = new ArrayList<Matchup>();
+	private Set<Matchup> matchups = new LinkedHashSet<Matchup>();
 	
 	@OneToOne
 	@JoinColumn
@@ -64,11 +64,11 @@ public class Squad extends BaseEntity implements Serializable {
 	 * Getters/Setters
 	 */
 	
-	public List<Matchup> getMatchups() {
+	public Set<Matchup> getMatchups() {
 		return matchups;
 	}
 
-	public void setMatchups(List<Matchup> matchups) {
+	public void setMatchups(LinkedHashSet<Matchup> matchups) {
 		this.matchups = matchups;
 	}
 
@@ -115,6 +115,10 @@ public class Squad extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", team == null ? "" : team.toString(), generation == null ? "" : generation);
+		if ("First Team".equals(generation)) {
+			return String.format("%s", team == null ? "" : team.toString());
+		} else {
+			return String.format("%s (%s)", team == null ? "" : team.toString(), generation == null ? "" : generation);
+		}
 	}
 }

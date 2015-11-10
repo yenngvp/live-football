@@ -1,6 +1,7 @@
 package com.footballun.model;
 
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,5 +13,5 @@ import javax.persistence.Table;
 public class Group extends NamedEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
-	private List<Squad> squads; 
+	private Set<Squad> squads = new LinkedHashSet<Squad>(); 
 }
