@@ -139,7 +139,9 @@ public class FootballunServiceImpl implements FootballunService {
 	private void calculatePoint(Standing standing, Squad squad) {
 		logger.info("calculatePoint:", standing, squad);
 		for (Matchup match : squad.getMatchups()) {
+			logger.info("calculatePoint2 ");
 			MatchupResult result = match.getResultBySquad(squad);
+			logger.info("calculatePoint3 ");
 			if (result != MatchupResult.UNKNOWN) {
 				standing.setPlayed(standing.getPlayed() + 1);
 				if (result == MatchupResult.WIN) {

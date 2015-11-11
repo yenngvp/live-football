@@ -58,7 +58,7 @@ public class MatchupLiveRepositoryEventListener extends
     		footballunService.updateMatchup(match);
     		Iterator<Squad> itr = match.getSquads().iterator();
     		while (itr.hasNext()) {
-    			logger.debug("triggerMatchupUpdate");
+    			logger.debug("triggerSquadStaningUpdate");
     			footballunService.updateSquadStanding(itr.next());
     		}
     	}

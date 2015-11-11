@@ -32,7 +32,6 @@ public class MatchupRegister extends BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(nullable = false)
-//	@JsonBackReference
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Matchup matchup;
 	

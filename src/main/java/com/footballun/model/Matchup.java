@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -56,7 +55,6 @@ public class Matchup extends NamedEntity implements Serializable {
 	@JoinTable(name="matchup_squad",
 	joinColumns=@JoinColumn(name = "matchup_id"),
 	inverseJoinColumns=@JoinColumn(name = "squad_id"))
-//	@JsonManagedReference
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<Squad> squads = new LinkedHashSet<Squad>();
 	
@@ -66,13 +64,11 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
 	@OrderBy("position ASC")
-//	@JsonManagedReference
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<MatchupRegister> matchupRegisters = new LinkedHashSet<MatchupRegister>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
 	@OrderBy("updateMinute DESC, timestamp DESC")
-//	@JsonManagedReference
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Set<MatchupLive> matchupLives = new LinkedHashSet<MatchupLive>();
 	
@@ -340,12 +336,14 @@ public class Matchup extends NamedEntity implements Serializable {
 			return MatchupResult.WIN;
 		} else if (r == MatchupResult.DRAW) {
 			return MatchupResult.DRAW;
+		} else {
+			return MatchupResult.UNKNOWN;
 		}
-		return MatchupResult.UNKNOWN;
 	}
 	
 	private MatchupResult getMatchupResult() {
-		switch(this.result) {
+		short r = getResult() == null ? -1 : getResult();
+		switch(r) {
 		case 1: 
 			return MatchupResult.WIN;
 		case 2: 
