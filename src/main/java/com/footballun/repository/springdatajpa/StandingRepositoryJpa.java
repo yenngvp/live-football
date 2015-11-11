@@ -28,10 +28,10 @@ public interface StandingRepositoryJpa extends StandingRepository, JpaRepository
 	@Override
 	public List<Standing> findBySquad_CompetitionIdOrderByCurrentPositionAsc(Integer id) throws DataAccessException;
 	
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public Standing save(Standing standing) throws DataAccessException;
-//	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Standing save(Standing standing) throws DataAccessException;
+	
 	/**
 	 * Finds a standing by squad
 	 */

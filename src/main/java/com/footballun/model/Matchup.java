@@ -46,17 +46,17 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@OneToMany(mappedBy = "matchup", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@OrderBy("id ASC")
+	@OrderBy("matchup ASC")
 	private Set<MatchupDetail> details = new LinkedHashSet<MatchupDetail>();
-	
-
-	@OneToOne
-	@JoinColumn(name = "home_squad_id")
-	private Squad homeSquad;
 
 	@OneToOne
 	@JoinColumn
 	private Stadium stadium;
+	
+	@OneToOne
+	@JoinColumn
+	private Competition competition;
+	
 	
 	/**
 	 * Columns
@@ -77,17 +77,14 @@ public class Matchup extends NamedEntity implements Serializable {
 	@Column(name = "featured")
 	private Boolean featured;
 	
-	@Column(name = "squad1_goal")
-	private Short squad1Goal;
-	
-	@Column(name = "squad2_goal")
-	private Short squad2Goal;
-	
 	@Column(name = "result")
 	private Short result;
 	
 	@Column(name = "status")
 	private Short status;
+	
+	@Column(name = "manual_mode")
+	private Boolean manualMode;
 	
 	
 	/**
@@ -97,16 +94,8 @@ public class Matchup extends NamedEntity implements Serializable {
 	public String getName() {
 		if (super.getName() != null) return super.getName();
 		if (details == null || details.size() < 2) return ""; 
-		Iterator<MatchupDetail> itr = details.iterator();
-		StringBuilder matchName = new StringBuilder();
-		while (itr.hasNext()) {
-			matchName.append(itr.next().getSquad().getTeam().getName());
-			if (itr.hasNext()) {
-				matchName.append(" vs ");
-				matchName.append(itr.next().getSquad().getTeam().getName());
-			}
-		}
-		return matchName.toString();
+		
+		return getFirstDetail().getSquad().getTeam().getName() + " vs " + getSecondDetail().getSquad().getTeam().getName();
 	}
 	
 	public Set<MatchupDetail> getDetails() {
@@ -192,14 +181,13 @@ public class Matchup extends NamedEntity implements Serializable {
 	 */
 	private void refreshResult() {
 		if (getDetails().size() < 2) return;
-		
-		Iterator<MatchupDetail> itr = getDetails().iterator();
-		MatchupDetail firstSquad = itr.next();
-		MatchupDetail secondSquad = itr.next();
-		
-		if (firstSquad.getGoal() > secondSquad.getGoal()) {
+			
+		if (getStatus() == null || getStatus() == -1) {
+			setResult((short) -1); // match is not started yet or cancelled
+		}
+		if (getFirstDetail().getGoal() > getSecondDetail().getGoal()) {
 			setResult((short) 1); 
-		} else if (firstSquad.getGoal() < secondSquad.getGoal()) {
+		} else if (getFirstDetail().getGoal() < getSecondDetail().getGoal()) {
 			setResult((short) 2); 
 		} else {
 			setResult((short) 0); 
@@ -257,6 +245,22 @@ public class Matchup extends NamedEntity implements Serializable {
 		}
 	}
 	
+	public Competition getCompetition() {
+		return competition;
+	}
+
+	public void setCompetition(Competition competition) {
+		this.competition = competition;
+	}
+
+	public Boolean getManualMode() {
+		return manualMode;
+	}
+
+	public void setManualMode(Boolean manualMode) {
+		this.manualMode = manualMode;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Matchup [%s]", getName());

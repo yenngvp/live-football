@@ -22,7 +22,7 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
 		return configurationBuilder
-				.nameField( "matchup" )
+				.nameField( "squad" )
 				.build();
 	}
 
@@ -35,8 +35,8 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
-				.field( "matchup" ).caption( "Matchup" )
 				.field( "squad" ).caption( "Squad" )
+				.field( "matchup" ).caption( "Matchup" )
 				.field( "isHomeSquad" ).caption( "Home" )
 				.field( "isFirstSquad" ).caption( "First Squad" )
 				.field( "goal" ).caption( "Goal" )

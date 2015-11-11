@@ -15,4 +15,6 @@ public interface MatchupRepository {
 	List<Matchup> findByFeatured(Boolean featured) throws DataAccessException;
 	
 	Matchup save(Matchup matchup) throws DataAccessException;
+	
+	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
 }

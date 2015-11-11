@@ -4,6 +4,8 @@
  */
 package com.footballun.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -18,6 +20,17 @@ import javax.persistence.Table;
 @Table(name = "standing")
 public class Standing extends BaseEntity {
 
+	public Standing() {
+		super();
+		played = 0;
+		won = 0;
+		lost = 0;
+		drawn = 0;
+		point = 0;
+		previousPosition = 0;
+		currentPosition = 0;
+	}
+	
 	/**
 	 * Fields in relationship
 	 */
@@ -49,6 +62,10 @@ public class Standing extends BaseEntity {
 	@Column(name = "previous_position")
 	private Integer previousPosition;
 	
+	@Column(name = "timestamp")
+	private Date timestamp;
+	
+
 	/**
 	 * Getters/Setters
 	 */
@@ -114,6 +131,14 @@ public class Standing extends BaseEntity {
 
 	public void setPreviousPosition(Integer previousPosition) {
 		this.previousPosition = previousPosition;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	@Override

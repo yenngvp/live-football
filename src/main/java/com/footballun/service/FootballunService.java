@@ -40,6 +40,5 @@ public interface FootballunService {
 	 */
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
-	void updateSquadStanding(Squad squad) throws DataAccessException;
 	void refreshStanding(Integer competitionId) throws DataAccessException;
 }

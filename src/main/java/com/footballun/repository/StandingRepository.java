@@ -19,7 +19,7 @@ public interface StandingRepository {
 
 	List<Standing> findBySquad_CompetitionIdOrderByCurrentPositionAsc(Integer id) throws DataAccessException;
 	
-	//Standing save(Standing standing) throws DataAccessException;
+	Standing save(Standing standing) throws DataAccessException;
 	
 	/**
 	 * Finds a standing by squad

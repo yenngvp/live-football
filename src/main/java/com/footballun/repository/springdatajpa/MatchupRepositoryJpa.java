@@ -22,4 +22,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	@SuppressWarnings("unchecked")
 	@Override
 	Matchup save(Matchup matchup) throws DataAccessException;
+	
+	@Override
+	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
 }

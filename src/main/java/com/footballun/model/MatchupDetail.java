@@ -93,7 +93,7 @@ public class MatchupDetail extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return String.format("MatchupDetail [%s]", squad.toString());
+		return String.format("%s", squad.toString());
 	}
 	
 }

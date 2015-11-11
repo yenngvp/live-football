@@ -1,5 +1,7 @@
 package com.footballun.service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import com.footballun.repository.SquadRepository;
 import com.footballun.repository.CompetitionRepository;
 import com.footballun.repository.StandingRepository;
 import com.footballun.repository.springdatajpa.StandingRepositoryJpa;
+import com.footballun.util.PositionComparator;
 
 @Service
 public class FootballunServiceImpl implements FootballunService {
@@ -36,8 +39,6 @@ public class FootballunServiceImpl implements FootballunService {
 	private SquadMemberRepository squadMemberRepository;
 	@Autowired
 	private StandingRepository standingRepository;
-	@Autowired
-	private StandingRepositoryJpa standingRepositoryJpa;
 	@Autowired
 	private MatchupDetailRepository matchupDetailRepository;
 	
@@ -119,56 +120,73 @@ public class FootballunServiceImpl implements FootballunService {
 	@Override
 	@Transactional(readOnly = false)
 	public void saveStanding(Standing standing) throws DataAccessException {
-		standingRepositoryJpa.save(standing);
-//		standingRepository.save(standing);
+		standingRepository.save(standing);
 	}
 	
 	@Override
-	@Transactional(readOnly = false)
-	public void updateSquadStanding(Squad squad) throws DataAccessException {
-
-		Standing standing = standingRepository.findBySquad(squad);
-		if (standing == null) {
-			logger.info("updateSquadStanding new");
-			standing = new Standing();
-			standing.setSquad(squad);
-		}
-		calculatePoint(standing, squad);
-		standingRepositoryJpa.saveAndFlush(standing);
-		logger.info("updateSquadStanding saveAndFlush");
-	}
-	
-	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public void refreshStanding(Integer competitionId) throws DataAccessException {
 		if (competitionId == null) competitionId = 9;
+		/**
+		 * For each squad in the competition: calculate its result and update standing table accordingly
+		 */
+		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
+		for (Squad squad : squads) {
+			Standing standing = standingRepository.findBySquad(squad);
+			if (standing == null) {
+				logger.info("createNewStandingforSquad");
+				standing = new Standing();
+				standing.setSquad(squad);
+			}
+			
+			calculateSquadStanding(standing, squad, competitionId);
+			
+		}
+		
+		/**
+		 * Now we need to sort the table against all squads achievement
+		 */
+		// Gets all standings
 		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
 		
+		// Sorts positions
+		Collections.sort(standings, new PositionComparator());
+		// Update current position number we already get an ordered list of standings
+		int currentPosition = 1;
 		for (Standing standing : standings) {
-			calculatePoint(standing, standing.getSquad());
-			
-			standingRepositoryJpa.saveAndFlush(standing);
+			standing.setPreviousPosition(standing.getCurrentPosition());
+			standing.setCurrentPosition(currentPosition++);
+			// Persists the standing
+			standingRepository.save(standing);
 		}
 	}
 
-	private void calculatePoint(Standing standing, Squad squad) {
+	private void calculateSquadStanding(Standing standing, Squad squad, Integer competitionId) {
 		logger.info("calculatePoint:", standing, squad);
-//		for (Matchup match : squad.getMatchups()) {
-//			logger.info("calculatePoint2 ");
-//			MatchupResult result = match.getResultBySquad(squad);
-//			logger.info("calculatePoint3 ");
-//			if (result != MatchupResult.UNKNOWN) {
-//				standing.setPlayed(standing.getPlayed() + 1);
-//				if (result == MatchupResult.WIN) {
-//					standing.setWon(standing.getWon() + 1);
-//					standing.setPoint(standing.getPoint() + 3);
-//				} else if (result == MatchupResult.DRAW) {
-//					standing.setDrawn(standing.getDrawn() + 1);
-//					standing.setPoint(standing.getPoint() + 1);
-//				} else {
-//					standing.setLost(standing.getLost() + 1);
-//				}
-//			}
-//		}
+
+		// Finds all matches played by the squad in this competition
+		List<Matchup> matches = matchupRepository.findByCompetitionId(competitionId);
+		for (Matchup matchup : matches) {
+			MatchupResult result = matchup.getResultBySquad(squad);
+			if (result != MatchupResult.UNKNOWN) {
+				// Counts played match
+				standing.setPlayed(standing.getPlayed() + 1);
+				if (result == MatchupResult.WIN) {
+					// Counts WON match
+					standing.setWon(standing.getWon() + 1);
+					standing.setPoint(standing.getPoint() + 3); // 3 points for a win game
+				} else if (result == MatchupResult.DRAW) {
+					// Counts DRAWN match
+					standing.setDrawn(standing.getDrawn() + 1);
+					standing.setPoint(standing.getPoint() + 1); // 1 point for a draw game
+				} else {
+					// Counts LOST match
+					standing.setLost(standing.getLost() + 1);
+				}
+			}
+		}
+		
+		// Save the standing
+		standingRepository.save(standing);
 	}
 }
