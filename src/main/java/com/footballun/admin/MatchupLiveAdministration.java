@@ -15,7 +15,7 @@ import org.lightadmin.api.config.unit.FiltersConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.MatchupLive;
-import com.footballun.repository.MatchupLiveRepositoryEventListener;
+import com.footballun.repository.event.MatchupLiveRepositoryEventListener;
 
 /**
  * @author YenNguyen

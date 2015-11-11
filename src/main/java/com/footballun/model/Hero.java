@@ -10,9 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 @Entity
 @Table(name = "hero")
 public class Hero extends BaseEntity {
@@ -25,10 +22,6 @@ public class Hero extends BaseEntity {
 	@JoinColumn
 	private HeroStatus status;
 	
-	@OneToOne(mappedBy = "hero")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private SquadMember squadMember;
-		
 	/**
 	 * Columns
 	 */
@@ -108,14 +101,6 @@ public class Hero extends BaseEntity {
 
 	public void setStatus(HeroStatus status) {
 		this.status = status;
-	}
-
-	public SquadMember getSquadMember() {
-		return squadMember;
-	}
-
-	public void setSquadMember(SquadMember squadMember) {
-		this.squadMember = squadMember;
 	}
 	
 	@Override

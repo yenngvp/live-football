@@ -7,22 +7,14 @@
 package com.footballun.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "squad")
@@ -35,11 +27,6 @@ public class Squad extends BaseEntity implements Serializable {
 	 * Field in relationships
 	 */
 	
-	@ManyToMany(mappedBy = "squads",  fetch = FetchType.EAGER)
-//	@JsonBackReference
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private Set<Matchup> matchups = new LinkedHashSet<Matchup>();
-	
 	@OneToOne
 	@JoinColumn
 	private Team team;
@@ -51,10 +38,6 @@ public class Squad extends BaseEntity implements Serializable {
 	@OneToOne
 	@JoinColumn
 	private Competition competition;
-	
-	/*
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "squad", fetch = FetchType.EAGER)
-	private List<SquadMember> members;*/
 		
 	/**
 	 * Columns
@@ -66,15 +49,6 @@ public class Squad extends BaseEntity implements Serializable {
 	/**
 	 * Getters/Setters
 	 */
-	
-	public Set<Matchup> getMatchups() {
-		return matchups;
-	}
-
-	public void setMatchups(LinkedHashSet<Matchup> matchups) {
-		this.matchups = matchups;
-	}
-
 	public Team getTeam() {
 		return team;
 	}
@@ -106,15 +80,6 @@ public class Squad extends BaseEntity implements Serializable {
 	public void setGeneration(String generation) {
 		this.generation = generation;
 	}
-
-	/*
-	public List<SquadMember> getMembers() {
-		return members;
-	}
-
-	public void setMembers(List<SquadMember> members) {
-		this.members = members;
-	}*/
 
 	@Override
 	public String toString() {

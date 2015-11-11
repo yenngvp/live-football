@@ -1,8 +1,6 @@
 /**
- * 
- *
  * @author: yen.nt
- * @created on Oct 30, 2015
+ * @created on Nov 11, 2015
  */
 package com.footballun.admin;
 
@@ -14,28 +12,35 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import com.footballun.model.Squad;
+import com.footballun.model.MatchupDetail;
 
 /**
  * @author yen.nt
  *
  */
-public class SquadAdministration extends AdministrationConfiguration<Squad> {
-	
+public class MatchupDetailAdministration extends AdministrationConfiguration<MatchupDetail> {
+
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "Team" ).build();
+		return configurationBuilder
+				.nameField( "matchup" )
+				.build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Squads Administration" )
+				.screenName( "Matchup Details Administration" )
 				.build();
 	}
 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
-				.field( "team" ).caption( "Team" )
+				.field( "matchup" ).caption( "Matchup" )
+				.field( "squad" ).caption( "Squad" )
+				.field( "isHomeSquad" ).caption( "Home" )
+				.field( "isFirstSquad" ).caption( "First Squad" )
+				.field( "goal" ).caption( "Goal" )
 				.build();
 	}
+	
 }

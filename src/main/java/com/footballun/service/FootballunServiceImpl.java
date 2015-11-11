@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.footballun.model.Matchup;
 import com.footballun.model.Matchup.MatchupResult;
+import com.footballun.model.MatchupDetail;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
+import com.footballun.repository.MatchupDetailRepository;
 import com.footballun.repository.MatchupRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
@@ -36,6 +38,9 @@ public class FootballunServiceImpl implements FootballunService {
 	private StandingRepository standingRepository;
 	@Autowired
 	private StandingRepositoryJpa standingRepositoryJpa;
+	@Autowired
+	private MatchupDetailRepository matchupDetailRepository;
+	
 	
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
 
@@ -76,9 +81,19 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	@Override
-	public void updateMatchup(Matchup matchup) throws DataAccessException {
+	public void saveMatchup(Matchup matchup) throws DataAccessException {
 		matchupRepository.save(matchup);
 	}
+	
+	
+	/**
+	 * Matchup Detail's APIs
+	 */
+	@Override
+	public void saveMatchupDetail(MatchupDetail detail) throws DataAccessException {
+		matchupDetailRepository.save(detail);
+	}
+	
 	
 	/**
 	 * Squad Member's APIs implement
@@ -138,22 +153,22 @@ public class FootballunServiceImpl implements FootballunService {
 
 	private void calculatePoint(Standing standing, Squad squad) {
 		logger.info("calculatePoint:", standing, squad);
-		for (Matchup match : squad.getMatchups()) {
-			logger.info("calculatePoint2 ");
-			MatchupResult result = match.getResultBySquad(squad);
-			logger.info("calculatePoint3 ");
-			if (result != MatchupResult.UNKNOWN) {
-				standing.setPlayed(standing.getPlayed() + 1);
-				if (result == MatchupResult.WIN) {
-					standing.setWon(standing.getWon() + 1);
-					standing.setPoint(standing.getPoint() + 3);
-				} else if (result == MatchupResult.DRAW) {
-					standing.setDrawn(standing.getDrawn() + 1);
-					standing.setPoint(standing.getPoint() + 1);
-				} else {
-					standing.setLost(standing.getLost() + 1);
-				}
-			}
-		}
+//		for (Matchup match : squad.getMatchups()) {
+//			logger.info("calculatePoint2 ");
+//			MatchupResult result = match.getResultBySquad(squad);
+//			logger.info("calculatePoint3 ");
+//			if (result != MatchupResult.UNKNOWN) {
+//				standing.setPlayed(standing.getPlayed() + 1);
+//				if (result == MatchupResult.WIN) {
+//					standing.setWon(standing.getWon() + 1);
+//					standing.setPoint(standing.getPoint() + 3);
+//				} else if (result == MatchupResult.DRAW) {
+//					standing.setDrawn(standing.getDrawn() + 1);
+//					standing.setPoint(standing.getPoint() + 1);
+//				} else {
+//					standing.setLost(standing.getLost() + 1);
+//				}
+//			}
+//		}
 	}
 }

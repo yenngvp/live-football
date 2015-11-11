@@ -11,15 +11,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -35,8 +30,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class Matchup extends NamedEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private static final short SHORT_NUM_ZERO = (short) 0;
-	private static final short SHORT_NUM_ONE = (short) 1;
 	
 	public enum MatchupResult {
 		WIN (1),
@@ -51,30 +44,19 @@ public class Matchup extends NamedEntity implements Serializable {
 	 * Field in relationships
 	 */
 	
-	@ManyToMany(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
-	@JoinTable(name="matchup_squad",
-	joinColumns=@JoinColumn(name = "matchup_id"),
-	inverseJoinColumns=@JoinColumn(name = "squad_id"))
+	@OneToMany(mappedBy = "matchup", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private Set<Squad> squads = new LinkedHashSet<Squad>();
+	@OrderBy("id ASC")
+	private Set<MatchupDetail> details = new LinkedHashSet<MatchupDetail>();
 	
-	@OneToOne
-	@JoinColumn
-	private Stadium stadium;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
-	@OrderBy("position ASC")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private Set<MatchupRegister> matchupRegisters = new LinkedHashSet<MatchupRegister>();
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "matchup", fetch = FetchType.EAGER)
-	@OrderBy("updateMinute DESC, timestamp DESC")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private Set<MatchupLive> matchupLives = new LinkedHashSet<MatchupLive>();
-	
+
 	@OneToOne
 	@JoinColumn(name = "home_squad_id")
 	private Squad homeSquad;
+
+	@OneToOne
+	@JoinColumn
+	private Stadium stadium;
 	
 	/**
 	 * Columns
@@ -114,66 +96,25 @@ public class Matchup extends NamedEntity implements Serializable {
 	@Override
 	public String getName() {
 		if (super.getName() != null) return super.getName();
-		if (squads == null || squads.size() < 2) return ""; 
-		Iterator<Squad> itr = squads.iterator();
+		if (details == null || details.size() < 2) return ""; 
+		Iterator<MatchupDetail> itr = details.iterator();
 		StringBuilder matchName = new StringBuilder();
 		while (itr.hasNext()) {
-			matchName.append(itr.next().getTeam().getName());
+			matchName.append(itr.next().getSquad().getTeam().getName());
 			if (itr.hasNext()) {
 				matchName.append(" vs ");
-				matchName.append(itr.next().getTeam().getName());
+				matchName.append(itr.next().getSquad().getTeam().getName());
 			}
 		}
 		return matchName.toString();
 	}
 	
-	public Set<Squad> getSquads() {
-		return squads;
+	public Set<MatchupDetail> getDetails() {
+		return details;
 	}
 
-	public void setSquads(LinkedHashSet<Squad> squads) {
-		this.squads = squads;
-	}
-
-	public Squad getSquad1() {
-		if (squads == null || squads.size() < 2) {
-			return null;
-		}
-		Iterator<Squad> itr = squads.iterator();
-		return itr.next();
-	}
-	
-	public Squad getSquad2() {
-		if (squads == null || squads.size() < 2) {
-			return null;
-		}
-		Iterator<Squad> itr = squads.iterator();
-		itr.next(); // Strip the first element
-		return itr.next();
-	}
-	
-	public Set<MatchupRegister> getMatchupRegisters() {
-		return matchupRegisters;
-	}
-
-	public void setMatchupRegisters(LinkedHashSet<MatchupRegister> matchupRegisters) {
-		this.matchupRegisters = matchupRegisters;
-	}
-
-	public Set<MatchupLive> getMatchupLives() {
-		return matchupLives;
-	}
-
-	public void setMatchupLives(LinkedHashSet<MatchupLive> matchupLives) {
-		this.matchupLives = matchupLives;
-	}
-
-	public Squad getHomeSquad() {
-		return homeSquad;
-	}
-
-	public void setHomeSquad(Squad homeSquad) {
-		this.homeSquad = homeSquad;
+	public void setDetails(LinkedHashSet<MatchupDetail> details) {
+		this.details = details;
 	}
 
 	public Date getStartAt() {
@@ -243,59 +184,6 @@ public class Matchup extends NamedEntity implements Serializable {
 	public void setFeatured(Boolean featured) {
 		this.featured = featured == null ? Boolean.FALSE : featured;
 	}
-
-	public Short getSquad1Goal() {
-		return squad1Goal;
-	}
-
-	public void setSquad1Goal(Short squad1Goal) {
-		this.squad1Goal = squad1Goal == null ? 0 : squad1Goal;
-	}
-
-	public Short getSquad2Goal() {
-		return squad2Goal;
-	}
-
-	public void setSquad2Goal(Short squad2Goal) {
-		this.squad2Goal = squad2Goal == null ? 0 : squad2Goal;
-	}
-
-	public void recalculateResult() {
-
-		if (getMatchupLives().size() > 0 && (getStatus() == null || getStatus() < 0)) {
-			setStatus((short) 1);
-		}
-		
-		/*
-		 * Loops over all events off the match and counts for goals of both squads 
-		 */
-		short goal1 = SHORT_NUM_ZERO;
-		short goal2 = SHORT_NUM_ZERO;
-		for (MatchupLive live : getMatchupLives()) {
-			
-			if ("Goal".equals(live.getEvent().getName())) {
-				if (live.getMatchupRegister().getSquadMember().getSquad() == getSquad1()) {
-					// Found an scoring goal event for squad 1, count for one
-					goal1 += SHORT_NUM_ONE;
-				}
-				else if (live.getMatchupRegister().getSquadMember().getSquad() == getSquad2()) {
-					// Found an scoring goal event for squad 2, count for one
-					goal2 += SHORT_NUM_ONE;
-				}
-				else /* Some errors */ ;
-			}
-		}
-	
-		setSquad1Goal(goal1);
-		setSquad2Goal(goal2);
-		
-		refreshResult();
-		
-		final Logger logger = LoggerFactory.getLogger(Matchup.class);
-		String log = String.format("recalculateResult: goal1:%d saved %d, goal2:%d saved %d with result=%s",
-				goal1, getSquad1Goal(), goal2, getSquad2Goal(),  getResult().toString());
-		logger.info(log);
-	}
 	
 	/**
 	 * Refreshes match result.
@@ -303,27 +191,41 @@ public class Matchup extends NamedEntity implements Serializable {
 	 * If it's not started, result is unknown.
 	 */
 	private void refreshResult() {
-		if (getSquad1Goal() == null || getSquad2Goal() == null) {
-			setResult((short) -1); // result UNKNOWN 
-			return;
-		}
+		if (getDetails().size() < 2) return;
 		
-		if (getSquad1Goal() > getSquad2Goal()) {
-			// Squad 1 WIN
-			setResult((short) 1);
-		} else if (getSquad1Goal() < getSquad2Goal()) {
-			// Squad 1 LOSE
-			setResult((short) 2);
+		Iterator<MatchupDetail> itr = getDetails().iterator();
+		MatchupDetail firstSquad = itr.next();
+		MatchupDetail secondSquad = itr.next();
+		
+		if (firstSquad.getGoal() > secondSquad.getGoal()) {
+			setResult((short) 1); 
+		} else if (firstSquad.getGoal() < secondSquad.getGoal()) {
+			setResult((short) 2); 
 		} else {
-			// DRAWN
-			setResult((short) 0);
+			setResult((short) 0); 
 		}
 	}
 	
+	public MatchupDetail getFirstDetail() {
+		Iterator<MatchupDetail> itr = getDetails().iterator();
+		return itr.next();
+	}
+	
+	public MatchupDetail getSecondDetail() {
+		Iterator<MatchupDetail> itr = getDetails().iterator();
+		itr.next();
+		return itr.next();
+	}
+	
+	public MatchupDetail getDetailBySquad(Squad squad) {
+		return getFirstDetail().getSquad().equals(squad) ? getFirstDetail() : getSecondDetail();
+	}
+	
 	public MatchupResult getResultBySquad(Squad squad) {
-		if (getSquad1().equals(squad)) {
+		
+		if (getFirstDetail().getSquad().equals(squad)) {
 			return getMatchupResult();
-		} else if (getSquad2().equals(squad)) {
+		} else if (getSecondDetail().getSquad().equals(squad)) {
 			return getOppositeResult(getMatchupResult());
 		}
 		return MatchupResult.UNKNOWN;
@@ -357,7 +259,6 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("Matchup [Begin at %s]",
-				startAt != null ? startAt.toString() : "");
+		return String.format("Matchup [%s]", getName());
 	}
 }
