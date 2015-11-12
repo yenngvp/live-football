@@ -40,6 +40,8 @@ public class StandingAdministration extends AdministrationConfiguration<Standing
 				.field( "won" ).caption( "W" )
 				.field( "lost" ).caption( "L" )
 				.field( "drawn" ).caption( "D" )
+				.field( "goalsScored" ).caption( "GF" )
+				.field( "goalsAgainst" ).caption( "GA" )
 				.build();
 	}
 }

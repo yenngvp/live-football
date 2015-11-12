@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.footballun.model.MatchupStatus.MatchupStatusCode;
 
 /**
  * 
@@ -46,7 +47,7 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@OneToMany(mappedBy = "matchup", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@OrderBy("matchup ASC")
+	@OrderBy("id ASC")
 	private Set<MatchupDetail> details = new LinkedHashSet<MatchupDetail>();
 
 	@OneToOne
@@ -57,6 +58,9 @@ public class Matchup extends NamedEntity implements Serializable {
 	@JoinColumn
 	private Competition competition;
 	
+	@OneToOne
+	@JoinColumn(name = "status")
+	private MatchupStatus status;
 	
 	/**
 	 * Columns
@@ -79,9 +83,6 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@Column(name = "result")
 	private Short result;
-	
-	@Column(name = "status")
-	private Short status;
 	
 	@Column(name = "manual_mode")
 	private Boolean manualMode;
@@ -134,11 +135,11 @@ public class Matchup extends NamedEntity implements Serializable {
 	/**
 	 * @return: -1 Not started, 0: Full time, 1: First Half, 2: Second Half, 3: Half time, 4: Delayed or Cancelled
 	 */
-	public Short getStatus() {
+	public MatchupStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(MatchupStatus status) {
 		this.status = status;
 	}
 
@@ -180,9 +181,14 @@ public class Matchup extends NamedEntity implements Serializable {
 	 * If it's not started, result is unknown.
 	 */
 	private void refreshResult() {
-		if (getDetails().size() < 2) return;
+		
+		if (getDetails() == null || getDetails().size() < 2) return;
 			
-		if (getStatus() == null || getStatus() == -1) {
+		if (getStatus() == null 
+				|| MatchupStatusCode.NOT_BEGIN.equals(getStatus().getCode())
+				|| MatchupStatusCode.UNKNOWN.equals(getStatus().getCode())
+				|| MatchupStatusCode.POSTPOSED.equals(getStatus().getCode())
+				|| MatchupStatusCode.CANCELLED.equals(getStatus().getCode())) {
 			setResult((short) -1); // match is not started yet or cancelled
 		}
 		if (getFirstDetail().getGoal() > getSecondDetail().getGoal()) {
@@ -195,28 +201,78 @@ public class Matchup extends NamedEntity implements Serializable {
 	}
 	
 	public MatchupDetail getFirstDetail() {
+		if (getDetails() == null || getDetails().size() < 2) return null;
+		
 		Iterator<MatchupDetail> itr = getDetails().iterator();
-		return itr.next();
+		MatchupDetail first = itr.next();
+		MatchupDetail second = itr.next();
+		if (first.getIsFirstSquad()) {
+			return first;
+		} else if (second.getIsFirstSquad()) {
+			return second;
+		}
+		return first; // believe this has been sorted by detail id
 	}
 	
 	public MatchupDetail getSecondDetail() {
+		if (getDetails() == null || getDetails().size() < 2) return null;
+		
 		Iterator<MatchupDetail> itr = getDetails().iterator();
-		itr.next();
-		return itr.next();
+		MatchupDetail first = itr.next();
+		MatchupDetail second = itr.next();
+		if (first.getIsFirstSquad()) {
+			return second;
+		} else if (second.getIsFirstSquad()) {
+			return first;
+		}
+		return second; // believe this has been sorted by detail id
 	}
 	
 	public MatchupDetail getDetailBySquad(Squad squad) {
-		return getFirstDetail().getSquad().equals(squad) ? getFirstDetail() : getSecondDetail();
+		if (getDetails() == null || getDetails().size() < 2) return null;
+		
+		if (getFirstDetail().getSquad().equals(squad)) {
+			return getFirstDetail();
+		}
+		else if (getSecondDetail().getSquad().equals(squad)) {
+			return getSecondDetail();
+		} else {
+			return null;
+		}
+	}
+	
+	public Integer getGoalsScoredBySquad(Squad squad) {
+		MatchupDetail detail = getDetailBySquad(squad);
+		if (detail != null) {
+			return detail.getGoal();
+		} else {
+			return 0;
+		}
+	}
+	
+	public Integer getGoalsAgainstBySquad(Squad squad) {
+		if (getDetails() == null || getDetails().size() < 2) return 0;
+		
+		// Gets squad goals conceded in the match (it's equals to the apponent's goals scored)
+		if (getFirstDetail().getSquad().equals(squad)) {
+			return getSecondDetail().getGoal();
+		} else if (getSecondDetail().getSquad().equals(squad)) {
+			return getFirstDetail().getGoal();
+		} else {
+			return 0;
+		}
 	}
 	
 	public MatchupResult getResultBySquad(Squad squad) {
+		if (getDetails() == null || getDetails().size() < 2) return MatchupResult.UNKNOWN;
 		
 		if (getFirstDetail().getSquad().equals(squad)) {
 			return getMatchupResult();
 		} else if (getSecondDetail().getSquad().equals(squad)) {
 			return getOppositeResult(getMatchupResult());
+		} else {
+			return MatchupResult.UNKNOWN;
 		}
-		return MatchupResult.UNKNOWN;
 	}
 	
 	private MatchupResult getOppositeResult(MatchupResult r) {

@@ -4,8 +4,6 @@
  */
 package com.footballun.repository.event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
 
@@ -21,42 +19,52 @@ import com.footballun.service.FootballunService;
 public class MatchupLiveRepositoryEventListener extends 
 	AbstractRepositoryEventListener<MatchupLive> {
 
-	private final Logger logger = LoggerFactory.getLogger(MatchupLiveRepositoryEventListener.class);
-
 	@Autowired
 	private FootballunService footballunService;
 	
-	@Override
-    public void onBeforeSave(MatchupLive liveEvent) {
-  
-    }
- 
     @Override
-    public void onAfterSave(MatchupLive liveEvent) {
-              
-        triggerMatchupUpdate(liveEvent);
+    public void onAfterCreate(MatchupLive liveEvent) {
+        
+    	// Only do automatic live update in non-manual mode
+    	if (liveEvent != null 
+    			&& !liveEvent.getMatchup().getManualMode()
+    			&& "Goal".equals(liveEvent.getEvent().getName())) {
+    		triggerMatchupUpdate(liveEvent, false);	
+    	}
     }
  
     @Override
     public void onBeforeDelete(MatchupLive liveEvent) {
     	
-    	triggerMatchupUpdate(liveEvent);
+    	// Only do automatic live update in non-manual mode
+    	if (liveEvent != null 
+    			&& !liveEvent.getMatchup().getManualMode()
+    			&& "Goal".equals(liveEvent.getEvent().getName())) {
+    		triggerMatchupUpdate(liveEvent, true);	
+    	}
     }
     
-    private void triggerMatchupUpdate(MatchupLive liveEvent) {
+    private void triggerMatchupUpdate(MatchupLive liveEvent, boolean isDeleted) {
     	
-    	if (liveEvent != null) {
-    		/*
-    		 *  Update match result for this live event.
-    		 *  
-    		 *  Record one goal for one squad in the matchup
-    		 */
-    		// Update match detail
-    		Squad squad = liveEvent.getMatchupRegister().getSquadMember().getSquad();
-    		MatchupDetail matchDetail = liveEvent.getMatchup().getDetailBySquad(squad);
-    		matchDetail.setGoal(matchDetail.getGoal() + 1);
+    	if (!"Goal".equals(liveEvent.getEvent().getName())) {
+    		return;
+    	}
+    	/*
+    	 *  Update match result for this live event.
+    	 *  
+    	 *  Record one goal for one squad in the matchup
+    	 */
+    	// Update match detail
+    	Squad squad = liveEvent.getMatchupRegister().getSquadMember().getSquad();
+    	MatchupDetail matchDetail = liveEvent.getMatchup().getDetailBySquad(squad);
+    	if (matchDetail != null) {
+    		if (isDeleted) {
+    			matchDetail.setGoal(matchDetail.getGoal() - 1);
+    		} else {
+    			matchDetail.setGoal(matchDetail.getGoal() + 1);
+    		}
     		footballunService.saveMatchupDetail(matchDetail);
-    		
+
     		// Refresh standing
     		footballunService.refreshStanding(null);
     	}

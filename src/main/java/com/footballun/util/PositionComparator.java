@@ -16,12 +16,33 @@ public class PositionComparator implements Comparator<Standing> {
 
 	@Override
 	public int compare(Standing s1, Standing s2) {
+		// Compares point first
 		if (s1.getPoint() > s2.getPoint()) {
 			return -1;
 		}
 		if (s1.getPoint() < s2.getPoint()) {
 			return 1;
 		}
+		
+		// The same point, compare goals difference
+		int goalsDiff1 = s1.getGoalsScored() - s1.getGoalsAgainst();
+		int goalsDiff2 = s2.getGoalsScored() - s2.getGoalsAgainst();
+		if (goalsDiff1 > goalsDiff2) {
+			return -1;
+		}
+		else if (goalsDiff1 < goalsDiff2) {
+			return 1;
+		}
+		
+		// Still the same goals difference, do compare goals scored
+		if (s1.getGoalsScored() > s2.getGoalsScored()) {
+			return -1;
+		}
+		if (s1.getGoalsScored() < s2.getGoalsScored()) {
+			return 1;
+		}
+		
+		// The same position
 		return 0;
 	}
 

@@ -6,6 +6,8 @@ package com.footballun.repository;
 
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
+
 import com.footballun.model.SquadMember;
 
 /**
@@ -14,5 +16,6 @@ import com.footballun.model.SquadMember;
  */
 public interface SquadMemberRepository {
 
-	List<SquadMember> findBySquadId(Integer squadId);
+	List<SquadMember> findBySquadId(Integer squadId)  throws DataAccessException;
+	SquadMember findByHero_LastNameAndSquadId(String lastName, Integer squadId)  throws DataAccessException;
 }

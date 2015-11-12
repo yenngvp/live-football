@@ -4,6 +4,8 @@
  */
 package com.footballun.repository.springdatajpa;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.footballun.model.MatchupLive;
@@ -18,4 +20,10 @@ public interface MatchupLiveRepositoryJpa extends MatchupLiveRepository, CrudRep
 	@SuppressWarnings("unchecked")
 	@Override
 	public MatchupLive save(MatchupLive matchupLive);
+	
+	@Override
+	public void deleteAll();
+	
+	@Override
+	public List<MatchupLive> findAll();
 }

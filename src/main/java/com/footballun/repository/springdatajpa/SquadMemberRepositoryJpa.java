@@ -6,6 +6,7 @@ package com.footballun.repository.springdatajpa;
 
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.CrudRepository;
 
 import com.footballun.model.SquadMember;
@@ -18,6 +19,8 @@ import com.footballun.repository.SquadMemberRepository;
 public interface SquadMemberRepositoryJpa extends SquadMemberRepository, CrudRepository<SquadMember, Integer> {
 	
 	@Override
-	List<SquadMember> findBySquadId(Integer squadId);
+	List<SquadMember> findBySquadId(Integer squadId) throws DataAccessException;
 	
+	@Override
+	SquadMember findByHero_LastNameAndSquadId(String lastName, Integer squadId) throws DataAccessException;
 }

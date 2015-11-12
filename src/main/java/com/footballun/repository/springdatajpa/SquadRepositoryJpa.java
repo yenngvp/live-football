@@ -16,4 +16,10 @@ public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squa
 	
 	@Override
 	List<Squad> findByCompetitionIdAndGeneration(Integer competitionId, String generation) throws DataAccessException;
+	
+	@Override
+	Squad findById(Integer id) throws DataAccessException;
+	
+	@Override
+	Squad findByTeam_NameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
 }

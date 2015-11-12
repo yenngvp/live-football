@@ -13,11 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.footballun.model.Matchup;
 import com.footballun.model.Matchup.MatchupResult;
+import com.footballun.model.Event;
 import com.footballun.model.MatchupDetail;
+import com.footballun.model.MatchupLive;
+import com.footballun.model.MatchupRegister;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
+import com.footballun.repository.EventRepository;
 import com.footballun.repository.MatchupDetailRepository;
+import com.footballun.repository.MatchupLiveRepository;
+import com.footballun.repository.MatchupRegisterRepository;
 import com.footballun.repository.MatchupRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
@@ -41,6 +47,12 @@ public class FootballunServiceImpl implements FootballunService {
 	private StandingRepository standingRepository;
 	@Autowired
 	private MatchupDetailRepository matchupDetailRepository;
+	@Autowired
+	private MatchupLiveRepository matchupLiveRepository;
+	@Autowired
+	private EventRepository eventRepository;
+	@Autowired
+	private MatchupRegisterRepository matchupRegisterRepository;
 	
 	
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
@@ -56,7 +68,19 @@ public class FootballunServiceImpl implements FootballunService {
 		return squadRepository.findByCompetitionIdAndGeneration(competitionId, generation);
 		
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Squad findSquadById(Integer id) throws DataAccessException {
+		return squadRepository.findById(id);
+	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Squad findSquadByName(String name, Integer competitionId) throws DataAccessException {
+		return squadRepository.findByTeam_NameAndCompetitionId(name, competitionId);
+	}
+	
 	/**
 	 * Matchup's APIs implements
 	 */
@@ -86,6 +110,15 @@ public class FootballunServiceImpl implements FootballunService {
 		matchupRepository.save(matchup);
 	}
 	
+	@Override
+	public List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException {
+		return matchupRepository.findByCompetitionId(competitionId);
+	}
+	
+	@Override
+	public Matchup findMatchupById(Integer id) throws DataAccessException {
+		return matchupRepository.findById(id);
+	}
 	
 	/**
 	 * Matchup Detail's APIs
@@ -95,6 +128,25 @@ public class FootballunServiceImpl implements FootballunService {
 		matchupDetailRepository.save(detail);
 	}
 	
+	/**
+	 * Matchup Live's APIs
+	 */
+	// For testing purpose only
+	@Override
+	public void deleteAllMachupLives() throws DataAccessException {
+		matchupLiveRepository.deleteAll();
+	}
+	
+	@Override
+	@Transactional
+	public void saveMatchupLive(MatchupLive event) throws DataAccessException {
+		matchupLiveRepository.save(event);
+	}
+	
+	@Override
+	public List<MatchupLive> findAllMachupLives() throws DataAccessException {
+		return matchupLiveRepository.findAll();
+	}
 	
 	/**
 	 * Squad Member's APIs implement
@@ -106,6 +158,11 @@ public class FootballunServiceImpl implements FootballunService {
 		return squadMemberRepository.findBySquadId(squadId);
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public SquadMember findSquadMemberByLastNameAndSquad(String lastName, Integer squadId) throws DataAccessException {
+		return squadMemberRepository.findByHero_LastNameAndSquadId(lastName, squadId);
+	}
 	
 	/**
 	 * Standing's APIs
@@ -117,6 +174,12 @@ public class FootballunServiceImpl implements FootballunService {
 		return standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Standing findStandingBySquad(Squad squad) throws DataAccessException {
+		return standingRepository.findBySquad(squad);
+	}
+	
 	@Override
 	@Transactional(readOnly = false)
 	public void saveStanding(Standing standing) throws DataAccessException {
@@ -139,8 +202,13 @@ public class FootballunServiceImpl implements FootballunService {
 				standing.setSquad(squad);
 			}
 			
-			calculateSquadStanding(standing, squad, competitionId);
-			
+			// Resets current standing
+			// TODO: should be accumulated from just finished matches
+			standing.reset();
+			// Persists the standing
+			standingRepository.save(standing);
+		
+			calculateSquadStanding(standing, squad, competitionId);			
 		}
 		
 		/**
@@ -162,8 +230,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 
 	private void calculateSquadStanding(Standing standing, Squad squad, Integer competitionId) {
-		logger.info("calculatePoint:", standing, squad);
-
+		
 		// Finds all matches played by the squad in this competition
 		List<Matchup> matches = matchupRepository.findByCompetitionId(competitionId);
 		for (Matchup matchup : matches) {
@@ -183,10 +250,31 @@ public class FootballunServiceImpl implements FootballunService {
 					// Counts LOST match
 					standing.setLost(standing.getLost() + 1);
 				}
+				
+				standing.setGoalsScored(standing.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
+				standing.setGoalsAgainst(standing.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
 			}
 		}
 		
 		// Save the standing
 		standingRepository.save(standing);
+	}
+	
+
+	/**
+	 * Event's repo APIs
+	 */
+	@Override
+	public Event findEventByName(String name) throws DataAccessException {
+		return eventRepository.findByName(name);
+	}
+	
+
+	/**
+	 * Matchup Register's APIs
+	 */
+	@Override
+	public void saveMatchupRegister(MatchupRegister register) throws DataAccessException {
+		matchupRegisterRepository.save(register);
 	}
 }

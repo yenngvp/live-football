@@ -30,9 +30,8 @@ public class MatchupRegister extends BaseEntity {
 	private Position position;
 	
 	@OneToOne
-	@JoinColumn(nullable = false)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
-	private Matchup matchup;
+	@JoinColumn(name = "matchup_detail_id", nullable = false)
+	private MatchupDetail matchupDetail;
 	
 	/**
 	 * Columns
@@ -61,12 +60,12 @@ public class MatchupRegister extends BaseEntity {
 		this.position = position;
 	}
 
-	public Matchup getMatchup() {
-		return matchup;
+	public MatchupDetail getMatchupDetail() {
+		return matchupDetail;
 	}
 
-	public void setMatchup(Matchup matchup) {
-		this.matchup = matchup;
+	public void setMatchupDetail(MatchupDetail matchupDetail) {
+		this.matchupDetail = matchupDetail;
 	}
 
 	public Boolean getIsLineup() {
@@ -81,7 +80,7 @@ public class MatchupRegister extends BaseEntity {
 	public String toString() {
 		return String.format("MatchupRegister [%s, %s, %s, linenup=%b]",
 				squadMember == null ? "" : squadMember.toString(),
-				matchup.toString(),
+				matchupDetail.toString(),
 				position == null ? "" : position.toString(),
 				isLineup == null ? false : isLineup);
 	}

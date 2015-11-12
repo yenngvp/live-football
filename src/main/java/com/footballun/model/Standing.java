@@ -22,13 +22,11 @@ public class Standing extends BaseEntity {
 
 	public Standing() {
 		super();
-		played = 0;
-		won = 0;
-		lost = 0;
-		drawn = 0;
-		point = 0;
-		previousPosition = 0;
-		currentPosition = 0;
+		/*
+		 * It needs to initialize numbered fields to zero to avoid NPE when get its value because
+		 * when create a new Standing() instance these fields will be initialized to "null" by default. 
+		 */
+		reset();
 	}
 	
 	/**
@@ -42,30 +40,35 @@ public class Standing extends BaseEntity {
 	 * Columns
 	 */
 	@Column(name = "point")
-	private Integer point;
+	private int point;
 	
 	@Column(name = "played")
-	private Integer played;
+	private int played;
 	
 	@Column(name = "won")
-	private Integer won;
+	private int won;
 	
 	@Column(name = "lost")
-	private Integer lost;
+	private int lost;
 	
 	@Column(name = "drawn")
-	private Integer drawn;
+	private int drawn;
 	
 	@Column(name = "current_position")
-	private Integer currentPosition;
+	private int currentPosition;
 
 	@Column(name = "previous_position")
-	private Integer previousPosition;
+	private int previousPosition;
 	
 	@Column(name = "timestamp")
 	private Date timestamp;
 	
-
+	@Column(name = "goals_scored")
+	private int goalsScored;
+	
+	@Column(name = "goals_against")
+	private int goalsAgainst;
+	
 	/**
 	 * Getters/Setters
 	 */
@@ -77,59 +80,59 @@ public class Standing extends BaseEntity {
 		this.squad = squad;
 	}
 
-	public Integer getPoint() {
+	public int getPoint() {
 		return point;
 	}
 
-	public void setPoint(Integer point) {
+	public void setPoint(int point) {
 		this.point = point;
 	}
 
-	public Integer getPlayed() {
+	public int getPlayed() {
 		return played;
 	}
 
-	public void setPlayed(Integer played) {
+	public void setPlayed(int played) {
 		this.played = played;
 	}
 
-	public Integer getWon() {
+	public int getWon() {
 		return won;
 	}
 
-	public void setWon(Integer won) {
+	public void setWon(int won) {
 		this.won = won;
 	}
 
-	public Integer getLost() {
+	public int getLost() {
 		return lost;
 	}
 
-	public void setLost(Integer lost) {
+	public void setLost(int lost) {
 		this.lost = lost;
 	}
 
-	public Integer getDrawn() {
+	public int getDrawn() {
 		return drawn;
 	}
 
-	public void setDrawn(Integer drawn) {
+	public void setDrawn(int drawn) {
 		this.drawn = drawn;
 	}
 
-	public Integer getCurrentPosition() {
+	public int getCurrentPosition() {
 		return currentPosition;
 	}
 
-	public void setCurrentPosition(Integer currentPosition) {
+	public void setCurrentPosition(int currentPosition) {
 		this.currentPosition = currentPosition;
 	}
 
-	public Integer getPreviousPosition() {
+	public int getPreviousPosition() {
 		return previousPosition;
 	}
 
-	public void setPreviousPosition(Integer previousPosition) {
+	public void setPreviousPosition(int previousPosition) {
 		this.previousPosition = previousPosition;
 	}
 
@@ -141,6 +144,35 @@ public class Standing extends BaseEntity {
 		this.timestamp = timestamp;
 	}
 
+	
+	public int getGoalsScored() {
+		return goalsScored;
+	}
+
+	public void setGoalsScored(int goalsScored) {
+		this.goalsScored = goalsScored;
+	}
+
+	public int getGoalsAgainst() {
+		return goalsAgainst;
+	}
+
+	public void setGoalsAgainst(int goalsAgainst) {
+		this.goalsAgainst = goalsAgainst;
+	}
+
+	public void reset() {
+		played = 0;
+		won = 0;
+		lost = 0;
+		drawn = 0;
+		point = 0;
+		previousPosition = 0;
+		currentPosition = 0;
+		goalsScored = 0;
+		goalsAgainst = 0;	
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("Standing [%d, %s]", currentPosition, squad.toString());

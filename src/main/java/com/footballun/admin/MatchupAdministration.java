@@ -23,7 +23,7 @@ import com.footballun.model.Matchup;
 public class MatchupAdministration extends AdministrationConfiguration<Matchup> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "details" ).build();
+		return configurationBuilder.nameField( "name" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
@@ -36,6 +36,7 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
 				.field( "details" ).caption( "Details" )
+				.field( "status" ).caption( "Status" )
 				.field( "result" ).caption( "Result" )
 				.build();
 	}

@@ -35,7 +35,7 @@ public class MatchupLive extends BaseEntity {
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Matchup matchup;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "matchup_register_id")
 	private MatchupRegister matchupRegister;
 	
@@ -105,6 +105,6 @@ public class MatchupLive extends BaseEntity {
 				event == null ? "" : event.toString(),
 				updateMinute,
 				matchup == null ? "" : matchup.toString(),
-				timestamp.toString());
+				timestamp == null ? "" : timestamp.toString());
 	}
 }

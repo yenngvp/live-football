@@ -25,4 +25,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	
 	@Override
 	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
+	
+	@Override
+	Matchup findById(Integer id) throws DataAccessException;
 }

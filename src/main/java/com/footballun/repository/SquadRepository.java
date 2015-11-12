@@ -42,4 +42,5 @@ public interface SquadRepository {
      *          if not found
      */
     Squad findById(Integer id) throws DataAccessException;
+    Squad findByTeam_NameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
 }

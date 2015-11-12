@@ -13,6 +13,7 @@ import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.MatchupDetail;
+import com.footballun.repository.event.MatchupDetailRepositoryEventListener;
 
 /**
  * @author yen.nt
@@ -23,6 +24,7 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
 		return configurationBuilder
 				.nameField( "squad" )
+				.repositoryEventListener(MatchupDetailRepositoryEventListener.class)
 				.build();
 	}
 

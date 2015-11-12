@@ -17,4 +17,6 @@ public interface MatchupRepository {
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
 	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
+	
+	Matchup findById(Integer id) throws DataAccessException;
 }

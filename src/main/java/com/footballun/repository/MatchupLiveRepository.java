@@ -4,6 +4,8 @@
  */
 package com.footballun.repository;
 
+import java.util.List;
+
 import com.footballun.model.MatchupLive;
 
 /**
@@ -12,5 +14,9 @@ import com.footballun.model.MatchupLive;
  */
 public interface MatchupLiveRepository {
 
-	MatchupLive  save(MatchupLive  matchupLive);
+	MatchupLive save(MatchupLive  matchupLive);
+	
+	void deleteAll();
+	
+	List<MatchupLive> findAll();
 }

@@ -88,12 +88,13 @@ public class MatchupDetail extends BaseEntity {
 	}
 
 	public void setGoal(Integer goal) {
+		if (goal < 0) goal = 0;
 		this.goal = goal;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s", squad.toString());
+		return String.format("%s (%s)", squad.toString(), matchup.toString());
 	}
 	
 }
