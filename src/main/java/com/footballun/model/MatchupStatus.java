@@ -63,7 +63,7 @@ public class MatchupStatus extends NamedEntity {
 		}
 	}
 	
-	public String getNameByCode(MatchupStatusCode code) {
+	public static String getNameByCode(MatchupStatusCode code) {
 		switch (code) {
 		case NOT_BEGIN:
 			return "Not Begin";

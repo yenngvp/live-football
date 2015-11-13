@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
  *
  */
 @MappedSuperclass
-public class StandingBase extends BaseEntity {
+public abstract class StandingBase extends BaseEntity {
 
 	public StandingBase() {
 		super();

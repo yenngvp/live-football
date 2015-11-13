@@ -43,6 +43,6 @@ public class MatchupDetailRepositoryEventListener extends
     private void triggerMatchupUpdate(MatchupDetail matchDetail) {
 
     	// Refresh standing
-    	footballunService.refreshStanding(null);
+    	footballunService.refreshStanding(false, null);
     }
 }

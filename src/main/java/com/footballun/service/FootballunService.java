@@ -12,6 +12,7 @@ import com.footballun.model.MatchupRegister;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
+import com.footballun.model.StandingLive;
 
 public interface FootballunService {
 
@@ -57,8 +58,14 @@ public interface FootballunService {
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	Standing findStandingBySquad(Squad squad) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
-	void refreshStanding(Integer competitionId) throws DataAccessException;
+	void refreshStanding(boolean liveNow, Integer competitionId) throws DataAccessException;
 	
+	/**
+	 * Standing Live's APIs
+	 */
+	List<StandingLive> findStandingLiveByCompetition(Integer competitionId) throws DataAccessException;
+	StandingLive findStandingLiveBySquad(Squad squad) throws DataAccessException;
+	void saveStandingLive(StandingLive standing) throws DataAccessException;
 	
 	/**
 	 * Event's repo APIs

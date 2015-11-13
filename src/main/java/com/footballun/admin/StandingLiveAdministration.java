@@ -1,6 +1,6 @@
 /**
  * @author: yen.nt
- * @created on Nov 10, 2015
+ * @created on Nov 13, 2015
  */
 package com.footballun.admin;
 
@@ -12,13 +12,13 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import com.footballun.model.Standing;
+import com.footballun.model.StandingLive;
 
 /**
  * @author yen.nt
  *
  */
-public class StandingAdministration extends AdministrationConfiguration<Standing> {
+public class StandingLiveAdministration extends AdministrationConfiguration<StandingLive> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
 		return configurationBuilder.nameField( "squad" ).build();
@@ -26,13 +26,13 @@ public class StandingAdministration extends AdministrationConfiguration<Standing
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Standing Administration" )
+				.screenName( "Standing Live Administration" )
 				.build();
 	}
 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
-				.field( "standingLive" ).caption( "Live Now" )
+				.field( "standing" ).caption( "Standing" )
 				.field( "currentPosition" ).caption( "#" )
 				.field( "previousPosition" ).caption( "#prev" )
 				.field( "squad" ).caption( "Squad" )

@@ -37,7 +37,6 @@ public class Standing extends StandingBase {
 		this.standingLive = standingLive;
 	}
 	
-	
 	/**
 	 * Columns
 	 */
@@ -57,5 +56,4 @@ public class Standing extends StandingBase {
 	public void setEnteredLive(boolean enteredLive) {
 		this.enteredLive = enteredLive;
 	}
-	
 }

@@ -66,7 +66,7 @@ public class MatchupLiveRepositoryEventListener extends
     		footballunService.saveMatchupDetail(matchDetail);
 
     		// Refresh standing
-    		footballunService.refreshStanding(null);
+    		footballunService.refreshStanding(true, null);
     	}
     }
 }
