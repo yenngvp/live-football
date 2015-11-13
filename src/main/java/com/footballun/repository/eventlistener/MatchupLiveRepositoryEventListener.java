@@ -2,7 +2,7 @@
  * @author: yen.nt
  * @created on Nov 9, 2015
  */
-package com.footballun.repository.event;
+package com.footballun.repository.eventlistener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;

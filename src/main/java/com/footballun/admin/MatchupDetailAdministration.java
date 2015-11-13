@@ -13,7 +13,7 @@ import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.MatchupDetail;
-import com.footballun.repository.event.MatchupDetailRepositoryEventListener;
+import com.footballun.repository.eventlistener.MatchupDetailRepositoryEventListener;
 
 /**
  * @author yen.nt
