@@ -8,10 +8,12 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
     <import resource="mvc-view-config.xml"/>
 
@@ -77,4 +79,25 @@
         <!-- needed otherwise exceptions won't be logged anywhere -->
     </bean>
 
+	<!-- Tasks scheduling -->
+	<context:component-scan base-package="com.footballun.schedule" />
+	
+	<!-- The quartz scheduler configuration -->
+    <!-- <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/> -->
+    
+	<!--
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:executor id="myExecutor" pool-size="5"/>
+	<task:scheduler id="myScheduler" pool-size="10"/>
+	
+	<task:scheduled-tasks scheduler="myScheduler">
+        <task:scheduled ref="livescoreTask" method="testMethod" fixed-delay="1000" />
+    </task:scheduled-tasks>
+   
+	<bean id="livescoreTask" class="com.footballun.schedule.LivescoreSchedule"/>
+	<bean id="liveGameJobScheduler" class="com.footballun.schedule.MatchupScheduler"/>
+    -->
+    
+ 
+      
 </beans>

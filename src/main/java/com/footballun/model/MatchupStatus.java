@@ -19,6 +19,7 @@ public class MatchupStatus extends NamedEntity {
 	public enum MatchupStatusCode {
 		UNKNOWN,
 		NOT_BEGIN,
+		ENTER_COUNTDOWN,
 		JUST_BEGIN,
 		FIRST_HALF,
 		HALF_TIME,
@@ -58,6 +59,8 @@ public class MatchupStatus extends NamedEntity {
 			return MatchupStatusCode.POSTPOSED;
 		case "Cancelled":
 			return MatchupStatusCode.CANCELLED;
+		case "Enter Countdown":
+			return MatchupStatusCode.ENTER_COUNTDOWN;
 		default:
 			return MatchupStatusCode.UNKNOWN;
 		}
@@ -79,6 +82,8 @@ public class MatchupStatus extends NamedEntity {
 			return "Full Time";
 		case POSTPOSED:
 			return "Postposed";
+		case ENTER_COUNTDOWN:
+			return "Enter Countdown";
 		default:
 			return "Cancelled";
 		}

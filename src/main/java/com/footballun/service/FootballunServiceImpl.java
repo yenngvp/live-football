@@ -201,7 +201,6 @@ public class FootballunServiceImpl implements FootballunService {
 		// Currently in live mode
 		if (liveNow) {
 			
-
 			// Gets all (none live) standings
 			List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
 			
@@ -232,82 +231,53 @@ public class FootballunServiceImpl implements FootballunService {
 			matchStatusCodes.add(MatchupStatusCode.FIRST_HALF);
 			matchStatusCodes.add(MatchupStatusCode.HALF_TIME);
 			matchStatusCodes.add(MatchupStatusCode.SECOND_HALF);
-			recalculateStandingLive(competitionId, matchStatusCodes);	
-			
-			// Do live standing update
-			/**
-			 * Now we need to sort the table against all squads achievement
-			 */
-			// Gets all standings
-			List<StandingLive> liveStandings = standingLiveRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-			sortAndSaveStandings(liveStandings);
-			
+			recalculateStanding(competitionId, matchStatusCodes, true);	
 		} else {
+			
 			Collection<MatchupStatusCode> matchStatusCodes = new ArrayList<MatchupStatusCode>();
 			matchStatusCodes.add(MatchupStatusCode.FULL_TIME);
 			// Calculates standing against played matches with status 'FULL_TIME'
-			recalculateStanding(competitionId, matchStatusCodes);
-			
-
-			/**
-			 * Now we need to sort the table against all squads achievement
-			 */
-			// Gets all standings
-			List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-			sortAndSaveStandings(standings);
+			recalculateStanding(competitionId, matchStatusCodes, false);
 		}
 	}
 
-	private void recalculateStanding(Integer competitionId, Collection<MatchupStatusCode> matchStatusCodes) {
+	private void recalculateStanding(Integer competitionId, Collection<MatchupStatusCode> matchStatusCodes, boolean isLive) {
 		
 		/**
 		 * For each squad in the competition: calculate its result and update standing table accordingly
 		 */
 		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
+		StandingBase standing;
 		for (Squad squad : squads) {
-			Standing standing = standingRepository.findBySquad(squad);
+			standing = isLive ? standingLiveRepository.findBySquad(squad) : standingRepository.findBySquad(squad);
 			if (standing == null) {
-				logger.info("createNewStandingforSquad");
-				standing = new Standing();
+				standing = isLive ? new StandingLive() : new Standing();
 				standing.setSquad(squad);
 			}
 		
 			// Resets current standing
 			// TODO: should be accumulated from just finished matches
-			standing.reset();
+			if (!isLive) {
+				standing.reset();
+			}
 			calculateSquadStanding(standing, squad, matchStatusCodes, competitionId);			
 		}
 		
-
+		sortAndSaveStandings(competitionId, isLive);
 	}
 
-	private void recalculateStandingLive(Integer competitionId, Collection<MatchupStatusCode> matchStatusCodes) {
-		
-		/**
-		 * For each squad in the competition: calculate its result and update standing table accordingly
-		 */
-		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
-		
-		for (Squad squad : squads) {
-			StandingLive standing = standingLiveRepository.findBySquad(squad);
-			if (standing == null) {
-				// shouldn't be here 
-				throw new RuntimeException("Couldn't find Standing live for squad: " + squad.toString());
-			}
-	
-			calculateSquadStanding(standing, squad, matchStatusCodes, competitionId);			
-		}
-		
-
+	private void sortAndSaveStandings(Integer competitionId, boolean isLive) {
 		/**
 		 * Now we need to sort the table against all squads achievement
 		 */
 		// Gets all standings
-		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-		sortAndSaveStandings(standings);
-	}
-
-	private void sortAndSaveStandings(List<? extends StandingBase> standings) {
+		List<? extends StandingBase> standings;
+		if (isLive) {
+			standings = standingLiveRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		} else {
+			standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		}
+											  
 		// Sorts positions
 		Collections.sort(standings, new PositionComparator());
 		// Update current position number we already get an ordered list of standings
@@ -398,4 +368,13 @@ public class FootballunServiceImpl implements FootballunService {
 	public void saveMatchupRegister(MatchupRegister register) throws DataAccessException {
 		matchupRegisterRepository.save(register);
 	}
+	
+	/**
+	 * Matchup status service 
+	 */
+	@Override
+	public MatchupStatus findMatchupStatusByName(String name) throws DataAccessException {
+		return null; // TODO
+	}
+	
 }

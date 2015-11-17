@@ -40,4 +40,11 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.field( "result" ).caption( "Result" )
 				.build();
 	}
+	
+//	public FieldSetConfigurationUnit quickView( final FieldSetConfigurationUnitBuilder fragmentBuilder ) {
+//        return fragmentBuilder
+//				.field( "startAt" ).caption( "Start" )
+//				.field( "endAt" ).caption( "Finish" )
+//				.build();
+//    }
 }

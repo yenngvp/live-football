@@ -9,6 +9,7 @@ import com.footballun.model.Matchup;
 import com.footballun.model.MatchupDetail;
 import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
+import com.footballun.model.MatchupStatus;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
@@ -45,6 +46,12 @@ public interface FootballunService {
 	void deleteAllMachupLives() throws DataAccessException; 
 	List<MatchupLive> findAllMachupLives() throws DataAccessException; 
 	void saveMatchupLive(MatchupLive event) throws DataAccessException;
+	
+	/**
+	 * Matchup status service 
+	 */
+	MatchupStatus findMatchupStatusByName(String name) throws DataAccessException;
+	
 	
 	/**
 	 * Squad Member's APIs
