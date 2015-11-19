@@ -79,9 +79,6 @@
         <!-- needed otherwise exceptions won't be logged anywhere -->
     </bean>
 
-	<!-- Tasks scheduling -->
-	<context:component-scan base-package="com.footballun.schedule" />
-	
 	<!-- The quartz scheduler configuration -->
     <!-- <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/> -->
     

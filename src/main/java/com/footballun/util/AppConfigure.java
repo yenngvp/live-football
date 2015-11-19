@@ -9,83 +9,66 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.footballun.model.Setting;
+import com.footballun.service.FootballunService;
+
 
 /**
  * @author yen.nt
  *
  */
+@Component
 public class AppConfigure {
 	
-	/*
-	 * Default competition
-	 */
-	public static final int DEFAULT_COMPETITION = 9;
+	private final Logger logger = LoggerFactory.getLogger(AppConfigure.class);
+	
+	@Autowired
+	private FootballunService footballunService;
 
-	/*
-	 * Default matchup checking refresh interval
-	 */
-	public static final int MATCHUP_CHECK_INTERVAL_SECONDS = 5;
-	
-	private static AppConfigure instance;
-	
-	/*
-	 * Current user time zone setting
-	 */
-	private TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
-	
-	/*
-	 * Current user's country locale applied
-	 */
-	private Locale locale = Locale.ENGLISH;
-	
-	/*
- 	 * Starts point to do matchup countdown (in miliseconds) 
-	 */
-	private int startCountDownInMiliseconds = 24 * 7;
-	
-	private AppConfigure() {}
-	
-	
-	public synchronized  static AppConfigure getSingleton() {
-		if (instance == null) {
-			instance = new AppConfigure();
-		}
-		return instance;
+	public static long HOUR_TO_MILLISECONDS = 60 * 60 * 60 * 1000;
+		
+	public Setting getSetting() {
+		return footballunService.getSetting(1);
 	}
 	
 	public int getCurrentCompetition() {
-		return DEFAULT_COMPETITION;
+		return getSetting().getCompetition().getId();
 	}
 	
 	public TimeZone getTimeZone() {
-		return timeZone;
+		return TimeZone.getTimeZone(getSetting().getTimeZoneId());
 	}
 	
-	public void setTimeZone(TimeZone timeZone) {
-		this.timeZone = timeZone;
+	public Calendar getServerCalendarUTC() {
+		if (getSetting().getOverrideServerTime() != null) {
+			Calendar overrideCalendar = GregorianCalendar.getInstance();
+			overrideCalendar.setTime(getSetting().getOverrideServerTime());
+			logger.warn("The server time used for the calendar has been overriden. Watch out!");
+			return overrideCalendar;
+		} else {
+			// Current server time
+			return GregorianCalendar.getInstance();
+		}
 	}
-	
-	public Calendar getCurrentCalendar() {
-		return GregorianCalendar.getInstance(timeZone, getLocale());
-	}
-
 
 	public Locale getLocale() {
-		return locale;
+		return Locale.US;
 	}
 
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
+	public long getStartCountDownInMiliseconds() {
+		return getSetting().getStartCountdown() * HOUR_TO_MILLISECONDS;
 	}
-
-
-	public int getStartCountDownInMiliseconds() {
-		return startCountDownInMiliseconds;
+	
+	public int getMatchStatusTrackerInterval() {
+		return getSetting().getMatchStatusTrackerInterval();
 	}
-
-
-	public void setStartCountDownInMiliseconds(int startCountDown) {
-		this.startCountDownInMiliseconds = startCountDown;
+	
+	public int getDefaultMatchDuration() {
+		return getSetting().getDefaultMatchDuration();
 	}
 }

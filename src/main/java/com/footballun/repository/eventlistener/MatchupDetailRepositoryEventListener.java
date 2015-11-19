@@ -23,26 +23,21 @@ public class MatchupDetailRepositoryEventListener extends
 	
 	@Override
     public void onAfterSave(MatchupDetail matchDetail) {
-		
-		// Only do trigger update if in manualMode only or it will be duplicated with MatchupLive event listener already do this
-		if (matchDetail != null && matchDetail.getMatchup().getManualMode()) {
+
+		// On save matchupDetail event, do recalculate associated matchup result
+		if (matchDetail != null) {
 			triggerMatchupUpdate(matchDetail);
 		}
 	}
 	
-	@Override
-    public void onBeforeDelete(MatchupDetail matchDetail) {
-    	
-		// Shouldn't go here, we don't expect match detail deletion but still handle it to enforce data consistency
-		if (matchDetail != null
-				&& matchDetail.getMatchup().getManualMode()) {
-			triggerMatchupUpdate(matchDetail);
-		}
-    }
-    
     private void triggerMatchupUpdate(MatchupDetail matchDetail) {
 
-    	// Refresh standing
-    	footballunService.refreshStanding(false, null);
+    	// Updates matchup detail
+    	matchDetail.getMatchup().setDetail(matchDetail);
+    	// Persists matchup
+    	footballunService.saveMatchup(matchDetail.getMatchup());
+    	
+    	// Trigger service update
+    	footballunService.onUpdateMatchup(matchDetail.getMatchup());
     }
 }

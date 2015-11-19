@@ -23,7 +23,7 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
 		return configurationBuilder
-				.nameField( "squad" )
+				.nameField( "name" )
 				.repositoryEventListener(MatchupDetailRepositoryEventListener.class)
 				.build();
 	}

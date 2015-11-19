@@ -34,11 +34,16 @@ public class NamedEntity extends BaseEntity {
 
 
     public void setName(String name) {
-        this.name = name;
+    	// Limit maximum length of the entity's name
+    	if (name == null || name.length() < 45) {
+    		this.name = name;
+    	} else {
+    		this.name = name.substring(0, 44);
+    	}
     }
 
     public String getName() {
-        return this.name;
+    	return this.name;
     }
 
     @Override

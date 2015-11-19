@@ -7,6 +7,7 @@ package com.footballun.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,17 +22,24 @@ public class MatchupRegister extends BaseEntity {
 	 * Field in relationships
 	 */
 	
-	@OneToOne
-	@JoinColumn(name = "squad_member_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "squad_member_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private SquadMember squadMember;
 	
 	@OneToOne
 	@JoinColumn
 	private Position position;
 	
-	@OneToOne
-	@JoinColumn(name = "matchup_detail_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "matchup_detail_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private MatchupDetail matchupDetail;
+	
+	@ManyToOne
+	@JoinColumn(name = "matchup_id", nullable = false)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+	private Matchup matchup;
 	
 	/**
 	 * Columns
@@ -76,6 +84,14 @@ public class MatchupRegister extends BaseEntity {
 		this.isLineup = isLineup;
 	}
 	
+	public Matchup getMatchup() {
+		return matchup;
+	}
+
+	public void setMatchup(Matchup matchup) {
+		this.matchup = matchup;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("MatchupRegister [%s, %s, %s, linenup=%b]",

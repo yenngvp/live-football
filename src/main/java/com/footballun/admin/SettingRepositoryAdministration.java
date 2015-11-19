@@ -1,6 +1,6 @@
 /**
  * @author: yen.nt
- * @created on Nov 10, 2015
+ * @created on Nov 18, 2015
  */
 package com.footballun.admin;
 
@@ -12,41 +12,33 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import com.footballun.model.Standing;
-import com.footballun.repository.eventlistener.StandingRepositoryEventListener;
+import com.footballun.model.Setting;
 
 /**
  * @author yen.nt
  *
  */
-public class StandingAdministration extends AdministrationConfiguration<Standing> {
+public class SettingRepositoryAdministration extends
+		AdministrationConfiguration<Setting> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder
-				.nameField( "squad" )
-				.repositoryEventListener(StandingRepositoryEventListener.class)
-				.build();
+		return configurationBuilder.nameField( "name" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
 		return screenContextBuilder
-				.screenName( "Standing Administration" )
+				.screenName( "Settings Administration" )
 				.build();
 	}
 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
-				.field( "standingLive" ).caption( "Live Now" )
-				.field( "currentPosition" ).caption( "#" )
-				.field( "previousPosition" ).caption( "#prev" )
-				.field( "squad" ).caption( "Squad" )
-				.field( "point" ).caption( "Point" )
-				.field( "played" ).caption( "Played" )
-				.field( "won" ).caption( "W" )
-				.field( "lost" ).caption( "L" )
-				.field( "drawn" ).caption( "D" )
-				.field( "goalsScored" ).caption( "GF" )
-				.field( "goalsAgainst" ).caption( "GA" )
+				.field( "id" ).caption( "ID" )
+				.field( "name" ).caption( "Team" )
+				.field( "competition" ).caption( "Selected Competition" )
+				.field( "timeZoneId" ).caption( "TimeZone" )
+				.field( "overrideServerTime" ).caption( "Override Server Time" )
+				.field( "startCountdown" ).caption( "Start Countdown (hours)" )
 				.build();
 	}
 }

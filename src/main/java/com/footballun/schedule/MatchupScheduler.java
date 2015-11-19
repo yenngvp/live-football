@@ -42,6 +42,9 @@ public class MatchupScheduler implements SchedulingConfigurer   {
 	@Autowired
 	private MatchupStatusUpdateTask matchupStatusUpdateTask;
 	
+	@Autowired
+	private AppConfigure appConfigure;
+	
     @Bean(destroyMethod = "shutdown")
     public Executor taskExecutor() {
         return Executors.newScheduledThreadPool(2);
@@ -66,7 +69,7 @@ public class MatchupScheduler implements SchedulingConfigurer   {
                         Calendar nextExecutionTime =  new GregorianCalendar();
                         Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
                         nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
-                        nextExecutionTime.add(Calendar.SECOND, AppConfigure.MATCHUP_CHECK_INTERVAL_SECONDS); //you can get the value from wherever you want
+                        nextExecutionTime.add(Calendar.SECOND, appConfigure.getMatchStatusTrackerInterval()); //you can get the value from wherever you want
                         return nextExecutionTime.getTime();
                     }
                 }

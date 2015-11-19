@@ -24,7 +24,7 @@ public abstract class StandingBase extends BaseEntity {
 		 * It needs to initialize numbered fields to zero to avoid NPE when get its value because
 		 * when create a new Standing() instance these fields will be initialized to "null" by default. 
 		 */
-		reset();
+		resetAll();
 	}
 	
 	/**
@@ -159,16 +159,20 @@ public abstract class StandingBase extends BaseEntity {
 		this.goalsAgainst = goalsAgainst;
 	}
 
-	public void reset() {
+	public void resetAchievement() {
 		played = 0;
 		won = 0;
 		lost = 0;
 		drawn = 0;
 		point = 0;
+		goalsScored = 0;
+		goalsAgainst = 0;
+	}
+	
+	public void resetAll() {
+		resetAchievement();
 		previousPosition = 0;
 		currentPosition = 0;
-		goalsScored = 0;
-		goalsAgainst = 0;	
 	}
 	
 	@Override

@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import com.footballun.model.Competition;
 import com.footballun.model.Event;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupDetail;
 import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
+import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
@@ -34,6 +36,11 @@ public interface FootballunService {
 	void saveMatchup(Matchup matchup) throws DataAccessException;
 	Matchup findMatchupById(Integer id) throws DataAccessException;
 	
+	void onStartMatchup(Matchup matchup);
+	void onFinishMatchup(Matchup matchup);
+	void onUpdateMatchup(Matchup matchup);
+	
+	
 	/**
 	 * Matchup Detail's APIs
 	 */
@@ -51,6 +58,11 @@ public interface FootballunService {
 	 * Matchup status service 
 	 */
 	MatchupStatus findMatchupStatusByName(String name) throws DataAccessException;
+	MatchupStatus getMatchupStatusJustBegin() throws DataAccessException;
+	MatchupStatus getMatchupStatusLive() throws DataAccessException;
+	MatchupStatus getMatchupStatusJustFullTime() throws DataAccessException;
+	MatchupStatus getMatchupStatusFullTime() throws DataAccessException;
+	MatchupStatus getMatchupStatusCountdown() throws DataAccessException;
 	
 	
 	/**
@@ -65,7 +77,9 @@ public interface FootballunService {
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	Standing findStandingBySquad(Squad squad) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
-	void refreshStanding(boolean liveNow, Integer competitionId) throws DataAccessException;
+	void refreshStanding(int competitionId) throws DataAccessException;
+	Standing createStandingForSquad(Squad squad);
+	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	
 	/**
 	 * Standing Live's APIs
@@ -84,4 +98,16 @@ public interface FootballunService {
 	 * Matchup Register's APIs
 	 */
 	void saveMatchupRegister(MatchupRegister register) throws DataAccessException;
+	
+	
+	/**
+	 * Setting services
+	 */
+	Setting getSetting(int id) throws DataAccessException;
+	void saveSetting(Setting setting) throws DataAccessException;
+	
+	/**
+	 * Competition services
+	 */
+	Competition findCompetitionById(Integer id) throws DataAccessException;
 }

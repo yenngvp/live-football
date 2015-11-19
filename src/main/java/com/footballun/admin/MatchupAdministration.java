@@ -15,6 +15,7 @@ import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.Matchup;
+import com.footballun.repository.eventlistener.MatchupRepositoryEventListener;
 
 /**
  * @author yen.nt
@@ -23,7 +24,10 @@ import com.footballun.model.Matchup;
 public class MatchupAdministration extends AdministrationConfiguration<Matchup> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "name" ).build();
+		return configurationBuilder
+				.nameField( "name" )
+				.repositoryEventListener(MatchupRepositoryEventListener.class)
+				.build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
@@ -38,13 +42,8 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.field( "details" ).caption( "Details" )
 				.field( "status" ).caption( "Status" )
 				.field( "result" ).caption( "Result" )
+				.field( "startAt" ).caption( "Start" )
+				.field( "endAt" ).caption( "Finish" )
 				.build();
 	}
-	
-//	public FieldSetConfigurationUnit quickView( final FieldSetConfigurationUnitBuilder fragmentBuilder ) {
-//        return fragmentBuilder
-//				.field( "startAt" ).caption( "Start" )
-//				.field( "endAt" ).caption( "Finish" )
-//				.build();
-//    }
 }

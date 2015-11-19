@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -67,9 +69,11 @@ public class Matchup extends NamedEntity implements Serializable {
 	 */
 	
 	@Column(name = "start_at")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startAt;
 	
 	@Column(name = "end_at")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date endAt;
 	
 	@Column(name = "matchday")
@@ -96,7 +100,8 @@ public class Matchup extends NamedEntity implements Serializable {
 		if (super.getName() != null) return super.getName();
 		if (details == null || details.size() < 2) return ""; 
 		
-		return getFirstDetail().getSquad().getTeam().getName() + " vs " + getSecondDetail().getSquad().getTeam().getName();
+		super.setName(getFirstDetail().getSquad().getTeam().getName() + " vs " + getSecondDetail().getSquad().getTeam().getName());
+		return super.getName();
 	}
 	
 	public Set<MatchupDetail> getDetails() {
@@ -105,8 +110,24 @@ public class Matchup extends NamedEntity implements Serializable {
 
 	public void setDetails(LinkedHashSet<MatchupDetail> details) {
 		this.details = details;
+		refreshResult(); // Refreshes match result whenever match's details has changed
 	}
 
+	public void setDetail(MatchupDetail detail) {
+		if (getFirstDetail().equals(detail)) {
+			// Replaces the first detail width new detail
+			MatchupDetail second = getSecondDetail();
+			getDetails().removeAll(getDetails());
+			getDetails().add(detail);
+			getDetails().add(second);
+		} else if (getSecondDetail().equals(detail)) {
+			// Replaces the second detail width new detail
+			getDetails().remove(getSecondDetail());
+			getDetails().add(detail);
+		}
+		refreshResult(); // Refreshes match result whenever match's details has changed
+	}
+	
 	public Date getStartAt() {
 		return startAt;
 	}
@@ -180,7 +201,7 @@ public class Matchup extends NamedEntity implements Serializable {
 	 * 
 	 * If it's not started, result is unknown.
 	 */
-	private void refreshResult() {
+	public void refreshResult() {
 		
 		if (getDetails() == null || getDetails().size() < 2) return;
 			
@@ -319,6 +340,6 @@ public class Matchup extends NamedEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Matchup [%s]", getName());
+		return String.format("[%s]", getName());
 	}
 }

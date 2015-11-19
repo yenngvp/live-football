@@ -37,7 +37,13 @@ public class MatchupLive extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "matchup_register_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private MatchupRegister matchupRegister;
+	
+	@ManyToOne
+	@JoinColumn(name = "matchup_detail_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+	private MatchupDetail matchupDetail;
 	
 	@OneToOne
 	@JoinColumn
@@ -98,6 +104,14 @@ public class MatchupLive extends BaseEntity {
 		this.updateMinute = updateMinute;
 	}
 	
+	public MatchupDetail getMatchupDetail() {
+		return matchupDetail;
+	}
+
+	public void setMatchupDetail(MatchupDetail matchupDetail) {
+		this.matchupDetail = matchupDetail;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("MatchupLive [%s %s at minute %d in %s at %s]", 

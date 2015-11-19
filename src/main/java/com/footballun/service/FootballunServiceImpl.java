@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.footballun.model.Competition;
 import com.footballun.model.Event;
 import com.footballun.model.Matchup;
 import com.footballun.model.Matchup.MatchupResult;
@@ -21,6 +22,7 @@ import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
+import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
@@ -32,6 +34,8 @@ import com.footballun.repository.MatchupDetailRepository;
 import com.footballun.repository.MatchupLiveRepository;
 import com.footballun.repository.MatchupRegisterRepository;
 import com.footballun.repository.MatchupRepository;
+import com.footballun.repository.MatchupStatusRepository;
+import com.footballun.repository.SettingRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
 import com.footballun.repository.springdatajpa.StandingLiveRepository;
@@ -61,6 +65,18 @@ public class FootballunServiceImpl implements FootballunService {
 	private EventRepository eventRepository;
 	@Autowired
 	private MatchupRegisterRepository matchupRegisterRepository;
+	@Autowired
+	private MatchupStatusRepository matchupStatusRepository;
+	@Autowired
+	private SettingRepository settingRepository;
+		
+	private MatchupStatus statusCountdown;
+	private MatchupStatus statusJustBegin;
+	private MatchupStatus statusLive;
+	private MatchupStatus statusJustFullTime;
+	private MatchupStatus statusFullTime;
+	
+	private Setting setting;
 	
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
 
@@ -193,144 +209,227 @@ public class FootballunServiceImpl implements FootballunService {
 		standingRepository.save(standing);
 	}
 	
+	/**
+	 * One start matchup, copy current standing to standing live 
+	 * 
+	 * @param matchup
+	 */
 	@Override
 	@Transactional
-	public void refreshStanding(boolean liveNow, Integer competitionId) throws DataAccessException {
-		if (competitionId == null) competitionId = 9;
+	public void onStartMatchup(Matchup matchup) {
+		// testing only
+		createStandingForCompetition(matchup.getCompetition().getId());
 		
-		// Currently in live mode
-		if (liveNow) {
-			
-			// Gets all (none live) standings
-			List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-			
-			// Go over all standing and check for live standings have been created or not, if not create it
-			StandingLive live;
-			for (Standing standing : standings) {
-				if (!standing.getEnteredLive()) {
-					standing.setEnteredLive(true);
-					
-					// Creates standing live instance
-					live = new StandingLive();
-					live.setStanding(standing);
-				} else {
-					// Query for existing live standing object
-					live = standing.getStandingLive();
-				}
-				
-				// Copy all standing values to live standing against StandingBase class properties,
-				// Remember to back live object' ID before copy and restore it after that.
-				Integer id = live.getId();
-				BeanUtils.copyProperties(standing, live, StandingBase.class);
-				live.setId(id);
-				standingLiveRepository.save(live);	
-			}
-			
-			// Calculates standing against played matches with status 'FULL_TIME'
-			Collection<MatchupStatusCode> matchStatusCodes = new ArrayList<MatchupStatusCode>();
-			matchStatusCodes.add(MatchupStatusCode.FIRST_HALF);
-			matchStatusCodes.add(MatchupStatusCode.HALF_TIME);
-			matchStatusCodes.add(MatchupStatusCode.SECOND_HALF);
-			recalculateStanding(competitionId, matchStatusCodes, true);	
-		} else {
-			
-			Collection<MatchupStatusCode> matchStatusCodes = new ArrayList<MatchupStatusCode>();
-			matchStatusCodes.add(MatchupStatusCode.FULL_TIME);
-			// Calculates standing against played matches with status 'FULL_TIME'
-			recalculateStanding(competitionId, matchStatusCodes, false);
+		// Checks status
+		if (matchup.getStatus().getCode() != MatchupStatusCode.JUST_BEGIN) {
+			return;
 		}
-	}
-
-	private void recalculateStanding(Integer competitionId, Collection<MatchupStatusCode> matchStatusCodes, boolean isLive) {
 		
-		/**
-		 * For each squad in the competition: calculate its result and update standing table accordingly
-		 */
-		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
-		StandingBase standing;
+		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
 		for (Squad squad : squads) {
-			standing = isLive ? standingLiveRepository.findBySquad(squad) : standingRepository.findBySquad(squad);
-			if (standing == null) {
-				standing = isLive ? new StandingLive() : new Standing();
-				standing.setSquad(squad);
-			}
-		
-			// Resets current standing
-			// TODO: should be accumulated from just finished matches
-			if (!isLive) {
-				standing.reset();
-			}
-			calculateSquadStanding(standing, squad, matchStatusCodes, competitionId);			
+			copyStandingToStandingLive(squad);
 		}
 		
-		sortAndSaveStandings(competitionId, isLive);
+		// Update matchup's status
+		matchup.setStatus(getMatchupStatusLive());
+		matchupRepository.save(matchup);
+	}
+	
+	/**
+	 * Refreshes the standing for the squad and overall
+	 * @param matchup
+	 */
+	@Override
+	@Transactional
+	public void onFinishMatchup(Matchup matchup) {
+		// Checks status
+		if (matchup.getStatus().getCode() != MatchupStatusCode.JUST_FULL_TIME) {
+			return;
+		}
+		
+		// Update matchup result
+		onUpdateMatchup(matchup);
+		
+		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
+		for (Squad squad : squads) {
+			copyStandingToStandingLive(squad);
+		}
+		
+		matchup.setStatus(getMatchupStatusFullTime());
+		matchupRepository.save(matchup);
+	}
+	
+	@Override
+	@Transactional
+	public void onUpdateMatchup(Matchup matchup) {
+		// Checks status (only accepts LIVE or JUST_FULL_TIME)
+		if (matchup.getStatus().getCode() != MatchupStatusCode.LIVE
+				&& matchup.getStatus().getCode() != MatchupStatusCode.JUST_FULL_TIME) {
+			return;
+		}
+		
+		accumulateStandingForMatchup(matchup, true);
+		refreshStanding(matchup.getCompetition().getId());
+	}
+	
+	private void copyStandingToStandingLive(Squad squad) {
+		Standing standing = standingRepository.findBySquad(squad);
+		if (standing != null && standing.getStandingLive() != null) {
+			// Syncs
+			Integer id = standing.getStandingLive().getId(); // don't want to copy its ID, keeps a backup
+			BeanUtils.copyProperties(standing, standing.getStandingLive(), StandingBase.class);
+			standing.getStandingLive().setId(id);
+			standingLiveRepository.save(standing.getStandingLive());
+		}
+	}
+	
+	@Override
+	@Transactional
+	public void refreshStanding(int competitionId) throws DataAccessException {
+		
+		// Gets all current squads standing
+		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		
+		sortAndSaveStandings(competitionId, standings);
+	}
+	
+	/**
+	 * Creates table for all squads off the competition (do only once)
+	 * @return
+	 */
+	public List<Standing> createStandingForCompetition(int competitionId) {
+		
+		List<Standing> standings = new ArrayList<Standing>();
+		
+		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
+		for (Squad squad : squads) {
+			createStandingForSquad(squad);
+		}
+				
+		return standings;
 	}
 
-	private void sortAndSaveStandings(Integer competitionId, boolean isLive) {
-		/**
-		 * Now we need to sort the table against all squads achievement
+	/**
+	 * Creates table for a new squad off the competition (do only once)
+	 * @return
+	 */
+	@Override
+	public Standing createStandingForSquad(Squad squad) {
+		
+		// Creates main standing table
+		Standing standing = standingRepository.findBySquad(squad);
+		if (standing == null) {
+			standing = new Standing();
+			standing.setSquad(squad);
+			standingRepository.save(standing);
+		}
+		
+		// Also creates live standing table
+		StandingLive standingLive = standingLiveRepository.findBySquad(squad);
+		if (standingLive == null) {
+			standingLive = new StandingLive();
+			standingLive.setStanding(standing);
+			standingLive.setSquad(squad);
+			standing.setStandingLive(standingLive);
+			standingLiveRepository.save(standingLive);
+		}
+		
+		return standing;
+	}
+	
+	private void accumulateStandingForMatchup(Matchup matchup, boolean isLive) {
+		
+		/*
+		 * Accumulate standing table = achievement from previous matches (saved on standingLive) + livescore
 		 */
-		// Gets all standings
-		List<? extends StandingBase> standings;
-		if (isLive) {
-			standings = standingLiveRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-		} else {
-			standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-		}
-											  
-		// Sorts positions
-		Collections.sort(standings, new PositionComparator());
-		// Update current position number we already get an ordered list of standings
-		int currentPosition = 1;
-		for (StandingBase standing : standings) {
-			standing.setPreviousPosition(standing.getCurrentPosition());
-			standing.setCurrentPosition(currentPosition++);
-			// Persists the standing
-			if (standing instanceof StandingLive) {
-				standingLiveRepository.save((StandingLive) standing);
+		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
+		for (Squad squad : squads) {
+			
+			Standing standing = standingRepository.findBySquad(squad);
+			StandingBase based;
+			if (isLive) {
+				standing.resetAchievement();
+				based = standing.getStandingLive();
 			} else {
-				standingRepository.save((Standing) standing);
+				based = standing;
 			}
-		}
-	}
-
-	private void calculateSquadStanding(StandingBase standing, Squad squad, Collection<MatchupStatusCode> matchStatusCodes, Integer competitionId) {
-
-		Collection<String> statuses = new ArrayList<String>();
-		for (MatchupStatusCode code : matchStatusCodes) {
-			statuses.add(MatchupStatus.getNameByCode(code));
-		}
-		// Finds all matches played by the squad in this competition with specified matchStatus
-		List<Matchup> matches = matchupRepository.findByCompetitionIdAndStatus_NameIn(competitionId, statuses);
-		for (Matchup matchup : matches) {
+			
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
 				// Counts played match
-				standing.setPlayed(standing.getPlayed() + 1);
+				standing.setPlayed(based.getPlayed() + 1);
 				if (result == MatchupResult.WIN) {
 					// Counts WON match
-					standing.setWon(standing.getWon() + 1);
-					standing.setPoint(standing.getPoint() + 3); // 3 points for a win game
+					standing.setWon(based.getWon() + 1);
+					standing.setPoint(based.getPoint() + 3); // 3 points for a win game
 				} else if (result == MatchupResult.DRAW) {
 					// Counts DRAWN match
-					standing.setDrawn(standing.getDrawn() + 1);
-					standing.setPoint(standing.getPoint() + 1); // 1 point for a draw game
+					standing.setDrawn(based.getDrawn() + 1);
+					standing.setPoint(based.getPoint() + 1); // 1 point for a draw game
 				} else {
 					// Counts LOST match
-					standing.setLost(standing.getLost() + 1);
+					standing.setLost(based.getLost() + 1);
 				}
 				
-				standing.setGoalsScored(standing.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
-				standing.setGoalsAgainst(standing.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
+				standing.setGoalsScored(based.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
+				standing.setGoalsAgainst(based.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
+			}
+			
+			standingRepository.save(standing);
+		}
+	}
+	
+
+	private void sortAndSaveStandings(Integer competitionId, List<Standing> standings) {
+		/**
+		 * Now we need to sort the table against all squads achievement
+		 */
+											  
+		// Sorts positions
+		Collections.sort(standings, new PositionComparator());
+
+		// Update current position number we already get an ordered list of standings
+		int currentPosition = 1;
+		for (Standing standing : standings) {
+			standing.setPreviousPosition(standing.getCurrentPosition());
+			standing.setCurrentPosition(currentPosition++);
+			
+			// Persists the standing
+			standingRepository.save(standing);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	@Transactional
+	public void recalculateStandingForTheCompetition(int competitionId) {
+		
+		if (competitionId < 0) competitionId = getSetting(1).getCompetition().getId();
+		
+		// Reset all standings
+		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		if (standings == null || standings.size() == 0) {
+			createStandingForCompetition(competitionId);
+		} else {
+			for (Standing standing : standings) {
+				standing.resetAll();
+				standing.getStandingLive().resetAll();
+				standingRepository.save(standing);
 			}
 		}
 		
-		// Save the standing
-		if (standing instanceof StandingLive) {
-			standingLiveRepository.save((StandingLive) standing);
-		} else {
-			standingRepository.save((Standing) standing);
+		// Gets all finished matchups from begin of the competition
+		Collection<String> statuses = new ArrayList<String>();
+		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameIn(competitionId, statuses);
+		
+		for (Matchup matchup : matchups) {
+			accumulateStandingForMatchup(matchup, false);
 		}
+		
+		refreshStanding(competitionId);
 	}
 	
 	/**
@@ -374,7 +473,71 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	public MatchupStatus findMatchupStatusByName(String name) throws DataAccessException {
-		return null; // TODO
+		return matchupStatusRepository.findByName(name);
+	}
+
+	
+	/**
+	 * Setting services
+	 */
+	@Override
+	public Setting getSetting(int id) throws DataAccessException {
+		if (setting == null) {
+			setting = settingRepository.findOne(id);
+		}
+		return setting;
 	}
 	
+	@Override
+	public void saveSetting(Setting setting) throws DataAccessException {
+		settingRepository.save(setting);
+	}
+	
+	/**
+	 * Competition services
+	 */
+	@Override
+	public Competition findCompetitionById(Integer id) throws DataAccessException {
+		return competitionRepository.findById(id);
+	}
+
+	@Override
+	public MatchupStatus getMatchupStatusCountdown() throws DataAccessException {
+		if (statusCountdown == null) {
+			statusCountdown = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.ENTER_COUNTDOWN));
+		}
+		return statusCountdown;
+	}
+
+	@Override
+	public MatchupStatus getMatchupStatusJustBegin() throws DataAccessException {
+		if (statusJustBegin == null) {
+			statusJustBegin = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.JUST_BEGIN));
+		}
+		return statusJustBegin;
+	}
+
+	@Override
+	public MatchupStatus getMatchupStatusLive() throws DataAccessException {
+		if (statusLive == null) {
+			statusLive = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.LIVE));
+		}
+		return statusLive;
+	}
+
+	@Override
+	public MatchupStatus getMatchupStatusJustFullTime() throws DataAccessException {
+		if (statusJustFullTime == null) {
+			statusJustFullTime = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.JUST_FULL_TIME));
+		}
+		return statusJustFullTime;
+	}
+
+	@Override
+	public MatchupStatus getMatchupStatusFullTime() throws DataAccessException {
+		if (statusFullTime == null) {
+			statusFullTime = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		}
+		return statusFullTime;
+	}
 }

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  */
 @Entity
 @Table(name = "matchup_detail")
-public class MatchupDetail extends BaseEntity {
+public class MatchupDetail extends NamedEntity {
 
 	/**
 	 * Fields in relationship
@@ -51,6 +51,14 @@ public class MatchupDetail extends BaseEntity {
 	/**
 	 * Getters/Setters
 	 */
+	@Override
+	public String getName() {
+		if (super.getName() != null) return super.getName();
+		
+		super.setName(String.format("%s (%s)", squad.toString(), matchup.toString()));
+		return super.getName();
+	}
+	
 	public Matchup getMatchup() {
 		return matchup;
 	}
