@@ -87,11 +87,14 @@ public class MatchupStatusUpdateTask {
 						matchDuration = appConfigure.getDefaultMatchDuration() / 60 * AppConfigure.HOUR_TO_MILLISECONDS ;
 					}
 
-					if (diffTime <= matchDuration && matchup.getStatus().getCode() != MatchupStatusCode.LIVE) {
+					if (diffTime <= matchDuration 
+							&& matchup.getStatus().getCode() != MatchupStatusCode.LIVE
+							&& matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME) {
 						// Match status 'is about to start' 
 						matchup.setStatus(footballunService.getMatchupStatusJustBegin());
 						footballunService.onStartMatchup(matchup);
-					} else if (diffTime > matchDuration && matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
+					} else if (diffTime > matchDuration 
+							&& matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
 						// Match status "JSUT FULL TIME"
 						matchup.setStatus(footballunService.getMatchupStatusJustFullTime());
 						footballunService.onFinishMatchup(matchup);
