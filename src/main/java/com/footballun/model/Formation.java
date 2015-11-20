@@ -12,6 +12,9 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * @author yen.nt
@@ -42,6 +45,9 @@ public class Formation extends NamedEntity {
 	@Column(name = "position_array_for_web")
 	private String positionArrayForWeb;
 
+	@JsonInclude
+	@Transient
+	private List<List<Short>> parsedPositions;
 	
 	/**
 	 * Getters/Setters
@@ -93,19 +99,22 @@ public class Formation extends NamedEntity {
 	public void setPositionArrayForWeb(String positionArrayForWeb) {
 		this.positionArrayForWeb = positionArrayForWeb;
 	}
-	
-	public List<List<Short>> getParsedPositionArrayForWeb() throws NumberFormatException {
-		if (positionArrayForWeb == null) return null;
+
+	public List<List<Short>> getParsedPositions() {
 		
-		List<List<Short>> parsedPositions = new ArrayList<List<Short>>();
+		if (positionArrayForWeb == null) {
+			return null;
+		}
+
+		parsedPositions = new ArrayList<List<Short>>();
 
 		// Example form of the array (formation 4-2-3-1): 1,2,3,4|5,6|7,8,9|10
-		
+
 		// Splits by group off position top-down 
 		String[] parsedGrouped = positionArrayForWeb.split("[|]");
 		for (String group : parsedGrouped) {
 			List<Short> parsedIntPostition = new ArrayList<Short>();
-			
+
 			group = group.trim();
 			if (group != null && group.length() > 0) {
 				String[] pos = group.split("[,]");
@@ -113,11 +122,11 @@ public class Formation extends NamedEntity {
 					parsedIntPostition.add(Short.valueOf(numStr));
 				}
 			}
-			
+
 			parsedPositions.add(parsedIntPostition);
 		}
-		
-		
+
+
 		return parsedPositions;
 	}
 }

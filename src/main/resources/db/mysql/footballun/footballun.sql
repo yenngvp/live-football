@@ -105,9 +105,15 @@ DROP TABLE IF EXISTS `formation`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `formation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `position1` tinyint(1) DEFAULT '0',
+  `position2` tinyint(1) DEFAULT '0',
+  `position3` tinyint(1) DEFAULT '0',
+  `position4` tinyint(1) DEFAULT '0',
+  `position5` tinyint(1) DEFAULT '0',
+  `position_array_for_web` text COLLATE utf8_unicode_ci COMMENT 'Array positions used to layout formation on the web',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,6 +122,7 @@ CREATE TABLE `formation` (
 
 LOCK TABLES `formation` WRITE;
 /*!40000 ALTER TABLE `formation` DISABLE KEYS */;
+INSERT INTO `formation` VALUES (1,'4-2-3-1',4,2,3,1,0,'13,15,17,19|24,28|33,36,39|46');
 /*!40000 ALTER TABLE `formation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -261,7 +268,7 @@ CREATE TABLE `matchup` (
 
 LOCK TABLES `matchup` WRITE;
 /*!40000 ALTER TABLE `matchup` DISABLE KEYS */;
-INSERT INTO `matchup` VALUES (3,'Crystal Palace vs West Brom',NULL,NULL,0,1,NULL,1,3,'11',1,0,9),(4,NULL,'2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,1,3,'11',1,0,9),(5,NULL,'2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,1,3,'11',1,0,9),(6,NULL,'2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,1,3,'11',1,0,9),(7,NULL,'2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,1,3,'11',0,0,9),(8,'Sunderland vs West Ham',NULL,NULL,0,1,NULL,1,3,'11',0,0,9),(9,NULL,'2015-10-03 16:30:00','2015-10-03 18:15:00',0,1,NULL,1,3,'11',NULL,0,9),(10,NULL,'2015-10-04 12:30:00','2015-10-04 14:15:00',0,1,NULL,1,3,'11',NULL,0,9),(11,NULL,'2015-10-04 15:00:00','2015-10-04 16:45:00',1,1,NULL,1,3,'11',NULL,0,9),(12,NULL,'2015-10-04 15:00:00','2015-10-04 16:45:00',0,1,NULL,1,3,'11',NULL,0,9),(13,NULL,'2015-10-17 11:45:00','2015-10-17 13:30:00',0,1,NULL,1,3,'11',NULL,0,9),(14,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(15,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(16,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(17,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(18,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(19,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,1,3,'11',NULL,0,9),(20,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(21,NULL,'2015-10-15 15:00:00','2015-10-15 16:45:00',0,2,NULL,1,3,'12',NULL,0,9),(22,NULL,'2015-10-14 19:00:00','2015-10-14 20:45:00',0,2,NULL,1,3,'12',NULL,0,9),(23,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(24,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(25,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(26,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(27,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(28,'Everton vs Arsenal',NULL,NULL,1,2,NULL,1,3,'12',0,0,9),(29,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(30,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(32,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(33,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(34,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(35,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(36,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(37,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,1,3,'12',NULL,0,9),(38,NULL,'2015-10-31 14:00:00',NULL,0,2,NULL,1,3,'12',NULL,0,9),(39,NULL,'2015-10-31 14:00:00',NULL,0,2,NULL,1,3,'12',NULL,0,9),(40,'',NULL,NULL,0,11,0,1,18,'11',1,0,9);
+INSERT INTO `matchup` VALUES (3,'Crystal Palace vs West Brom',NULL,NULL,0,1,NULL,1,3,'11',1,0,9),(4,'Stoke vs Aston Villa','2015-10-03 14:00:00','2015-10-03 15:45:00',1,1,NULL,6,3,'11',1,0,9),(5,'Watford vs Bournemouth','2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,6,3,'11',1,0,9),(6,'Man City vs Newcastle','2015-10-03 14:00:00','2015-10-03 15:45:00',0,1,NULL,6,3,'11',1,0,9),(7,'Leicester vs Norwich','2015-10-03 14:00:00','2015-10-03 15:45:00',2,1,NULL,6,3,'11',0,0,9),(8,'Sunderland vs West Ham',NULL,NULL,0,1,NULL,1,3,'11',0,0,9),(9,'Southampton vs Chelsea','2015-10-03 16:30:00','2015-10-03 18:15:00',2,1,NULL,9,3,'11',NULL,0,9),(10,'Liverpool vs Everton','2015-10-04 12:30:00','2015-10-04 14:15:00',0,1,NULL,9,3,'11',NULL,0,9),(11,'Arsenal vs Man Utd','2015-10-04 15:00:00','2015-10-04 16:45:00',1,1,NULL,6,3,'11',0,0,9),(12,'Spurs vs Swansea','2015-10-04 15:00:00','2015-10-04 16:45:00',0,1,NULL,6,3,'11',NULL,0,9),(13,'Spurs vs Liverpool','2015-10-17 11:45:00','2015-10-17 13:30:00',0,1,NULL,6,3,'11',0,0,9),(14,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(15,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(16,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(17,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(18,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(19,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,1,NULL,6,3,'11',NULL,0,9),(20,NULL,'2015-10-17 14:00:00','2015-10-17 15:45:00',0,2,NULL,6,3,'12',NULL,0,9),(21,'Norwich vs Newcastle','2015-10-15 15:00:00','2015-10-15 16:45:00',0,2,NULL,9,3,'12',NULL,0,9),(22,'Swansea vs Stoke','2015-10-14 19:00:00','2015-10-14 20:45:00',0,2,NULL,9,3,'12',NULL,0,9),(23,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(24,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(25,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(26,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(27,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(28,'Everton vs Arsenal',NULL,NULL,0,2,NULL,1,3,'12',0,0,9),(29,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(30,NULL,'2015-10-24 14:00:00','2015-10-24 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(32,'Southampton vs Liverpool','2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(33,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(34,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(35,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(36,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(37,NULL,'2015-10-31 14:00:00','2015-10-31 15:45:00',0,2,NULL,9,3,'12',NULL,0,9),(38,NULL,'2015-10-31 14:00:00',NULL,0,2,NULL,9,3,'12',NULL,0,9),(39,NULL,'2015-10-31 14:00:00',NULL,0,2,NULL,9,3,'12',NULL,0,9),(40,'',NULL,NULL,0,11,0,1,18,'11',1,0,9);
 /*!40000 ALTER TABLE `matchup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,9 +286,13 @@ CREATE TABLE `matchup_detail` (
   `is_home_squad` tinyint(1) DEFAULT '0',
   `is_first_squad` tinyint(1) DEFAULT '0',
   `goal` int(11) DEFAULT '0',
+  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `formation_id` int(11) DEFAULT NULL COMMENT 'A formation is applied/predicted to apply for this match',
   PRIMARY KEY (`id`),
   KEY `fk_matchup_squad_squad1_idx` (`squad_id`),
   KEY `fk_matchup_squad_matchup1_idx` (`matchup_id`),
+  KEY `fk_matchup_detail_formation1_idx` (`formation_id`),
+  CONSTRAINT `fk_matchup_detail_formation1` FOREIGN KEY (`formation_id`) REFERENCES `formation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_squad_matchup1` FOREIGN KEY (`matchup_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_squad_squad1` FOREIGN KEY (`squad_id`) REFERENCES `squad` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -293,7 +304,7 @@ CREATE TABLE `matchup_detail` (
 
 LOCK TABLES `matchup_detail` WRITE;
 /*!40000 ALTER TABLE `matchup_detail` DISABLE KEYS */;
-INSERT INTO `matchup_detail` VALUES (1,21,6,0,0,0),(2,21,17,0,0,0),(3,21,35,0,0,0),(4,22,11,0,0,11),(5,22,20,0,0,0),(6,22,28,1,1,7),(7,22,37,0,0,0),(8,23,8,0,0,0),(9,23,15,0,0,0),(10,23,27,0,0,0),(11,23,38,0,0,0),(12,24,11,0,0,0),(13,24,16,0,0,0),(14,24,34,0,0,0),(15,25,7,0,0,0),(16,25,18,0,0,0),(17,25,24,0,0,0),(18,25,39,0,0,0),(19,26,12,0,0,0),(20,26,13,0,0,0),(21,26,30,0,0,0),(22,27,3,0,0,0),(23,27,15,0,0,0),(24,27,24,0,0,0),(25,27,34,0,0,0),(26,28,9,0,0,0),(27,28,18,0,0,0),(28,28,32,0,0,0),(29,29,10,0,0,0),(30,29,13,0,0,0),(31,29,32,0,0,0),(32,29,33,0,0,0),(33,30,3,0,0,0),(34,30,19,0,0,0),(35,30,25,0,0,0),(36,30,39,0,0,0),(37,31,10,0,0,0),(38,31,16,0,0,0),(39,31,28,0,0,5),(40,32,12,0,0,0),(41,32,22,0,0,0),(42,32,23,0,0,0),(43,32,37,0,0,0),(44,33,5,0,0,0),(45,33,20,0,0,0),(46,33,26,0,0,0),(47,33,38,0,0,0),(48,34,4,0,0,0),(49,34,22,0,0,0),(50,34,26,0,0,0),(51,34,36,0,0,0),(52,35,9,0,0,0),(53,35,14,0,0,0),(54,35,27,0,0,0),(55,35,33,0,0,0),(56,36,7,0,0,0),(57,36,21,0,0,0),(58,36,25,0,0,0),(59,36,35,0,0,0),(60,37,5,0,0,0),(61,37,17,0,0,0),(62,37,30,0,0,0),(63,38,8,0,0,0),(64,38,19,0,0,0),(65,38,29,0,0,0),(66,39,6,0,0,0),(67,39,21,0,0,0),(68,39,29,0,0,0),(69,39,36,0,0,0),(70,40,4,0,0,0),(71,40,14,0,0,0),(72,40,23,0,0,0),(73,21,40,1,1,0),(74,22,40,0,0,0);
+INSERT INTO `matchup_detail` VALUES (1,21,6,0,0,0,NULL,NULL),(2,21,17,0,0,0,NULL,NULL),(3,21,35,0,0,0,NULL,NULL),(4,22,11,0,0,1,'Arsenal (Matchup [Arsenal vs Man Utd])',1),(5,22,20,0,0,0,NULL,NULL),(6,22,28,0,0,0,NULL,NULL),(7,22,37,0,0,0,NULL,NULL),(8,23,8,0,0,0,NULL,NULL),(9,23,15,0,0,0,NULL,NULL),(10,23,27,0,0,0,'West Ham (Matchup [West Ham vs Chelsea])',NULL),(11,23,38,0,0,0,NULL,NULL),(12,24,11,0,0,0,NULL,NULL),(13,24,16,0,0,0,NULL,NULL),(14,24,34,0,0,0,NULL,NULL),(15,25,7,0,0,2,'Leicester ([Leicester vs Norwich])',NULL),(16,25,18,0,0,0,NULL,NULL),(17,25,24,0,0,0,NULL,NULL),(18,25,39,0,0,0,NULL,NULL),(19,26,12,0,0,0,NULL,NULL),(20,26,13,0,0,3,NULL,NULL),(21,26,30,0,0,0,NULL,NULL),(22,27,3,0,0,0,NULL,NULL),(23,27,15,0,0,0,NULL,NULL),(24,27,24,0,0,0,NULL,NULL),(25,27,34,0,0,0,NULL,NULL),(26,28,9,0,0,0,'Southampton ([Southampton vs Chelsea])',NULL),(27,28,18,0,0,0,NULL,NULL),(28,28,32,0,0,0,'Southampton ([Southampton vs Liverpool])',NULL),(29,29,10,0,0,0,NULL,NULL),(30,29,13,0,0,3,NULL,NULL),(31,29,32,0,0,0,NULL,NULL),(32,29,33,0,0,0,NULL,NULL),(33,30,3,0,0,0,NULL,NULL),(34,30,19,0,0,0,NULL,NULL),(35,30,25,0,0,0,NULL,NULL),(36,30,39,0,0,0,NULL,NULL),(37,31,10,0,0,0,NULL,NULL),(38,31,16,0,0,0,NULL,NULL),(39,31,28,0,0,0,NULL,NULL),(40,32,12,0,0,0,NULL,NULL),(41,32,22,0,0,0,NULL,NULL),(42,32,23,0,0,0,NULL,NULL),(43,32,37,0,0,0,NULL,NULL),(44,33,5,0,0,0,NULL,NULL),(45,33,20,0,0,0,NULL,NULL),(46,33,26,0,0,0,NULL,NULL),(47,33,38,0,0,0,NULL,NULL),(48,34,4,0,0,7,'Stoke (Matchup [Stoke vs Aston Villa])',NULL),(49,34,22,0,0,0,NULL,NULL),(50,34,26,0,0,0,NULL,NULL),(51,34,36,0,0,0,NULL,NULL),(52,35,9,0,0,1,'Chelsea (Matchup [Southampton vs Chelsea])',NULL),(53,35,14,0,0,0,NULL,NULL),(54,35,27,0,0,0,NULL,NULL),(55,35,33,0,0,0,NULL,NULL),(56,36,7,0,0,7,'Norwich ([Leicester vs Norwich])',NULL),(57,36,21,0,0,0,NULL,NULL),(58,36,25,0,0,0,NULL,NULL),(59,36,35,0,0,0,NULL,NULL),(60,37,5,0,0,0,NULL,NULL),(61,37,17,0,0,0,NULL,NULL),(62,37,30,0,0,0,NULL,NULL),(63,38,8,0,0,0,NULL,NULL),(64,38,19,0,0,0,NULL,NULL),(65,38,29,0,0,0,NULL,NULL),(66,39,6,0,0,0,NULL,NULL),(67,39,21,0,0,0,NULL,NULL),(68,39,29,0,0,0,NULL,NULL),(69,39,36,0,0,0,NULL,NULL),(70,40,4,0,0,3,'Aston Villa ([Stoke vs Aston Villa])',NULL),(71,40,14,0,0,0,NULL,NULL),(72,40,23,0,0,0,NULL,NULL),(73,21,40,1,1,0,NULL,NULL),(74,22,40,0,0,0,NULL,NULL);
 /*!40000 ALTER TABLE `matchup_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,15 +321,18 @@ CREATE TABLE `matchup_live` (
   `event_id` smallint(6) NOT NULL,
   `timestamp` timestamp NULL DEFAULT NULL,
   `update_minute` tinyint(4) DEFAULT NULL,
-  `matchup_register_id` int(11) NOT NULL,
+  `matchup_register_id` int(11) DEFAULT NULL,
+  `matchup_detail_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_matchup_detail_matchup1_idx` (`matchup_id`),
   KEY `fk_matchup_detail_event1_idx` (`event_id`),
   KEY `fk_matchup_detail_matchup_register1_idx` (`matchup_register_id`),
+  KEY `fk_matchup_live_matchup_detail1_idx` (`matchup_detail_id`),
   CONSTRAINT `fk_matchup_live_event1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_live_matchup1` FOREIGN KEY (`matchup_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_matchup_live_matchup_detail1` FOREIGN KEY (`matchup_detail_id`) REFERENCES `matchup_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_live_matchup_register1` FOREIGN KEY (`matchup_register_id`) REFERENCES `matchup_register` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Information for team line-up, subtitues, formation, so on';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Information for team line-up, subtitues, formation, so on';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -327,7 +341,7 @@ CREATE TABLE `matchup_live` (
 
 LOCK TABLES `matchup_live` WRITE;
 /*!40000 ALTER TABLE `matchup_live` DISABLE KEYS */;
-INSERT INTO `matchup_live` VALUES (34,11,1,'2015-11-12 16:46:11',5,11),(37,11,1,NULL,0,11),(38,11,1,NULL,0,11),(39,11,1,NULL,0,11),(40,11,1,NULL,0,11),(41,11,1,NULL,0,11),(42,11,1,NULL,0,11),(43,11,1,NULL,0,11),(44,11,1,NULL,0,11),(45,11,1,NULL,0,11),(46,11,1,NULL,0,11);
+INSERT INTO `matchup_live` VALUES (6,4,2,NULL,0,NULL,NULL),(17,4,1,NULL,0,NULL,48),(18,4,1,NULL,0,NULL,70),(19,4,1,NULL,4,3,NULL),(20,4,1,NULL,0,NULL,70),(21,13,1,NULL,0,NULL,20),(22,13,1,'2015-11-11 10:49:51',3,NULL,20),(23,13,1,'2015-11-11 10:49:51',3,NULL,20),(24,13,1,NULL,0,NULL,30),(25,13,1,NULL,0,NULL,30),(26,13,1,NULL,0,NULL,20),(27,13,1,NULL,0,NULL,30);
 /*!40000 ALTER TABLE `matchup_live` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,15 +357,17 @@ CREATE TABLE `matchup_register` (
   `is_lineup` tinyint(1) DEFAULT NULL,
   `squad_member_id` int(11) NOT NULL,
   `position_id` int(2) DEFAULT NULL,
-  `matchup_detail_id` int(11) NOT NULL,
+  `matchup_detail_id` int(11) DEFAULT NULL,
+  `matchup_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_lineup_substitue_squad1_idx` (`squad_member_id`),
   KEY `fk_lineup_substitue_position1_idx` (`position_id`),
   KEY `fk_matchup_register_matchup1_idx` (`matchup_detail_id`),
-  CONSTRAINT `fk_matchup_register_matchup_detail1` FOREIGN KEY (`matchup_detail_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_matchup_detail_matchup1_idx` (`matchup_id`),
+  CONSTRAINT `fk_matchup_detail_matchup1` FOREIGN KEY (`matchup_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_register_position1` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_register_squad_member1` FOREIGN KEY (`squad_member_id`) REFERENCES `squad_member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +376,7 @@ CREATE TABLE `matchup_register` (
 
 LOCK TABLES `matchup_register` WRITE;
 /*!40000 ALTER TABLE `matchup_register` DISABLE KEYS */;
-INSERT INTO `matchup_register` VALUES (10,0,22,8,4),(11,1,89,8,4);
+INSERT INTO `matchup_register` VALUES (3,0,71,59,4,11);
 /*!40000 ALTER TABLE `matchup_register` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -376,7 +392,7 @@ CREATE TABLE `matchup_status` (
   `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `short_name` varchar(3) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -385,7 +401,7 @@ CREATE TABLE `matchup_status` (
 
 LOCK TABLES `matchup_status` WRITE;
 /*!40000 ALTER TABLE `matchup_status` DISABLE KEYS */;
-INSERT INTO `matchup_status` VALUES (1,'Not Begin','NA'),(2,'Just Begin',''),(3,'First Half','FH'),(4,'Half Time','HT'),(5,'Second Half','SH'),(6,'Full Time','FT'),(7,'Postposed',NULL),(8,'Cancelled',NULL),(9,'Rescheduled',NULL);
+INSERT INTO `matchup_status` VALUES (1,'Not Begin','NA'),(2,'Just Begin',''),(3,'First Half','FH'),(4,'Half Time','HT'),(5,'Second Half','SH'),(6,'Full Time','FT'),(7,'Postposed',NULL),(8,'Cancelled',NULL),(9,'Enter Countdown','ECD'),(10,'Just Full Time','JFT'),(11,'Live','LIV');
 /*!40000 ALTER TABLE `matchup_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -399,8 +415,11 @@ DROP TABLE IF EXISTS `position`;
 CREATE TABLE `position` (
   `id` int(2) NOT NULL AUTO_INCREMENT,
   `name` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `particular_name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `area_topdown` tinyint(4) DEFAULT '0',
+  `area_leftright` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -409,8 +428,41 @@ CREATE TABLE `position` (
 
 LOCK TABLES `position` WRITE;
 /*!40000 ALTER TABLE `position` DISABLE KEYS */;
-INSERT INTO `position` VALUES (5,'Goalkeeper'),(6,'Defender'),(7,'Midfielder'),(8,'Forward');
+INSERT INTO `position` VALUES (59,'Defender','RDF',1,1),(60,'Defender','RDF',2,1),(61,'Defender','CDF',3,1),(62,'Defender','LDF',4,1),(63,'Defender','LDF',5,1),(64,'Midfielder','RDM',1,2),(65,'Midfielder','RDM',2,2),(66,'Midfielder','CDM',3,2),(67,'Midfielder','LDM',4,2),(68,'Midfielder','LDM',5,2),(69,'Midfielder','RM',1,3),(70,'Midfielder','RM',2,3),(71,'Midfielder','CM',3,3),(72,'Midfielder','LM',4,3),(73,'Midfielder','LM',5,3),(74,'Midfielder','RAM',1,4),(75,'Midfielder','RAM',2,4),(76,'Midfielder','CAM',3,4),(77,'Midfielder','LAM',4,4),(78,'Midfielder','LAM',5,4),(79,'Forward','RF',1,5),(80,'Forward','RF',2,5),(81,'Forward','CF',3,5),(82,'Forward','LF',4,5),(83,'Forward','LF',5,5);
 /*!40000 ALTER TABLE `position` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `setting`
+--
+
+DROP TABLE IF EXISTS `setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `setting` (
+  `id` int(11) NOT NULL,
+  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `competition_id` int(11) NOT NULL,
+  `timezone_id` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `override_server_time` timestamp NULL DEFAULT NULL,
+  `start_countdown` int(11) DEFAULT '0',
+  `locale` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `match_status_tracker_interval` int(11) DEFAULT '0',
+  `default_match_duration` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_setting_competition1_idx` (`competition_id`),
+  CONSTRAINT `fk_setting_competition1` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `setting`
+--
+
+LOCK TABLES `setting` WRITE;
+/*!40000 ALTER TABLE `setting` DISABLE KEYS */;
+INSERT INTO `setting` VALUES (1,'EPL Setting 2015-10-17 11:45:00',9,'Asia/Ho_Chi_Minh','2015-11-12 15:15:35',24,NULL,30,120);
+/*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -427,11 +479,14 @@ CREATE TABLE `squad` (
   `group_id` int(11) DEFAULT NULL,
   `competition_id` int(11) DEFAULT NULL,
   `generation` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'First team, U21, U19, so on',
+  `formation_id` int(11) DEFAULT NULL COMMENT 'Squad''s favorite formation (most played)',
   PRIMARY KEY (`id`),
   KEY `fk_team_id_team_idx` (`team_id`),
   KEY `fk_squad_group1_idx` (`group_id`),
   KEY `fk_squad_competition1_idx` (`competition_id`),
+  KEY `fk_squad_formation1_idx` (`formation_id`),
   CONSTRAINT `fk_squad_competition1` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_squad_formation1` FOREIGN KEY (`formation_id`) REFERENCES `formation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_squad_group1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_team_id_team` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -443,7 +498,7 @@ CREATE TABLE `squad` (
 
 LOCK TABLES `squad` WRITE;
 /*!40000 ALTER TABLE `squad` DISABLE KEYS */;
-INSERT INTO `squad` VALUES (21,42,NULL,NULL,9,'First Team'),(22,43,NULL,NULL,9,'First Team'),(23,44,NULL,NULL,9,'First Team'),(24,45,NULL,NULL,9,'First Team'),(25,46,NULL,NULL,9,'First Team'),(26,47,NULL,NULL,9,'First Team'),(27,48,NULL,NULL,9,'First Team'),(28,49,NULL,NULL,9,'First Team'),(29,50,NULL,NULL,9,'First Team'),(30,51,NULL,NULL,9,'First Team'),(31,52,NULL,NULL,9,'First Team'),(32,53,NULL,NULL,9,'First Team'),(33,54,NULL,NULL,9,'First Team'),(34,55,NULL,NULL,9,'First Team'),(35,56,NULL,NULL,9,'First Team'),(36,57,NULL,NULL,9,'First Team'),(37,58,NULL,NULL,9,'First Team'),(38,59,NULL,NULL,9,'First Team'),(39,60,NULL,NULL,9,'First Team'),(40,61,NULL,NULL,9,'First Team'),(41,28,NULL,NULL,8,'First Team');
+INSERT INTO `squad` VALUES (21,42,NULL,NULL,9,'First Team',NULL),(22,43,NULL,NULL,9,'First Team',1),(23,44,NULL,NULL,9,'First Team',NULL),(24,45,NULL,NULL,9,'First Team',NULL),(25,46,NULL,NULL,9,'First Team',NULL),(26,47,NULL,NULL,9,'First Team',NULL),(27,48,NULL,NULL,9,'First Team',NULL),(28,49,NULL,NULL,9,'First Team',NULL),(29,50,NULL,NULL,9,'First Team',NULL),(30,51,NULL,NULL,9,'First Team',NULL),(31,52,NULL,NULL,9,'First Team',NULL),(32,53,NULL,NULL,9,'First Team',NULL),(33,54,NULL,NULL,9,'First Team',NULL),(34,55,NULL,NULL,9,'First Team',NULL),(35,56,NULL,NULL,9,'First Team',NULL),(36,57,NULL,NULL,9,'First Team',NULL),(37,58,NULL,NULL,9,'First Team',NULL),(38,59,NULL,NULL,9,'First Team',NULL),(39,60,NULL,NULL,9,'First Team',NULL),(40,61,NULL,NULL,9,'First Team',NULL),(41,28,NULL,NULL,8,'First Team',NULL);
 /*!40000 ALTER TABLE `squad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -479,7 +534,7 @@ CREATE TABLE `squad_member` (
 
 LOCK TABLES `squad_member` WRITE;
 /*!40000 ALTER TABLE `squad_member` DISABLE KEYS */;
-INSERT INTO `squad_member` VALUES (5,1,5,1,21,5),(6,2,5,1,21,6),(7,3,5,1,21,7),(8,4,6,1,21,8),(9,5,6,1,21,9),(10,6,6,1,21,10),(11,7,6,1,21,11),(12,8,6,1,21,12),(13,9,6,1,21,13),(14,10,6,1,21,14),(15,11,6,1,21,15),(16,12,6,1,21,16),(17,13,7,1,21,17),(18,14,7,1,21,18),(19,15,7,1,21,19),(20,16,8,1,21,20),(21,17,8,1,21,21),(22,18,8,1,21,22),(23,19,8,1,21,23),(24,20,8,1,21,24),(25,21,8,1,21,25),(26,22,7,1,21,26),(27,23,7,1,21,27),(28,24,7,1,21,28),(29,25,7,1,21,29),(30,26,7,1,21,30),(31,27,7,1,21,31),(32,28,7,1,21,32),(33,29,7,1,21,33),(34,30,8,1,21,34),(35,31,7,1,21,35),(36,32,8,1,21,36),(37,33,8,1,21,37),(68,34,5,1,22,68),(69,35,5,1,22,69),(70,36,5,1,22,70),(71,37,6,1,22,71),(72,38,6,1,22,72),(73,39,6,1,22,73),(74,40,6,1,22,74),(75,41,6,1,22,75),(76,42,6,1,22,76),(77,43,6,1,22,77),(78,44,6,1,22,78),(79,45,6,1,22,79),(80,46,6,1,22,80),(81,47,7,1,22,81),(82,48,7,1,22,82),(83,49,7,1,22,83),(84,50,7,1,22,84),(85,51,7,1,22,85),(86,52,7,1,22,86),(87,53,7,1,22,87),(88,54,8,1,22,88),(89,55,8,1,22,89),(90,56,8,1,22,90),(91,57,8,1,22,91);
+INSERT INTO `squad_member` VALUES (5,1,NULL,1,21,5),(6,2,NULL,1,21,6),(7,3,NULL,1,21,7),(8,4,NULL,1,21,8),(9,5,NULL,1,21,9),(10,6,NULL,1,21,10),(11,7,NULL,1,21,11),(12,8,NULL,1,21,12),(13,9,NULL,1,21,13),(14,10,NULL,1,21,14),(15,11,NULL,1,21,15),(16,12,NULL,1,21,16),(17,13,NULL,1,21,17),(18,14,NULL,1,21,18),(19,15,NULL,1,21,19),(20,16,NULL,1,21,20),(21,17,NULL,1,21,21),(22,18,NULL,1,21,22),(23,19,NULL,1,21,23),(24,20,NULL,1,21,24),(25,21,NULL,1,21,25),(26,22,NULL,1,21,26),(27,23,NULL,1,21,27),(28,24,NULL,1,21,28),(29,25,NULL,1,21,29),(30,26,NULL,1,21,30),(31,27,NULL,1,21,31),(32,28,NULL,1,21,32),(33,29,NULL,1,21,33),(34,30,NULL,1,21,34),(35,31,NULL,1,21,35),(36,32,NULL,1,21,36),(37,33,NULL,1,21,37),(68,34,NULL,1,22,68),(69,35,NULL,1,22,69),(70,36,NULL,1,22,70),(71,37,NULL,1,22,71),(72,38,NULL,1,22,72),(73,39,NULL,1,22,73),(74,40,NULL,1,22,74),(75,41,NULL,1,22,75),(76,42,NULL,1,22,76),(77,43,NULL,1,22,77),(78,44,NULL,1,22,78),(79,45,NULL,1,22,79),(80,46,NULL,1,22,80),(81,47,NULL,1,22,81),(82,48,NULL,1,22,82),(83,49,NULL,1,22,83),(84,50,NULL,1,22,84),(85,51,NULL,1,22,85),(86,52,NULL,1,22,86),(87,53,NULL,1,22,87),(88,54,NULL,1,22,88),(89,55,NULL,1,22,89),(90,56,NULL,1,22,90),(91,57,NULL,1,22,91);
 /*!40000 ALTER TABLE `squad_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -539,7 +594,7 @@ CREATE TABLE `standing` (
   UNIQUE KEY `squad_id_UNIQUE` (`squad_id`),
   KEY `fk_standing_competing_team1_idx` (`squad_id`),
   CONSTRAINT `fk_standing_competing_team1` FOREIGN KEY (`squad_id`) REFERENCES `squad` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -548,7 +603,7 @@ CREATE TABLE `standing` (
 
 LOCK TABLES `standing` WRITE;
 /*!40000 ALTER TABLE `standing` DISABLE KEYS */;
-INSERT INTO `standing` VALUES (3,7,35,4,0,0,4,2,2,NULL,0,0,1),(4,4,21,4,0,0,4,10,10,NULL,0,0,1),(5,9,22,5,2,0,3,1,1,NULL,9,5,1),(6,4,23,4,0,0,4,11,11,NULL,0,0,1),(7,2,24,3,0,1,2,20,20,NULL,0,2,1),(8,4,25,4,0,0,4,12,12,NULL,0,0,1),(9,3,26,3,0,0,3,16,16,NULL,0,0,1),(10,4,27,4,0,0,4,13,13,NULL,0,0,1),(11,3,28,3,0,0,3,17,17,NULL,0,0,1),(12,4,29,4,0,0,4,9,9,NULL,0,0,1),(13,4,30,4,0,0,4,8,8,NULL,0,0,1),(14,2,31,3,0,1,2,19,19,NULL,5,7,1),(15,4,32,4,0,0,4,3,3,NULL,0,0,1),(16,4,33,4,0,0,4,4,4,NULL,0,0,1),(17,4,34,4,0,0,4,5,5,NULL,0,0,1),(18,4,36,4,0,0,4,6,6,NULL,0,0,1),(19,3,37,3,0,0,3,14,14,NULL,0,0,1),(20,3,38,3,0,0,3,15,15,NULL,0,0,1),(21,4,39,4,0,0,4,7,7,NULL,0,0,1),(22,3,40,3,0,0,3,18,18,NULL,0,0,1);
+INSERT INTO `standing` VALUES (4,4,21,4,0,0,4,6,5,NULL,0,0,0),(6,4,23,4,0,0,4,6,5,NULL,0,0,0),(8,3,25,4,0,1,3,9,8,NULL,2,7,0),(9,3,26,3,0,0,3,7,6,NULL,3,3,0),(10,4,27,4,0,0,4,6,5,NULL,0,0,0),(11,2,28,3,0,1,2,10,9,NULL,0,1,0),(12,4,29,4,0,0,4,5,4,NULL,3,3,0),(13,4,30,4,0,0,4,6,5,NULL,0,0,0),(14,3,31,3,0,0,3,8,7,NULL,0,0,0),(15,4,32,4,0,0,4,6,7,NULL,0,0,0),(16,4,33,4,0,0,4,6,7,NULL,0,0,0),(17,6,34,4,1,0,3,3,3,NULL,7,3,0),(18,6,35,4,1,0,3,4,1,NULL,1,0,0),(19,6,36,4,1,0,3,2,2,NULL,7,2,0),(20,3,37,3,0,0,3,8,7,NULL,0,0,0),(21,3,38,3,0,0,3,8,7,NULL,0,0,0),(22,4,39,4,0,0,4,6,7,NULL,0,0,0),(23,2,40,3,0,1,2,11,10,NULL,3,7,0),(24,7,22,5,1,0,4,1,1,NULL,1,0,1),(25,2,24,3,0,1,2,10,9,NULL,0,1,0);
 /*!40000 ALTER TABLE `standing` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -577,7 +632,7 @@ CREATE TABLE `standing_live` (
   KEY `fk_standing_live_standing1_idx` (`id`),
   KEY `fk_standing_live_standing_idx` (`standing_id`),
   CONSTRAINT `fk_standing_live_standing` FOREIGN KEY (`standing_id`) REFERENCES `standing` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -586,7 +641,7 @@ CREATE TABLE `standing_live` (
 
 LOCK TABLES `standing_live` WRITE;
 /*!40000 ALTER TABLE `standing_live` DISABLE KEYS */;
-INSERT INTO `standing_live` VALUES (23,9,22,5,2,0,3,1,1,NULL,9,5,5),(24,7,35,4,0,0,4,2,2,NULL,0,0,3),(25,4,32,4,0,0,4,3,3,NULL,0,0,15),(26,4,33,4,0,0,4,4,4,NULL,0,0,16),(27,4,34,4,0,0,4,5,5,NULL,0,0,17),(28,4,36,4,0,0,4,6,6,NULL,0,0,18),(29,4,39,4,0,0,4,7,7,NULL,0,0,21),(30,4,30,4,0,0,4,8,8,NULL,0,0,13),(31,4,29,4,0,0,4,9,9,NULL,0,0,12),(32,4,21,4,0,0,4,10,10,NULL,0,0,4),(33,4,23,4,0,0,4,11,11,NULL,0,0,6),(34,4,25,4,0,0,4,12,12,NULL,0,0,8),(35,4,27,4,0,0,4,13,13,NULL,0,0,10),(36,3,37,3,0,0,3,14,14,NULL,0,0,19),(37,3,38,3,0,0,3,15,15,NULL,0,0,20),(38,3,26,3,0,0,3,16,16,NULL,0,0,9),(39,3,28,3,0,0,3,17,17,NULL,0,0,11),(40,3,40,3,0,0,3,18,18,NULL,0,0,22),(41,2,31,3,0,1,2,19,19,NULL,5,7,14),(42,2,24,3,0,1,2,20,20,NULL,0,2,7);
+INSERT INTO `standing_live` VALUES (1,5,21,5,0,0,5,6,5,NULL,0,0,4),(3,5,23,5,0,0,5,6,5,NULL,0,0,6),(5,4,25,5,0,0,4,9,8,NULL,2,7,8),(6,4,26,4,0,0,4,7,6,NULL,6,6,9),(7,5,27,5,0,0,5,6,5,NULL,0,0,10),(8,3,28,4,0,0,3,10,9,NULL,0,1,11),(9,5,29,5,0,0,5,5,4,NULL,6,6,12),(10,5,30,5,0,0,5,6,5,NULL,0,0,13),(11,4,31,4,0,0,4,8,7,NULL,0,0,14),(12,4,32,4,0,0,4,8,7,NULL,0,0,15),(13,5,33,5,0,0,5,6,7,NULL,0,0,16),(14,6,34,4,1,0,3,4,3,NULL,7,3,17),(15,7,35,5,0,0,4,2,1,NULL,1,0,18),(16,6,36,4,1,0,3,3,2,NULL,7,2,19),(17,4,37,4,0,0,4,8,7,NULL,0,0,20),(18,4,38,4,0,0,4,8,7,NULL,0,0,21),(19,4,39,4,0,0,4,8,7,NULL,0,0,22),(20,3,40,4,0,0,3,11,10,NULL,3,7,23),(21,8,22,6,0,0,5,1,1,NULL,1,0,24),(22,3,24,4,0,0,3,10,9,NULL,0,1,25);
 /*!40000 ALTER TABLE `standing_live` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -670,6 +725,31 @@ LOCK TABLES `team` WRITE;
 INSERT INTO `team` VALUES (21,'France','FRA',NULL,NULL,NULL,NULL,21),(22,'Albania','',NULL,NULL,NULL,NULL,22),(23,'Austria','',NULL,NULL,NULL,NULL,23),(24,'Belgium','',NULL,NULL,NULL,NULL,24),(25,'Croatia','',NULL,NULL,NULL,NULL,25),(26,'Czech Republic','',NULL,NULL,NULL,NULL,26),(27,'England','',NULL,NULL,NULL,NULL,27),(28,'Germany','',NULL,NULL,NULL,NULL,28),(29,'Iceland','',NULL,NULL,NULL,NULL,29),(30,'Italy','',NULL,NULL,NULL,NULL,30),(31,'Northern Ireland','',NULL,NULL,NULL,NULL,31),(32,'Poland','',NULL,NULL,NULL,NULL,32),(33,'Portugal','',NULL,NULL,NULL,NULL,33),(34,'Romania','',NULL,NULL,NULL,NULL,34),(35,'Russia','',NULL,NULL,NULL,NULL,35),(36,'Slovakia','',NULL,NULL,NULL,NULL,36),(37,'Spain','',NULL,NULL,NULL,NULL,37),(38,'Switzerland','',NULL,NULL,NULL,NULL,38),(39,'Turkey','',NULL,NULL,NULL,NULL,39),(40,'Wales','',NULL,NULL,NULL,NULL,40),(42,'Man City',NULL,NULL,NULL,NULL,NULL,NULL),(43,'Arsenal',NULL,NULL,NULL,NULL,NULL,NULL),(44,'West Ham',NULL,NULL,NULL,NULL,NULL,NULL),(45,'Man Utd',NULL,NULL,NULL,NULL,NULL,NULL),(46,'Leicester',NULL,NULL,NULL,NULL,NULL,NULL),(47,'Spurs',NULL,NULL,NULL,NULL,NULL,NULL),(48,'Crystal Palace',NULL,NULL,NULL,NULL,NULL,NULL),(49,'Southampton',NULL,NULL,NULL,NULL,NULL,NULL),(50,'Liverpool',NULL,NULL,NULL,NULL,NULL,NULL),(51,'West Brom',NULL,NULL,NULL,NULL,NULL,NULL),(52,'Everton',NULL,NULL,NULL,NULL,NULL,NULL),(53,'Swansea',NULL,NULL,NULL,NULL,NULL,NULL),(54,'Watford',NULL,NULL,NULL,NULL,NULL,NULL),(55,'Stoke',NULL,NULL,NULL,NULL,NULL,NULL),(56,'Chelsea',NULL,NULL,NULL,NULL,NULL,NULL),(57,'Norwich',NULL,NULL,NULL,NULL,NULL,NULL),(58,'Bournemouth',NULL,NULL,NULL,NULL,NULL,NULL),(59,'Sunderland',NULL,NULL,NULL,NULL,NULL,NULL),(60,'Newcastle',NULL,NULL,NULL,NULL,NULL,NULL),(61,'Aston Villa',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `timezone`
+--
+
+DROP TABLE IF EXISTS `timezone`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `timezone` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zone_id` tinyint(4) DEFAULT NULL,
+  `iso_code` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `timezone`
+--
+
+LOCK TABLES `timezone` WRITE;
+/*!40000 ALTER TABLE `timezone` DISABLE KEYS */;
+/*!40000 ALTER TABLE `timezone` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -680,4 +760,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-13 17:37:56
+-- Dump completed on 2015-11-20 17:42:56
