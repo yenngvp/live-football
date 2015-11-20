@@ -37,7 +37,7 @@ public class MatchupDetailRepositoryEventListener extends
     	// Persists matchup
     	footballunService.saveMatchup(matchDetail.getMatchup());
     	
-    	// Trigger service update
-    	footballunService.onUpdateMatchup(matchDetail.getMatchup());
+    	// Recalculate over all standing if user is manually editing the match result
+    	footballunService.recalculateStandingForTheCompetition(-1);
     }
 }

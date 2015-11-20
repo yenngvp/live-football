@@ -26,7 +26,8 @@ public class MatchupRepositoryEventListener extends
 
 		// On matchup update event, do recalculate standings of the competition
 		if (matchup != null) {
-			footballunService.onUpdateMatchup(matchup);
+			// Recalculate over all standing if user is manually editing the match result
+	    	footballunService.recalculateStandingForTheCompetition(-1);
 		}
 	}
 }

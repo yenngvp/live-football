@@ -268,8 +268,8 @@ public class FootballunServiceImpl implements FootballunService {
 			return;
 		}
 		
-		accumulateStandingForMatchup(matchup, true);
-		refreshStanding(matchup.getCompetition().getId());
+		accumulateStandingForMatchup(matchup, false);
+		refreshStanding(matchup.getCompetition().getId(), null);
 	}
 	
 	private void copyStandingToStandingLive(Squad squad) {
@@ -285,12 +285,15 @@ public class FootballunServiceImpl implements FootballunService {
 	
 	@Override
 	@Transactional
-	public void refreshStanding(int competitionId) throws DataAccessException {
+	public List<Standing> refreshStanding(int competitionId, List<Standing> standings) throws DataAccessException {
 		
 		// Gets all current squads standing
-		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
-		
+		if (standings == null) {
+			standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		}
 		sortAndSaveStandings(competitionId, standings);
+		
+		return standings;
 	}
 	
 	/**
@@ -337,7 +340,7 @@ public class FootballunServiceImpl implements FootballunService {
 		return standing;
 	}
 	
-	private void accumulateStandingForMatchup(Matchup matchup, boolean isLive) {
+	private void accumulateStandingForMatchup(Matchup matchup, boolean isManual) {
 		
 		/*
 		 * Accumulate standing table = achievement from previous matches (saved on standingLive) + livescore
@@ -347,7 +350,7 @@ public class FootballunServiceImpl implements FootballunService {
 			
 			Standing standing = standingRepository.findBySquad(squad);
 			StandingBase based;
-			if (isLive) {
+			if (!isManual) {
 				standing.resetAchievement();
 				based = standing.getStandingLive();
 			} else {
@@ -387,15 +390,26 @@ public class FootballunServiceImpl implements FootballunService {
 											  
 		// Sorts positions
 		Collections.sort(standings, new PositionComparator());
-
+		
 		// Update current position number we already get an ordered list of standings
 		int currentPosition = 1;
+		
+		// But still needs further check for squads stand the same position due to all rules are identical
+		Standing prev = null;
 		for (Standing standing : standings) {
+			if (prev != null) {
+				if (PositionComparator.doCompare(standing, prev) != 0) {
+					// Increases position only if two squads are not identical results
+					currentPosition++;
+				}
+			}
+			
 			standing.setPreviousPosition(standing.getCurrentPosition());
-			standing.setCurrentPosition(currentPosition++);
+			standing.setCurrentPosition(currentPosition);
 			
 			// Persists the standing
 			standingRepository.save(standing);
+			prev = standing;
 		}
 	}
 
@@ -407,6 +421,18 @@ public class FootballunServiceImpl implements FootballunService {
 	public void recalculateStandingForTheCompetition(int competitionId) {
 		
 		if (competitionId < 0) competitionId = getSetting(1).getCompetition().getId();
+
+		/*
+		 * Rejects to reset the standing if there is still have matchups in LIVE mode.
+		 */
+		List<Matchup> matchups = matchupRepository.findByCompetitionId(competitionId);
+		
+		for (Matchup matchup : matchups) {
+			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
+				logger.warn("Attemping to recalculate standing but match " + matchup.getName() + " still in LIVE status. Request rejected!");
+				return;
+			}
+		}
 		
 		// Reset all standings
 		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
@@ -414,22 +440,27 @@ public class FootballunServiceImpl implements FootballunService {
 			createStandingForCompetition(competitionId);
 		} else {
 			for (Standing standing : standings) {
+				// backup standing to standing temp table
+				Integer id = standing.getStandingLive().getId(); // don't want to copy its ID, keeps a backup
+				BeanUtils.copyProperties(standing, standing.getStandingLive(), StandingBase.class);
+				standing.getStandingLive().setId(id);
+				standingLiveRepository.save(standing.getStandingLive());
+				
 				standing.resetAll();
-				standing.getStandingLive().resetAll();
 				standingRepository.save(standing);
 			}
 		}
 		
-		// Gets all finished matchups from begin of the competition
-		Collection<String> statuses = new ArrayList<String>();
-		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
-		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameIn(competitionId, statuses);
-		
 		for (Matchup matchup : matchups) {
-			accumulateStandingForMatchup(matchup, false);
+			accumulateStandingForMatchup(matchup, true);
 		}
 		
-		refreshStanding(competitionId);
+		standings = refreshStanding(competitionId, null);
+		
+		// Due to the recalculation lost all squad's previous positions so bring them back from back up
+		for (Standing standing : standings) {
+			standing.setPreviousPosition(standing.getStandingLive().getPreviousPosition());
+		}
 	}
 	
 	/**

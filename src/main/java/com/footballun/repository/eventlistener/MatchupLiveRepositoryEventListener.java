@@ -9,7 +9,6 @@ import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
 
 import com.footballun.model.MatchupDetail;
 import com.footballun.model.MatchupLive;
-import com.footballun.model.Squad;
 import com.footballun.service.FootballunService;
 
 /**

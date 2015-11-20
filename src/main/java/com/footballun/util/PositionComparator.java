@@ -16,6 +16,16 @@ public class PositionComparator implements Comparator<StandingBase> {
 
 	@Override
 	public int compare(StandingBase s1, StandingBase s2) {
+		return PositionComparator.doCompare(s1, s2);
+	}
+	
+	/**
+	 * Sharing this comparison to out site of this comparator 
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
+	public static int doCompare(StandingBase s1, StandingBase s2) {
 		// Compares point first
 		if (s1.getPoint() > s2.getPoint()) {
 			return -1;
@@ -23,7 +33,7 @@ public class PositionComparator implements Comparator<StandingBase> {
 		if (s1.getPoint() < s2.getPoint()) {
 			return 1;
 		}
-		
+
 		// The same point, compare goals difference
 		int goalsDiff1 = s1.getGoalsScored() - s1.getGoalsAgainst();
 		int goalsDiff2 = s2.getGoalsScored() - s2.getGoalsAgainst();
@@ -33,7 +43,7 @@ public class PositionComparator implements Comparator<StandingBase> {
 		else if (goalsDiff1 < goalsDiff2) {
 			return 1;
 		}
-		
+
 		// Still the same goals difference, do compare goals scored
 		if (s1.getGoalsScored() > s2.getGoalsScored()) {
 			return -1;
@@ -41,9 +51,8 @@ public class PositionComparator implements Comparator<StandingBase> {
 		if (s1.getGoalsScored() < s2.getGoalsScored()) {
 			return 1;
 		}
-		
+
 		// The same position
 		return 0;
 	}
-
 }

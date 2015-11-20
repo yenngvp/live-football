@@ -77,7 +77,7 @@ public interface FootballunService {
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	Standing findStandingBySquad(Squad squad) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
-	void refreshStanding(int competitionId) throws DataAccessException;
+	List<Standing> refreshStanding(int competitionId, List<Standing> standings) throws DataAccessException;
 	Standing createStandingForSquad(Squad squad);
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	

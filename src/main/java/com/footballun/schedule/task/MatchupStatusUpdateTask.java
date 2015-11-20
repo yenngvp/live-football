@@ -56,7 +56,7 @@ public class MatchupStatusUpdateTask {
 	public void updateMatchupStatus(Matchup matchup) {
 		
 		Calendar calendar = appConfigure.getServerCalendarUTC();
-		Calendar matchCalendar = new GregorianCalendar(appConfigure.getTimeZone(), appConfigure.getLocale());
+		Calendar matchCalendar = GregorianCalendar.getInstance();
 		
 		long currentTime = calendar.getTimeInMillis();
 		long matchStartTime;
