@@ -34,6 +34,10 @@ public class MatchupDetail extends NamedEntity {
 	@JoinColumn
 	private Squad squad;
 	
+	@OneToOne
+	@JoinColumn
+	private Formation formation;
+	
 	
 	/**
 	 * Columns
@@ -98,6 +102,14 @@ public class MatchupDetail extends NamedEntity {
 	public void setGoal(Integer goal) {
 		if (goal < 0) goal = 0;
 		this.goal = goal;
+	}
+
+	public Formation getFormation() {
+		return formation;
+	}
+
+	public void setFormation(Formation formation) {
+		this.formation = formation;
 	}
 
 	@Override

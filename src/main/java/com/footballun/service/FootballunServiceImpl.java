@@ -76,8 +76,6 @@ public class FootballunServiceImpl implements FootballunService {
 	private MatchupStatus statusJustFullTime;
 	private MatchupStatus statusFullTime;
 	
-	private Setting setting;
-	
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
 
 	/**
@@ -513,10 +511,8 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	public Setting getSetting(int id) throws DataAccessException {
-		if (setting == null) {
-			setting = settingRepository.findOne(id);
-		}
-		return setting;
+
+		return settingRepository.findOne(id);
 	}
 	
 	@Override

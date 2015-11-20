@@ -39,6 +39,10 @@ public class Squad extends BaseEntity implements Serializable {
 	@JoinColumn
 	private Competition competition;
 		
+	@OneToOne
+	@JoinColumn
+	private Formation formation;
+	
 	/**
 	 * Columns
 	 */
@@ -79,6 +83,14 @@ public class Squad extends BaseEntity implements Serializable {
 
 	public void setGeneration(String generation) {
 		this.generation = generation;
+	}
+
+	public Formation getFormation() {
+		return formation;
+	}
+
+	public void setFormation(Formation formation) {
+		this.formation = formation;
 	}
 
 	@Override

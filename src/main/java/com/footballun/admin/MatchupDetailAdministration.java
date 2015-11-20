@@ -44,6 +44,7 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 				.field( "isHomeSquad" ).caption( "Home" )
 				.field( "isFirstSquad" ).caption( "First Squad" )
 				.field( "goal" ).caption( "Goal" )
+				.field( "formation" ).caption( "Formation" )
 				.build();
 	}
 	
