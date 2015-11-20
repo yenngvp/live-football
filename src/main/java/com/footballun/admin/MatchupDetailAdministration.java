@@ -7,9 +7,11 @@ package com.footballun.admin;
 import org.lightadmin.api.config.AdministrationConfiguration;
 import org.lightadmin.api.config.builder.EntityMetadataConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.FieldSetConfigurationUnitBuilder;
+import org.lightadmin.api.config.builder.FiltersConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.ScreenContextConfigurationUnitBuilder;
 import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
+import org.lightadmin.api.config.unit.FiltersConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.MatchupDetail;
@@ -45,4 +47,12 @@ public class MatchupDetailAdministration extends AdministrationConfiguration<Mat
 				.build();
 	}
 	
+	public FiltersConfigurationUnit filters( final FiltersConfigurationUnitBuilder filterBuilder ) {
+		return filterBuilder
+				.filter( "ID", "id" )
+				.filter( "Matchup", "matchup" )
+				.filter( "Squad", "squad" )
+				.filter( "Goal", "goal" )
+				.build();
+	}
 }

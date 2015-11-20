@@ -46,8 +46,13 @@ public class MatchupLiveAdministration extends AdministrationConfiguration<Match
 				.field( "timestamp" ).caption( "Timestamp" )
 				.build();
 	}
-	
-//	public FiltersConfigurationUnit filters(final FiltersConfigurationUnitBuilder filterBuilder) {
-//        return filterBuilder.build();
-//    }
+
+	public FiltersConfigurationUnit filters( final FiltersConfigurationUnitBuilder filterBuilder ) {
+		return filterBuilder
+				.filter( "ID", "id" )
+				.filter( "Matchup", "matchup" )
+				.filter( "Matchup Register", "matchupRegister" )
+				.filter( "Event", "event" )
+				.build();
+	}
 }
