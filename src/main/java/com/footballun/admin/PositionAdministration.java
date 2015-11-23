@@ -34,7 +34,7 @@ public class PositionAdministration  extends AdministrationConfiguration<Positio
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
 				.field( "name" ).caption( "Name" )
-				.field( "particularName" ).caption( "Particular Name" )
+				.field( "position" ).caption( "Position" )
 				.field( "areaTopdown" ).caption( "Topdown (1-5)" )
 				.field( "areaLeftright" ).caption( "Leftright(1-5)" )
 				.build();

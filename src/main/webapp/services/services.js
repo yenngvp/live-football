@@ -11,9 +11,8 @@ var MatchDay = ['$resource','context', function($resource, context) {
 }];
 
 
-var Team = ['$resource','$cacheFactory','context', function($resource, $cacheFactory, context) {
-	var cache = $cacheFactory("Teams");
-	var cache2 = $cacheFactory("TeamDetails");
+var Team = ['$resource','context', function($resource, context) {
+
 	return {
 		teams: $resource(context + '/api/teams', {}, {
 	        query: {method: 'GET', params: {}, isArray: true}
@@ -43,21 +42,9 @@ var MockService = ['$httpBackend', '$http', '$q', 'context', function($httpBacke
 			
 			if(useMockData) {
 				$q.defer();
-				$q.all([
-				        $http.get(context + '/static/mock-data/pets.json'),
-				        $http.get(context + '/static/mock-data/vets.json'),
-				        $http.get(context + '/static/mock-data/owners.json'),
-				        $http.get(context + '/static/mock-data/owner_one.json'),
+				$q.all([,
 				        $http.get(context + '/static/mock-data/pettypes.json'),
 				]).then(function(data) {
-					console.log("Mocking /api/pets");
-					$httpBackend.whenGET(context + '/api/pets').respond(data[0].data);
-					console.log("Mocking /api/vets");
-					$httpBackend.whenGET(context + '/api/vets').respond(data[1].data);
-					console.log("Mocking /api/owners");
-					$httpBackend.whenGET(context + '/api/owners').respond(data[2].data);
-					console.log("Mocking /api/owners/1");
-					$httpBackend.whenGET(context + '/api/owners/1').respond(data[3].data);
 					console.log("Mocking /api/pets/types");
 					$httpBackend.whenGET(context + '/api/pets/types').respond(data[4].data);
 					

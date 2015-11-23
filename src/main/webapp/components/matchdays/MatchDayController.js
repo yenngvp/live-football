@@ -1,4 +1,5 @@
-var MatchDayController = ['$scope', 'MatchDay','localStorageService', function($scope, MatchDay, localStorageService) {
+var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageService',
+                          function($scope, MatchDay, enableCache, localStorageService) {
 
 	/*
 	$scope.$on('$viewContentLoaded', function(event){
@@ -7,10 +8,9 @@ var MatchDayController = ['$scope', 'MatchDay','localStorageService', function($
 		}, 1000);
 	});*/
 
-	var enableCache = false;
-
 	if (enableCache) {
 		// Gets localStorage cached
+		console.log("Cache service enabled");
 		var key = 'matchdaysCache'; 
 		$scope.matchdays = localStorageService.get(key);
 		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {

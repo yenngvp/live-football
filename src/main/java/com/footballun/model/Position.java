@@ -20,8 +20,8 @@ public class Position extends NamedEntity {
 	/**
 	 * Columns
 	 */
-	@Column(name = "particular_name")
-	private String particularName;
+	@Column(name = "position")
+	private String position;
 	
 	@Column(name = "area_topdown")
 	private int areaTopdown;
@@ -29,16 +29,17 @@ public class Position extends NamedEntity {
 	@Column(name = "area_leftright")
 	private int areaLeftright;
 
-	public String getParticularName() {
-		return particularName;
-	}
 
-	
 	/**
 	 * Getters/Setters
 	 */
-	public void setParticularName(String particularName) {
-		this.particularName = particularName;
+	
+	public String getPosition() {
+		return position;
+	}
+	
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	public int getAreaTopdown() {

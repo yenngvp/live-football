@@ -1,7 +1,6 @@
-var StandingController = ['$scope','$http','Standing','localStorageService', function ($scope, $http, Standing, localStorageService) {
+var StandingController = ['$scope','$http','Standing','enableCache','localStorageService',
+                          function ($scope, $http, Standing, enableCache, localStorageService) {
 	
-	var enableCache = false;
-
 	if (enableCache) {
 		// Gets localStorage cached
 		var key = 'standingsCache'; 

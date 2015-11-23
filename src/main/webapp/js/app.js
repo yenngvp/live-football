@@ -12,13 +12,19 @@ var app = angular.module('footballun', ['ui.router',
                                     	'angular-timeline',
                                     	'angular-scroll-animate',
                                     	'ui.bootstrap',
-                                    	'LocalStorageModule'
+                                    	'LocalStorageModule',
+                                    	'ngLocalize',
+                                    	'ngLocalize.InstalledLanguages',
+                                    	'ngLocalize.Events'
                                     	]);
 
 
 /** Start of Configurable constants **/
 app.constant('useMockData', false);
 app.constant('context', '/footballun');
+app.constant('enableCache', false);
+
+
 /** End of Configurable constants **/
 
 app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvider',function(stateHelperProvider,$urlRouterProvider,$urlMatcherFactoryProvider) {
@@ -69,7 +75,38 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		templateUrl: "components/teams/team_details.html",
 		controller: "TeamDetailsController",
 		data: {requireLogin : false}
-	});
+	}).state({
+		name: "competition",
+		url: "/competition",
+		templateUrl: "components/competition/competition.html",
+		controller: "CompetitionController",
+		data: {requireLogin : false}
+	}).state({
+		name: "competition.epl",
+		url: "/competition/:id",
+		templateUrl: "components/teams/team_details.html",
+		controller: "CompetitionController",
+		data: {requireLogin : false}
+	}).state({
+		name: "competition.bundesliga",
+		url: "/competition/:id/members",
+		templateUrl: "components/teams/team_details.html",
+		controller: "CompetitionController",
+		data: {requireLogin : false}
+	}).state({
+		name: "competition.laliga",
+		url: "/competition/:id/members",
+		templateUrl: "components/teams/team_details.html",
+		controller: "CompetitionController",
+		data: {requireLogin : false}
+	}).state({
+		name: "competition.seria",
+		url: "/competition/:id/members",
+		templateUrl: "components/teams/team_details.html",
+		controller: "CompetitionController",
+		data: {requireLogin : false}
+	})
+	;
 
 } ]);
 
@@ -91,45 +128,55 @@ app.controller('StatsController', StatsController);
 app.controller('SearchController', SearchController);
 app.controller('TeamDetailsController', TeamDetailsController);
 
-app.controller('DashboardController', ['$scope', 'MatchDay', 'localStorageService', function($scope, MatchDay,localStorageService) {
+app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService',
+                                       function($scope, MatchDay, enableCache, localStorageService) {
 
-	// Query matchdays
-	// Gets localStorage cached
-	var key = 'matchdaysCache'; 
-    $scope.matchdays = localStorageService.get(key);
-    if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
-    	MatchDay.matchdays.query().$promise.then(
-    			//success
-    			function( value ) {
-    				localStorageService.set(key, value);
-    				$scope.matchdays = value;
-    			},
-    			//error
-    			function( error ) {
-    				// TODO: Handle request returns error
-    				console.log("Failed with: " + error);
-    			}
-    	);
-    }
+	if (enableCache) {
+		// Query matchdays
+		// Gets localStorage cached
 
-    // Query featured players
-	// Gets localStorage cached
-	key = 'featuredMatchupsCache'; 
-    $scope.featuredMatchups = localStorageService.get(key);
-    if (angular.isUndefined($scope.featuredMatchups) || $scope.featuredMatchups == null || $scope.featuredMatchups == 0) {
-    	MatchDay.featuredMatchups.query().$promise.then(
-    			//success
-    			function( value ) {
-    				localStorageService.set(key, value);
-    				$scope.featuredMatchups = value;
-    			},
-    			//error
-    			function( error ) {
-    				// TODO: Handle request returns error
-    				console.log("Failed with: " + error);
-    			}
-    	);
-    }
+		var key = 'matchdaysCache'; 
+		$scope.matchdays = localStorageService.get(key);
+		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
+			MatchDay.matchdays.query().$promise.then(
+					//success
+					function( value ) {
+						localStorageService.set(key, value);
+						$scope.matchdays = value;
+					},
+					//error
+					function( error ) {
+						// TODO: Handle request returns error
+						console.log("Failed with: " + error);
+					}
+					);
+		}
+	} else {
+		$scope.matchdays = MatchDay.matchdays.query();
+	}
+	
+	if (enableCache) {
+		// Query featured players
+		// Gets localStorage cached
+		key = 'featuredMatchupsCache'; 
+		$scope.featuredMatchups = localStorageService.get(key);
+		if (angular.isUndefined($scope.featuredMatchups) || $scope.featuredMatchups == null || $scope.featuredMatchups == 0) {
+			MatchDay.featuredMatchups.query().$promise.then(
+					//success
+					function( value ) {
+						localStorageService.set(key, value);
+						$scope.featuredMatchups = value;
+					},
+					//error
+					function( error ) {
+						// TODO: Handle request returns error
+						console.log("Failed with: " + error);
+					}
+					);
+		}
+	} else {
+		$scope.featuredMatchups = MatchDay.featuredMatchups.query();
+	}
 	
 	// Carousel directive
 	$scope.myInterval = 5000;
@@ -160,6 +207,17 @@ app.directive('scrollToTarget', function() {
 
 app.directive('datePicker', DatePickerDirective);
 app.directive('myMatchup', MatchupDirective);
+
+app.value('localeSupported', [
+                           'en-US',
+                           'fr-FR',
+                           'vi-VN'
+                       ]);
+app.value('localeFallbacks', {
+                           'en': 'en-US',
+                           'fr': 'fr-FR',
+                           'vi': 'vi-VN'
+                       });
 
 app.run(function(useMockData, MockService) {
 	MockService.mock(useMockData);
