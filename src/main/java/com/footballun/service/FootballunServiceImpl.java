@@ -110,20 +110,20 @@ public class FootballunServiceImpl implements FootballunService {
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException {
 		
-		return  matchupRepository.findByMatchday(matchday);
+		return  matchupRepository.findByMatchdayOrderByStartAtAsc(matchday);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByRound(String round) throws DataAccessException {
 		
-		return  matchupRepository.findByRound(round);
+		return  matchupRepository.findByRoundOrderByStartAtAsc(round);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException {
-		return  matchupRepository.findByFeatured(featured);
+		return  matchupRepository.findByFeaturedOrderByStartAtAsc(featured);
 	}
 	
 	@Override
@@ -133,7 +133,7 @@ public class FootballunServiceImpl implements FootballunService {
 	
 	@Override
 	public List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException {
-		return matchupRepository.findByCompetitionId(competitionId);
+		return matchupRepository.findByCompetitionIdOrderByStartAtAsc(competitionId);
 	}
 	
 	@Override
@@ -423,7 +423,7 @@ public class FootballunServiceImpl implements FootballunService {
 		/*
 		 * Rejects to reset the standing if there is still have matchups in LIVE mode.
 		 */
-		List<Matchup> matchups = matchupRepository.findByCompetitionId(competitionId);
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdOrderByStartAtAsc(competitionId);
 		
 		for (Matchup matchup : matchups) {
 			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
@@ -496,6 +496,12 @@ public class FootballunServiceImpl implements FootballunService {
 	public void saveMatchupRegister(MatchupRegister register) throws DataAccessException {
 		matchupRegisterRepository.save(register);
 	}
+	
+	@Override
+	public List<MatchupRegister> findMatchupRegisterByMatchupId(int matchupId) throws DataAccessException {
+		return matchupRegisterRepository.findByMatchupIdOrderByMatchupDetailIdAsc(matchupId);
+	}
+	
 	
 	/**
 	 * Matchup status service 

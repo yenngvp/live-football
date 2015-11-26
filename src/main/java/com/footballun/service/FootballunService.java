@@ -98,7 +98,7 @@ public interface FootballunService {
 	 * Matchup Register's APIs
 	 */
 	void saveMatchupRegister(MatchupRegister register) throws DataAccessException;
-	
+	List<MatchupRegister> findMatchupRegisterByMatchupId(int matchupId) throws DataAccessException;
 	
 	/**
 	 * Setting services

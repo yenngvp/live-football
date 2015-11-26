@@ -41,14 +41,3 @@ var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactor
     	);
     } 	
 }];
-
-/*
-var AddTeamController = ['$scope','Team', function($scope,Team) {
-
-	$scope.Team={id:0,pets:[]};
-
-	$scope.addTeam = function(){
-		Team.save($scope.Team);
-	}
-}];
-*/

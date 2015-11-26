@@ -6,19 +6,18 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 
 import com.footballun.model.Matchup;
-import com.footballun.model.MatchupStatus;
 
 public interface MatchupRepository {
 
-	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
+	List<Matchup> findByMatchdayOrderByStartAtAsc(Integer matchday) throws DataAccessException;
 	
-	List<Matchup> findByRound(String round) throws DataAccessException;
+	List<Matchup> findByRoundOrderByStartAtAsc(String round) throws DataAccessException;
 	
-	List<Matchup> findByFeatured(Boolean featured) throws DataAccessException;
+	List<Matchup> findByFeaturedOrderByStartAtAsc(Boolean featured) throws DataAccessException;
 	
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
-	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
+	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
 	List<Matchup> findByCompetitionIdAndStatus_NameIn(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	

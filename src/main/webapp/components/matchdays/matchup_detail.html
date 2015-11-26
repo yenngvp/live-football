@@ -1,0 +1,181 @@
+<section id="matchdays" class="sections sections-body" ng-controller="MatchupDetailController">
+  <div class="container">
+  	
+  	<!-- Matchup Details -->
+  	<div class="row">
+		<div style="text-align: center"><h3>{{matchup.stadium.name}}</h3></div>
+		<div style="text-align: center"><h4>{{matchup.startAt | date:dateTimeFormatString}}</h4></div>
+		
+		<div class="table">
+			<div class="table-row">
+				<div class="table-cell">
+					<div class="thumbnail team-card">
+			          <img title="matchup.firstDetail.squad.team.name"
+			         	   class="img-responsive" width="150px" height="150px"
+			         	   data-ng-src="images/teams/{{matchup.firstDetail.squad.team.name | lowercase}}-150.png"
+			         	   alt="{{matchup.firstDetail.squad.team.name}}"></img>
+			          <div class="caption">
+			            <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{matchup.firstDetail.squad.team.name}}</a></h3>
+			          </div>
+			     	</div>
+				</div>
+				<div class="table-cell">
+					Begin in: <timer  countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+				</div>
+				
+				<div class="table-cell">	
+					<div class="thumbnail team-card">
+			          <img title="matchup.secondDetail.squad.team.name"
+			          	   class="img-responsive" width="150px" height="150px"
+			          	   data-ng-src="images/teams/{{matchup.secondDetail.squad.team.name | lowercase}}-150.png"
+			          	   alt="{{matchup.secondDetail.squad.team.name}}"></img>
+			          <div class="caption">
+			            <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{matchup.secondDetail.squad.team.name}}</a></h3>
+			          </div>
+			        </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+  	
+  	<!-- Line-ups  -->
+  	<div class="row">
+  		<span ng-if="!lineupAvailable">
+  				<h4>Lineup not available yet</h4>
+  		</span>
+  		
+  		<div class="table">
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Manager</h3></div>
+				</div>
+				<div class="group">
+					<div class="table-row">
+						<div class="table-cell">
+							<ul>
+								<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+							</ul>
+						</div>
+						<div class="table-cell">
+						  	<ul>
+								<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Goalkeeper</h3></div>
+				</div>
+				<div class="group">
+				<div class="table-row">
+					<div class="table-cell">
+						<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+				</div>
+				</div>
+				
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Defenders</h3></div>
+				</div>
+				<div class="group">
+				<div class="table-row">
+					<div class="table-cell">
+						<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+				</div>
+				</div>
+				
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Midfielders</h3></div>
+				</div>
+				<div class="group">
+				<div class="table-row">
+					<div class="table-cell">
+						<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+				</div>
+				</div>
+				
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Forwards</h3></div>
+				</div>
+				<div class="group">
+				<div class="table-row">
+					<div class="table-cell">
+						<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+				</div>
+				</div>
+				
+				 <div class="caption table-row-header">
+					<div class="table-cell span2"><h3>Substitues</h3></div>
+				</div>
+				<div class="group">
+				<div class="table-row">
+					<div class="table-cell">
+						<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul>
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						</ul>
+					</div>
+				</div>
+				</div>
+			</div>
+    </div>
+    
+    
+    <!-- Pitch layouts -->
+    <div class="row">
+    	<div class="outsideWrapper">
+		    <div class="insideWrapper">
+				<!-- Pitch background -->
+		        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
+		        <!-- Players' position -->
+		        <ul>
+		        	<li ng-repeat="p in imagePositions">
+		        		<canvas class="positionCoveringCanvas" ng-style="{'position': 'absolute',
+		        											   			  'left': '{{p[0]}}px',
+		        											   			  'top': '{{p[1]}}px',
+		        											   			  'background-image': 'url(images/heros/the-citizens.png)'}">
+		        		</canvas>
+		        	<li>
+		        </ul>
+		    </div>
+		 </div>
+    </div>
+    
+  </div>
+</section>

@@ -4,6 +4,8 @@
  */
 package com.footballun.repository.springdatajpa;
 
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.CrudRepository;
 
@@ -20,4 +22,7 @@ public interface MatchupRegisterRepositoryJpa extends
 	@SuppressWarnings("unchecked")
 	@Override
 	MatchupRegister save(MatchupRegister matchupRegister) throws DataAccessException;
+	
+	@Override
+	List<MatchupRegister> findByMatchupIdOrderByMatchupDetailIdAsc(Integer matchupId) throws DataAccessException;
 }

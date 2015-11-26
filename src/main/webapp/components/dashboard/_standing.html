@@ -1,0 +1,22 @@
+
+<section class="sections sections-body" ng-controller="StandingController">
+	  <div class="table">
+	  	<p class="section-desc">Live Standing Now</p>
+	  	 <div class="table-row">
+				<div class="table-cell"><h5 class="caption-heading">#</h5></div>
+				<div class="table-cell"><h5 class="caption-heading">club</h5></div>
+				<div class="table-cell"><h5 class="caption-heading">played</h5></div>
+				<div class="table-cell"><h5 class="caption-heading">point</h5></div>
+		 </div>  
+		<div class="table-row"
+			ng-class-odd="'table-row-odd'"
+			ng-class-even="'table-row-even'"
+			ng-repeat="p in standings">
+			<div class="table-cell">{{p.currentPosition}}</div>
+			<div class="table-cell">{{p.squad.team.name}}</div>
+			<div class="table-cell">{{p.played}}</div>
+			<div class="table-cell">{{p.point}}</div>
+		</div>
+		</div>
+	  </div>
+</section>

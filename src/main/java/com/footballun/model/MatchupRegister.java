@@ -94,9 +94,10 @@ public class MatchupRegister extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return String.format("MatchupRegister [%s, %s, %s, linenup=%b]",
+		return String.format("MatchupRegister [%s, %s, %s, %s, linenup=%b]",
 				squadMember == null ? "" : squadMember.toString(),
-				matchupDetail.toString(),
+				matchup == null ? "" : matchup.toString(),
+				matchupDetail == null ? "" : matchupDetail.toString(),
 				position == null ? "" : position.toString(),
 				isLineup == null ? false : isLineup);
 	}

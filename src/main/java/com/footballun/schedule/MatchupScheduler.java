@@ -69,7 +69,7 @@ public class MatchupScheduler implements SchedulingConfigurer   {
                         Calendar nextExecutionTime =  new GregorianCalendar();
                         Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
                         nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
-                        nextExecutionTime.add(Calendar.SECOND, appConfigure.getMatchStatusTrackerInterval()); //you can get the value from wherever you want
+                        nextExecutionTime.add(Calendar.HOUR, appConfigure.getMatchStatusTrackerInterval());
                         return nextExecutionTime.getTime();
                     }
                 }

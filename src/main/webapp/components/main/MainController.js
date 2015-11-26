@@ -74,6 +74,33 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 	});
 	
 
+	$scope.timeIndicator = function($date) {
+		var now = new Date();
+		var ahead = new Date(parseInt($date, 10));
+		var diff = ahead - now;
+		var dayNow = now.getDay(); // Day in week (0-6)
+		var dayAhead = ahead.getDay();
+		
+		if (diff == 0) {
+			// Today
+			console.log(toString(ahead) + ' is today');
+		} else if (diff > 0 && diff <= 7) {
+			// Future within 7 days but needs to check it is in the week or next week
+			if (dayAhead > dayNow) {
+				// Same week
+				console.log(toString(ahead) + ' is in this week');
+			} else {
+				// day ahead is next week
+				console.log(toString(ahead) + ' is next week');
+			}
+		} else if (diff > 7 && diff < (dayNow + 7 * dayAhead)) {
+			// day ahead is still within next week
+			console.log(toString(ahead) + ' is next week');
+			
+		}
+	};
+			
+	
 	/*
 	 * Localization supported
 	 */
@@ -83,39 +110,33 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
             flagClass: 'flag-us',
             langDisplayText: 'English'
         },
+        'vi-VN': {
+            flagClass: 'flag-vi',
+            langDisplayText: 'Tiếng Việt'
+        },
         'fr-FR': {
             flagClass: 'flag-fr',
             langDisplayText: 'Français'
-        },
-        'vi-VN': {
-            flagClass: 'flag-vi',
-            langDisplayText: 'Tieng Viet'
         }
-        
     };
 
     $scope.currentYear = new Date().getFullYear();
     $scope.fullName = 'Yen Nguyen';
 
     $scope.setLocale = function (loc) {
-    	console.log("setLocale as " + loc);
         locale.setLocale(loc);
     };
 
     locale.ready('common').then(function () {
-    	
-    	for (var i =0; i < $scope.supportedLang.length; i++) 
-    	{
-    		console.log($scope.supportedLang[i]);
-    	}
-    	$scope.setLocale($scope.supportedLang[2]);
-    	console.log('common ready ' + locale.getLocale());
         $scope.flagClass = $scope.localeData[locale.getLocale()].flagClass;
         $scope.langDisplayText = $scope.localeData[locale.getLocale()].langDisplayText;
+        
+        $rootScope.dateTimeFormatString = locale.getString('common.dateTimeFormat');
     });
 
     $scope.$on(localeEvents.localeChanges, function (event, data) {
-    	console.log('Changing locale');
+    	$rootScope.dateTimeFormatString = locale.getString('common.dateTimeFormat');
+    	
         $scope.flagClass = $scope.localeData[data].flagClass;
         $scope.langDisplayText = $scope.localeData[data].langDisplayText;
     });

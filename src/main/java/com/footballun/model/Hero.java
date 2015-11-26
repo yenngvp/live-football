@@ -103,6 +103,10 @@ public class Hero extends BaseEntity {
 		this.status = status;
 	}
 	
+	public String getFullName() {
+		return String.format("%s %s", firstName, lastName);
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("Hero [%d, %s %s]", id, firstName, lastName);

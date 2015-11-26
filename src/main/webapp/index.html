@@ -21,20 +21,20 @@
     <![endif]-->
 
     <ng-include src="'components/header.html'"></ng-include>
-
-    <data-ui-view></data-ui-view> 
-
+	
+	<data-ui-view></data-ui-view> 
+	
     <ng-include src="'components/footer.html'"></ng-include>
 
     <!-- Search modal -->
     <ng-include src="'components/_partials/_modal_search.html'"></ng-include>
 
-    <!--<script src="http://code.jquery.com/jquery.js"></script>-->
     <script src="plugins/jquery/jquery-2.1.0.min.js"></script>
     <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 
     <!-- bootstrap javascript -->
-    <script src="js/lib/bootstrap.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/bootstrap-dropdown.js"></script>
     <script src="plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
     <!-- build:js({app,.tmp}) scripts/main.js -->
@@ -71,6 +71,8 @@
     <script src="components/directives/DatePickerDirective.js"></script>
     <script src="components/directives/MatchupDirective.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/lib/i18n/angular-locale_vi.js"></script>
     <!-- endbuild -->
   </body>
+
 </html>

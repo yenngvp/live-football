@@ -11,5 +11,18 @@
     "championLeague": "Champion League",
     "bundesliga": "Bundesliga (Đức)",
     "laliga": "Laliga (TBN)",
-    "seria": "Seri-A (Ý)"
+    "seria": "Seri-A (Ý)",
+    "scheduleTBD": "Chưa có lịch",
+    "thisWeek": "Tuần này",
+    "nextWeek": "Tuần sau",
+    "monday": "Thứ 2",
+    "tuesday": "Thứ 3",
+    "wednessday": "Thứ 4",
+    "thursday": "Thứ 5",
+    "friday": "Thứ 7",
+    "saturday": "Thứ 7",
+    "sunday": "Chủ nhật",
+    "at": "lúc",
+    "viewMatchDetail": "Chi tiết",
+    "dateTimeFormat": "HH:mm EEEE, d MMMM, yyyy"
 }

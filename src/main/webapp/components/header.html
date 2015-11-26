@@ -49,24 +49,20 @@
       </li>
     </ul>
      -->
- <div class="pull-right">
-       <!-- Single button -->
-       <div class="btn-group dropup">
-         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-             <i ng-class="flagClass"></i>
-             <span>{{ langDisplayText }}</span>
-             <span class="caret"></span>
-         </button>
-         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-             <li data-ng-repeat="lang in supportedLang">
-                 <a href="#" ng-click="setLocale(lang)">
-                     <i ng-class="localeData[lang].flagClass"></i>
-                     <span>{{ localeData[lang].langDisplayText }}</span>
-                 </a>
-             </li>
-         </ul>
-       </div>
-   </div>
-        
-  </div><!-- /.container-fluid -->
+		<div class="dropdown pull-right">
+			<button type="button" class="btn btn-default dropdown-toggle"
+				data-toggle="dropdown">
+				<i ng-class="flagClass"></i> <span>{{ langDisplayText }}</span> <span
+					class="caret"></span>
+			</button>
+			<ul class="dropdown-menu navbar-dropdown-menu">
+				<li data-ng-repeat="lang in supportedLang"><a href=""
+					ng-click="setLocale(lang)"> <i
+						ng-class="localeData[lang].flagClass"></i> <span>{{localeData[lang].langDisplayText
+							}}</span>
+				</a></li>
+			</ul>
+		</div>
+
+	</div><!-- /.container-fluid -->
 </nav>

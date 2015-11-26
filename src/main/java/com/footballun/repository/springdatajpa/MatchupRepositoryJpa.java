@@ -13,20 +13,20 @@ import com.footballun.repository.MatchupRepository;
 public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<Matchup, Integer> {
 
 	@Override
-	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
+	List<Matchup> findByMatchdayOrderByStartAtAsc(Integer matchday) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByRound(String round) throws DataAccessException;
+	List<Matchup> findByRoundOrderByStartAtAsc(String round) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByFeatured(Boolean featured) throws DataAccessException;
+	List<Matchup> findByFeaturedOrderByStartAtAsc(Boolean featured) throws DataAccessException;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByCompetitionId(Integer competitionId) throws DataAccessException;
+	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
 	@Override
 	List<Matchup> findByCompetitionIdAndStatus_NameIn(Integer competitionId, Collection<String> statuses) throws DataAccessException;

@@ -1,55 +1,84 @@
 
-<!-- Headline -->
-<ng-include src="'components/dashboard/_headline.html'"></ng-include>
-
-
 <!-- Dash board highlight content -->
-<div class="container-full section sections-body">
+<div class="container section sections-body">
+	<div class="row">
+		<div class="col-md-12">
+			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
+		</div>
+	</div>
+ 
+	<div class="row">
+		<div class="col-md-10">
 
-    <!-- Page header -->
-    <div class="page-header">
-        <h2>Matchups this week</h2>
-    </div>
-    <!-- /Page header -->
-
-    <!-- Timeline -->
-    <div class="timeline">
-    
-        <!-- Line component -->
-        <div class="line text-muted"></div>
-
-       
-        <!-- Panel -->
-        <div class="panel panel-primary">
-    
-            <!-- Icon -->
-            <div class="panel-heading thumbnail icon">
-                <i class="glyphicon glyphicon-calendar"></i>
-            </div>
-            <!-- /Icon -->
-    
-            <!-- Heading -->
-            <div class="panel-heading">
-                <h2 class="panel-title">Thu 7 tuan nay luc 6:45 toi:</h2>
-            </div>
-            <!-- /Heading -->
-    
-            <!-- Body -->
-			<div class="panel-body">
-					<my-matchup class="col-md-3 thumbnail matchup-wrapper" ng-repeat="matchup in matchdays" matchup="matchup"></my-matchup>
+			<!-- Page header -->
+			<div class="page-header">
+				<h3>{{ 'common.epl' | i18n }} {{ 'common.thisWeek' | i18n }}</h3>
 			</div>
-			<!-- /Body -->
+			<!-- /Page header -->
 
-			<!-- Footer -->
-			<!-- 
-            <div class="panel-footer">
-                <small>Footer is also supported!</small>
-            </div>
-            <!-- /Footer -->
+			<!-- Timeline -->
+			<div class="timeline">
 
-        </div>
-        <!-- /Panel -->
-    </div>
-    <!-- /Timeline -->
+				<!-- Line component -->
+				<div class="line text-muted"></div>
 
+
+				<!-- Panel -->
+				<div class="panel panel-primary" ng-repeat="matchday in matchdays">
+
+					<!-- Icon -->
+					<div class="panel-heading thumbnail icon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+					<!-- /Icon -->
+
+					<!-- Heading -->
+					<div class="panel-heading">
+						<h2 class="panel-title" ng-if="matchday[0].startAt" ng-init="timeIndicator(matchday[0].startAt)"> {{ matchday[0].startAt | date:dateTimeFormatString }}</h2>
+						<h2 class="panel-title" ng-if="!matchday[0].startAt">{{'common.scheduleTBD' | i18n }}</h2>
+						<span style="text-align: center !important;"><timer ng-if="matchday[0].startAt"  countdown="matchday[0].startAt" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></span>
+					</div>
+					<!-- /Heading -->
+
+					<!-- Body -->
+					<div class="panel-body">
+						<div class="table">
+						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
+						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
+						    <div class="table-cell cell-matchup-center" >
+						    	<h4 ng-if="!(matchup.status.name='Live')">vs</h4>
+						    	<h4 ng-if="matchup.status.name='Live'">0:0</h4>
+						    </div>
+						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
+						    <div class="table-cell cell-matchup-right2">
+						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{'common.viewMatchDetail'  | i18n}}</a></h5>
+						    </div>
+						  </div>
+						</div>
+					<!-- <my-matchup ng-repeat="matchup in matchday" matchup="matchup"></my-matchup>  -->
+					</div>
+					<!-- /Body -->
+
+					<!-- Footer -->
+					<!-- 
+		            <div class="panel-footer">
+		                <small>Footer is also supported!</small>
+		            </div>
+          			<!-- /Footer -->
+
+				</div>
+				<!-- /Panel -->
+			</div>
+			<!-- /Timeline -->
+		</div>
+		<div class="col-md-2">
+			<div class="row">
+				<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
+			</div>
+			<div class="row">
+				<ng-include src="'components/dashboard/_standing.html'"></ng-include>
+			</div>
+		</div>
+	</div>
+	
 </div>

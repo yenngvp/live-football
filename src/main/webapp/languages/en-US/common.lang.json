@@ -11,5 +11,9 @@
     "championLeague": "UEFA Champion League",
     "bundesliga": "Bundesliga",
     "laliga": "Laliga",
-    "seria": "Seri-A"
+    "seria": "Seri-A",
+    "scheduleTBD": "TBD",
+    "thisWeek": "This week",
+    "nextWeek": "Next week",
+    "viewMatchDetail": "Details"
 }

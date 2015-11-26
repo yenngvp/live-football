@@ -1,7 +1,7 @@
-<div style="width: 350px !important"; height: 400px !important;>
+<div>
 	<div class="col-md-12" style="text-align: center">{{matchup.stadium.name}}</div>
 	<div class="col-md-5" style="text-align: center">
-		<img alt="{{matchup.firstDetail.squad.team.name}}"
+		<img class="img-responsive" alt="{{matchup.firstDetail.squad.team.name}}"
 			src="images/teams/{{matchup.firstDetail.squad.team.name | lowercase}}-150.png">
 		<span>{{matchup.firstDetail.squad.team.name}}</span>
 	</div>
@@ -10,7 +10,7 @@
 		Begin in: <timer  countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
 	</div>
 	<div class="col-md-5" style="text-align: center">
-		<img alt="{{matchup.secondDetail.squad.team.name}}"
+		<img  class="img-responsive" alt="{{matchup.secondDetail.squad.team.name}}"
 			src="images/teams/{{matchup.secondDetail.squad.team.name | lowercase}}-150.png">
 		<span>{{matchup.secondDetail.squad.team.name}}</span>
 	</div>

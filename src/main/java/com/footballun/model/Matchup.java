@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
@@ -70,10 +71,12 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@Column(name = "start_at")
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	private Date startAt;
 	
 	@Column(name = "end_at")
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	private Date endAt;
 	
 	@Column(name = "matchday")

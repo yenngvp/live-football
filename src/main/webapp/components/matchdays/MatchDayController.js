@@ -30,7 +30,8 @@ var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageServic
 	} else {
 		$scope.matchdays = MatchDay.matchdays.query();
 	}
-
+	
+	
     /*
      *  Calulates lineup positions
      */
@@ -64,33 +65,61 @@ var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageServic
     console.log($scope.imagePositions);
 }];
 
-/*
-var PetDetailsController = ['$scope','PetType','OwnerPet',function($scope,PetType,OwnerPet,Pet) {
-	$scope.petTypes = PetType.query();
-	
-	$scope.save = function(){
-		currentOwnerId = $scope.currentOwner.id;
 
-		for (i=0; i<$scope.petTypes.length; i++){
-			if ($scope.petTypes[i].id == $scope.currentPet.type.id){
-				$scope.currentPet.type.name = $scope.petTypes[i].name;
-				break;
-			}
-		}
-		
-		OwnerPet.save({ownerId:currentOwnerId},$scope.currentPet,function(pet) {
-			var newPet = true;
-			for (i=0;i<$scope.currentOwner.pets.length;i++) {
-				if($scope.currentOwner.pets[i].id == pet.id) {
-					$scope.currentOwner.pets[i] == pet;
-					newPet = false;
-					break;
+var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay','localStorageService','locale', 
+                               function($scope,$rootScope,$stateParams,MatchDay,localStorageService,locale) {
+	
+	$scope.matchup = MatchDay.getSelectedMatchup();
+	
+	// Get the matchup registration
+	MatchDay.registers.query({id: $stateParams.id}).$promise.then(
+			//success
+			function( value ) {
+				var registers = value;
+				$scope.lineupAvailable = false;
+				
+				if (value !== undefined && value != '' && value.length > 0) {
+						
+					var matchupInvolves = registers[0];
+					// Inside matchupRegister object returned by Json we can get matchup object from
+					// matchupRegister.matchup or matchRegister.matchupDetail.matchup, but due it serialized/deserialized by
+					// @JsonIdentityInfo so on one matchup is actual an object the other is an ID number refered to the matchup.
+					if (typeof matchupInvolves[0].matchup == 'object') {
+						$scope.matchup = matchupInvolves[0].matchup;
+					} else if (matchupInvolves[0].matchupDetail != null) {
+						$scope.matchup = matchupInvolves[0].matchupDetail.matchup;
+					}
+					
+					for (var i = 0; i < registers.length; i++) {
+						var register = registers[i];
+						if (register[0].matchupDetail == null) {
+							$scope.referees = register; 
+						} else if (register[0].matchupDetail.id = $scope.matchup.firstDetail.id) {
+							$scope.firstRegisters = register;
+							$scope.lineupAvailable = true;
+						}  else if (register[0].matchupDetail.id = $scope.matchup.secondDetail.id) {
+							$scope.secondRegisters = register;
+							$scope.lineupAvailable = true;
+						}
+					}	
 				}
+				
+				
+				if ($scope.matchup === undefined) {
+					$scope.matchup = MatchDay.matchup.query({id: $stateParams.id});
+					console.log("Getting the matchup");
+				}
+				
+				console.log("Getting registers");
+			},
+			//error
+			function( error ) {
+				// TODO: Handle request returns error
+				console.log("Failed with: " + error);
 			}
-			if(newPet) {
-				$scope.currentOwner.pets.push(pet);
-			}
-		});
-	};
+	);
+
+
 }];
-*/
+
+

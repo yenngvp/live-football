@@ -1,20 +1,17 @@
 <section class="sections sections-narrow">
+	<div class="headline">
+				<uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+					<uib-slide ng-repeat="m in featuredMatchups" active="m.active">
+						<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
+						<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
+						<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
+					</uib-slide> 
+				</uib-carousel>
+		</div>
+</section>
+
+<!-- 
 	<div class="container-full">
 		<div class="jumbotron jumbotron-welcome">
-			<div class="row headline">
-				<div class="col-md-12">
-					<timer countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
-				</div>
-				<div class="col-md-12" style="text-align: center !important;">
-					<uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-						<uib-slide ng-repeat="m in featuredMatchups" active="m.active">
-							<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
-							<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
-							<my-matchup class="col-md-4 thumbnail" matchup="m"></my-matchup>
-						</uib-slide> 
-					</uib-carousel>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+		
+ -->

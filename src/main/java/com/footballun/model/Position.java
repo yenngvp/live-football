@@ -7,6 +7,9 @@ package com.footballun.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author yen.nt
@@ -28,7 +31,6 @@ public class Position extends NamedEntity {
 	
 	@Column(name = "area_leftright")
 	private int areaLeftright;
-
 
 	/**
 	 * Getters/Setters
@@ -56,5 +58,18 @@ public class Position extends NamedEntity {
 
 	public void setAreaLeftright(int areaLeftright) {
 		this.areaLeftright = areaLeftright;
+	}
+
+	@Override
+	public String getName() {
+		return String.format("%s (%s %d,%d)",
+				super.getName() == null ? "" : super.getName(),
+				position == null ? "" : position,
+				areaTopdown, areaLeftright);
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 }

@@ -15,7 +15,8 @@ var app = angular.module('footballun', ['ui.router',
                                     	'LocalStorageModule',
                                     	'ngLocalize',
                                     	'ngLocalize.InstalledLanguages',
-                                    	'ngLocalize.Events'
+                                    	'ngLocalize.Events',
+                                    	'ngLocale'
                                     	]);
 
 
@@ -47,7 +48,7 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "matchdays",
-		url: "/matchdays",
+		url: "/competition/:id/matchdays",
 		templateUrl: "components/matchdays/matchdays.html",
 		controller: "MatchDayController",
 		data: { requireLogin : false }
@@ -76,34 +77,16 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		controller: "TeamDetailsController",
 		data: {requireLogin : false}
 	}).state({
-		name: "competition",
-		url: "/competition",
-		templateUrl: "components/competition/competition.html",
-		controller: "CompetitionController",
+		name: "matchDetails",
+		url: "/match/:id",
+		templateUrl: "components/matchdays/matchup_detail.html",
+		controller: "MatchupDetailController",
 		data: {requireLogin : false}
 	}).state({
-		name: "competition.epl",
-		url: "/competition/:id",
-		templateUrl: "components/teams/team_details.html",
-		controller: "CompetitionController",
-		data: {requireLogin : false}
-	}).state({
-		name: "competition.bundesliga",
-		url: "/competition/:id/members",
-		templateUrl: "components/teams/team_details.html",
-		controller: "CompetitionController",
-		data: {requireLogin : false}
-	}).state({
-		name: "competition.laliga",
-		url: "/competition/:id/members",
-		templateUrl: "components/teams/team_details.html",
-		controller: "CompetitionController",
-		data: {requireLogin : false}
-	}).state({
-		name: "competition.seria",
-		url: "/competition/:id/members",
-		templateUrl: "components/teams/team_details.html",
-		controller: "CompetitionController",
+		name: "matchRegister",
+		url: "/match-register/:id",
+		templateUrl: "components/matchdays/matchup_detail.html",
+		controller: "MatchupDetailController",
 		data: {requireLogin : false}
 	})
 	;
@@ -127,9 +110,10 @@ app.controller('StatsController', StatsController);
 
 app.controller('SearchController', SearchController);
 app.controller('TeamDetailsController', TeamDetailsController);
+app.controller('MatchupDetailController', MatchupDetailController);
 
-app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService',
-                                       function($scope, MatchDay, enableCache, localStorageService) {
+app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
+                                       function($scope, MatchDay, enableCache, localStorageService,locale) {
 
 	if (enableCache) {
 		// Query matchdays
@@ -154,7 +138,7 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 	} else {
 		$scope.matchdays = MatchDay.matchdays.query();
 	}
-	
+		
 	if (enableCache) {
 		// Query featured players
 		// Gets localStorage cached
@@ -182,6 +166,10 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 	$scope.myInterval = 5000;
 	$scope.noWrapSlides = false;
 	
+	// Clicked matchup
+	$scope.saveSelectedMatchup = function($obj) {
+		MatchDay.setSelectedMatchup($obj);
+	};
 }]);
 
 
@@ -218,6 +206,34 @@ app.value('localeFallbacks', {
                            'fr': 'fr-FR',
                            'vi': 'vi-VN'
                        });
+
+/** Custom filters **/
+/** Custom date filter  **/
+app.filter('smarterDate', function($filter) {
+	return function(input) {
+		if (input == null) { 
+			return "";
+		} 
+
+		console.log(input);
+		var smarterDate = $filter('date') (new Date(input));
+
+		return smarterDate;
+	};
+});
+app.filter('smarterTime', function($filter) {
+	return function(input) {
+		if (input == null) { 
+			return "";
+		} 
+
+		console.log(input);
+		var smarterDate = $filter('date') (new Date(input), "h:ss a");
+
+		return smarterDate;
+	};
+});
+
 
 app.run(function(useMockData, MockService) {
 	MockService.mock(useMockData);

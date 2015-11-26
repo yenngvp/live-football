@@ -1,12 +1,36 @@
 
 var MatchDay = ['$resource','context', function($resource, context) {
+	
+	var selectedMatchups;
+	
+	var setSelectedMatchup = function(obj) {
+		selectedMatchups = obj;
+	};
+	
+	var getSelectedMatchup = function() {
+		return selectedMatchups;
+	};
+	
 	return {
+		 // matchups schedules service
 	      matchdays: $resource(context + '/api/matchdays', {}, {
-	        query: {method: 'GET', params: {}, isArray: true}
+	    	  query: {method: 'GET', params: {}, isArray: true}
 	      }),
+	      // Featured matchups service
 	      featuredMatchups: $resource(context + '/api/featured-matchups', {}, {
-	        query: { method: 'GET', params: {}, isArray: true}
-	      })
+	    	  query: { method: 'GET', params: {}, isArray: true}
+	      }),
+	      // Matchup Register service
+	      registers: $resource(context + '/api/match-register/:id', {}, {
+	    	  query: { method: 'GET', params: {id: '@id'}, isArray: true}
+		  }),
+		  // Matchup
+	      matchup: $resource(context + '/api/match/:id', {}, {
+	    	  query: { method: 'GET', params: {id: '@id'}, isArray: false}
+		  }),
+		  
+		  setSelectedMatchup: setSelectedMatchup,
+		  getSelectedMatchup: getSelectedMatchup
 	};
 }];
 
