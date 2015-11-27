@@ -19,8 +19,16 @@
 			          </div>
 			     	</div>
 				</div>
-				<div class="table-cell">
-					Begin in: <timer  countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+				<div class="table-cell" style="text-align: center">
+					<span ng-if="matchup.status.code==='ENTER_COUNTDOWN'">
+						Begin in: <timer  countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+					</span>
+					<span ng-if="matchup.status.code==='LIVE'" class="livescore">
+						matchup.firstDetail.goal:matchup.secondDetail.goal
+					</span>
+					<span ng-if="matchup.status.code!=='LIVE' && matchup.status.code!=='ENTER_COUNTDOWN'" class="livescore">
+						<h6>{{matchup.firstDetail.goal}} : {{matchup.secondDetail.goal}}</h6><br/><h6 title="{{matchup.status.name}}">{{matchup.status.shortName}}</h6>
+					</span>
 				</div>
 				
 				<div class="table-cell">	
@@ -42,135 +50,142 @@
   	<!-- Line-ups  -->
   	<div class="row">
   		<span ng-if="!lineupAvailable">
-  				<h4>Lineup not available yet</h4>
+  				<h4>{{'common.lineupNoAvailable' | i18n}}</h4>
   		</span>
   		
-  		<div class="table">
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Manager</h3></div>
-				</div>
-				<div class="group">
-					<div class="table-row">
+  		<div class="table" ng-if="lineupAvailable">
+  				<div class="table-cell table-row-header"><h3>{{'common.manager' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
+				
+				<div class="table-row">
 						<div class="table-cell">
-							<ul>
-								<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+							<ul style="list-style-type: none;">
+								<li ng-repeat="player in firstRegisters"  ng-if="player.squadMember.heroRole.name === 'Manager'"><h4>{{player.squadMember.hero.fullName}}</h4></li>
 							</ul>
 						</div>
 						<div class="table-cell">
-						  	<ul>
-								<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						  	<ul style="list-style-type: none;">
+								<li ng-repeat="player in firstRegisters" ng-if="player.squadMember.heroRole.name === 'Manager'"><h4>{{player.squadMember.hero.fullName}}</h4></li>
 							</ul>
 						</div>
+				</div>
+				
+				<div class="table-cell table-row-header"><h3>{{'common.goalkeeper' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
+				<div class="table-row">
+					<div class="table-cell">
+						<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Goalkeeper'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
+						</ul>
+					</div>
+					<div class="table-cell">
+					  	<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Goalkeeper'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
+						</ul>
 					</div>
 				</div>
 				
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Goalkeeper</h3></div>
-				</div>
-				<div class="group">
+				<div class="table-cell table-row-header"><h3>{{'common.defender' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
 				<div class="table-row">
 					<div class="table-cell">
-						<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.isLineup && player.squadMember.position.name === 'Defender'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
 					<div class="table-cell">
-					  	<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+					  	<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.isLineup && player.squadMember.position.name === 'Defender'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
-				</div>
 				</div>
 				
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Defenders</h3></div>
-				</div>
-				<div class="group">
+				<div class="table-cell table-row-header"><h3>{{'common.midfielder' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
 				<div class="table-row">
 					<div class="table-cell">
-						<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Midfielder'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
 					<div class="table-cell">
-					  	<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+					  	<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Midfielder'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
-				</div>
 				</div>
 				
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Midfielders</h3></div>
-				</div>
-				<div class="group">
+				<div class="table-cell table-row-header"><h3>{{'common.forward' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
 				<div class="table-row">
 					<div class="table-cell">
-						<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Forward'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
 					<div class="table-cell">
-					  	<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+					  	<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="player.isLineup && player.squadMember.position.name === 'Forward'"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
-				</div>
 				</div>
 				
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Forwards</h3></div>
-				</div>
-				<div class="group">
+				<div class="table-cell table-row-header"><h3>{{'common.substitute' | i18n}}</h3></div>
+				<div class="table-cell table-row-header"></div>
 				<div class="table-row">
 					<div class="table-cell">
-						<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+						<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
 					<div class="table-cell">
-					  	<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
+					  	<ul style="list-style-type: none;">
+							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}} ({{player.squadMember.shirtNumber}})</h4></li>
 						</ul>
 					</div>
-				</div>
-				</div>
-				
-				 <div class="caption table-row-header">
-					<div class="table-cell span2"><h3>Substitues</h3></div>
-				</div>
-				<div class="group">
-				<div class="table-row">
-					<div class="table-cell">
-						<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
-						</ul>
-					</div>
-					<div class="table-cell">
-					  	<ul>
-							<li ng-repeat="player in firstRegisters" ng-if="!player.isLineup"><h4>{{player.squadMember.hero.fullName}}</h4></li>
-						</ul>
-					</div>
-				</div>
 				</div>
 			</div>
     </div>
     
     
-    <!-- Pitch layouts -->
+    <!-- Pitch layed out -->
+    <!-- Formation 1 -->
     <div class="row">
+    	<h3>{{'common.teamLineup' | i18n}} {{matchup.firstDetail.squad.team.name}}</h3>
     	<div class="outsideWrapper">
 		    <div class="insideWrapper">
 				<!-- Pitch background -->
 		        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
 		        <!-- Players' position -->
-		        <ul>
-		        	<li ng-repeat="p in imagePositions">
-		        		<canvas class="positionCoveringCanvas" ng-style="{'position': 'absolute',
-		        											   			  'left': '{{p[0]}}px',
-		        											   			  'top': '{{p[1]}}px',
-		        											   			  'background-image': 'url(images/heros/the-citizens.png)'}">
+		        <ul style="list-style-type: none;">
+		        	<li ng-repeat="p in formation1[1] track by $index">
+		        		<canvas class="positionCoveringCanvas" ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
 		        		</canvas>
+						<span ng-if="formation1[0][$index].squadMember.hero.lastName" style="text-align: center" ng-style="{'position': 'absolute',
+		        							'left': '{{p[0]}}px',
+		        							'top': '{{p[1] + 60}}px'}"><h6
+								>{{formation1[0][$index].squadMember.hero.lastName}} ({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
+		        	<li>
+		        </ul>
+		    </div>
+		 </div>
+    </div>
+    <!-- Formation 2 -->
+    <div class="row">
+   		<h3>{{'common.teamLineup' | i18n}} {{matchup.secondDetail.squad.team.name}}</h3>
+    	<div class="outsideWrapper">
+		    <div class="insideWrapper">
+				<!-- Pitch background -->
+		        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
+		        <!-- Players' position -->
+		        <ul style="list-style-type: none;">
+		        	<li ng-repeat="p in formation1[1] track by $index">
+		        		<canvas class="positionCoveringCanvas" ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
+		        		</canvas>
+						<span ng-if="formation1[0][$index].squadMember.hero.lastName" style="text-align: center" ng-style="{'position': 'absolute',
+		        							'left': '{{p[0]}}px',
+		        							'top': '{{p[1] + 60}}px'}"><h6
+								>{{formation1[0][$index].squadMember.hero.lastName}} ({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
 		        	<li>
 		        </ul>
 		    </div>

@@ -37,7 +37,10 @@ public class Position extends NamedEntity {
 	 */
 	
 	public String getPosition() {
-		return position;
+		return String.format("%s (%s %d,%d)",
+				super.getName() == null ? "" : super.getName(),
+				position == null ? "" : position,
+				areaTopdown, areaLeftright);
 	}
 	
 	public void setPosition(String position) {
@@ -59,17 +62,9 @@ public class Position extends NamedEntity {
 	public void setAreaLeftright(int areaLeftright) {
 		this.areaLeftright = areaLeftright;
 	}
-
-	@Override
-	public String getName() {
-		return String.format("%s (%s %d,%d)",
-				super.getName() == null ? "" : super.getName(),
-				position == null ? "" : position,
-				areaTopdown, areaLeftright);
-	}
 	
 	@Override
 	public String toString() {
-		return getName();
+		return getPosition();
 	}
 }

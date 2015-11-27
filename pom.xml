@@ -349,7 +349,12 @@
             <artifactId>quartz</artifactId>
             <version>1.8.5</version>
          </dependency>
-         
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.13</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -389,6 +394,9 @@
 				<artifactId>spring-tx</artifactId>
 				<version>${spring-framework.version}</version>
 			</dependency>
+
+			<!-- Apache POI for reading/writing excel document -->			
+
 		</dependencies>
 	</dependencyManagement>
 

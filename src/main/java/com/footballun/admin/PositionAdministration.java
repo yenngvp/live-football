@@ -21,7 +21,7 @@ import com.footballun.model.Position;
 public class PositionAdministration  extends AdministrationConfiguration<Position> {
 
 	public EntityMetadataConfigurationUnit configuration(EntityMetadataConfigurationUnitBuilder configurationBuilder) {
-		return configurationBuilder.nameField( "name" ).build();
+		return configurationBuilder.nameField( "position" ).build();
 	}
 
 	public ScreenContextConfigurationUnit screenContext(ScreenContextConfigurationUnitBuilder screenContextBuilder) {
@@ -33,8 +33,8 @@ public class PositionAdministration  extends AdministrationConfiguration<Positio
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
 				.field( "id" ).caption( "ID" )
-				.field( "name" ).caption( "Position Detail" )
-				.field( "position" ).caption( "Position" )
+				.field( "name" ).caption( "Position" )
+				.field( "position" ).caption( "Position Detail" )
 				.field( "areaTopdown" ).caption( "Topdown (1-5)" )
 				.field( "areaLeftright" ).caption( "Leftright(1-5)" )
 				.build();

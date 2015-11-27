@@ -31,38 +31,6 @@ var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageServic
 		$scope.matchdays = MatchDay.matchdays.query();
 	}
 	
-	
-    /*
-     *  Calulates lineup positions
-     */
-    var lineups = [];
-    lineups.push([5,0]);
-    lineups.push([2,1]);
-    lineups.push([4,1]);
-    lineups.push([6,1]);
-    lineups.push([8,1]);
-    lineups.push([3,2]);
-    lineups.push([7,2]);
-    lineups.push([2,3]);
-    lineups.push([5,3]);
-    lineups.push([8,3]);
-    lineups.push([5,4]);
-    // Maximum pitch image background (in pixels)
-    var imgWidth = 750;
-    var imgHeight = 450;
-    var maxGridX = 10;
-    var maxGridY = 5; 		
-    var imgWidthUnit = imgWidth / maxGridX;
-    var imgHeightUnit = imgHeight / maxGridY;
-    var imagePositions = [];
-    var pos = [];
-    console.log(toString(lineups.length));
-    for (var i = 0; i < lineups.length; i++) {
-    	pos = [imgWidthUnit * lineups[i][0] - 30, imgHeightUnit * lineups[i][1]];
-    	imagePositions.push(pos);
-    }
-    $scope.imagePositions = imagePositions;
-    console.log($scope.imagePositions);
 }];
 
 
@@ -104,13 +72,13 @@ var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay',
 					}	
 				}
 				
-				
 				if ($scope.matchup === undefined) {
 					$scope.matchup = MatchDay.matchup.query({id: $stateParams.id});
-					console.log("Getting the matchup");
 				}
 				
-				console.log("Getting registers");
+				$scope.formation1 = getPitchLaidout($scope.matchup.firstDetail, $scope.firstRegisters);
+				$scope.formation2 = getPitchLaidout($scope.matchup.secondDetail, $scope.secondRegisters);
+			
 			},
 			//error
 			function( error ) {
@@ -120,6 +88,74 @@ var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay',
 	);
 
 
+	$scope.renderFormationCanvas = function(x, y, name) {
+		return {
+			  'position': 'absolute',
+			  'left': + x + 'px',
+			  'top': + y + 'px',
+			  'background-image': 'url(images/teams/' + name.toLowerCase() + '-150.png)',
+			  'background-size': 'cover',
+		}
+	};
+	
+	var getPitchLaidout = function (matchupDetail, matchupRegisters) {
+		
+		if (!$scope.lineupAvailable || matchupDetail == null || matchupRegisters == null || matchupRegisters === undefined) return null;
+		
+		/*
+		 *  Calulates lineup positions
+		 */
+		var form;
+		var formPositions;
+		
+		if (matchupDetail.formation != null) {
+			// Available formation for this matchup
+			form = matchupDetail.formation
+		} else {
+			// User favorite formation from the squad
+			form = matchupDetail.squad.formation; 
+		}
+		
+		formPositions = form.parsedPositions;
+		if (formPositions == null) return null;
+		
+		// DON'T change maxGridX,Y value. It must be in consistent with parsedPositions predefined in the database
+		var maxGridX = 10;
+		var maxGridY = 5; 	
+		
+		// Maximum pitch image background (in pixels)
+		var imgWidth = 750;
+		var imgHeight = 450;	
+		var imgWidthUnit = imgWidth / maxGridX;
+		var imgHeightUnit = imgHeight / maxGridY;
+		var imagePositions = [];
+		var pos = [];
+		
+		var lineupPositions = [];
+		var x, y, row;
+		// Decodes prefiened formation positions for web displayed
+		for (var i = 0; i < formPositions.length; i++) {
+			row = formPositions[i];
+			for (var j = 0; j < row.length; j++) {
+				x = row[j] % maxGridX - 1;
+				y = Math.floor(row[j] / maxGridX);
+				pos = [imgWidthUnit * x - 30, imgHeightUnit * y];
+				lineupPositions.push(pos);
+			}
+		}
+		
+
+		var lineupPlayers = [];
+		// Gets lineup players squad
+		for (var index in matchupRegisters) {
+			if (matchupRegisters[index].isLineup) {
+				lineupPlayers.push(matchupRegisters[index]);
+			}
+		}
+			
+		return [lineupPlayers, lineupPositions];
+	};
+    
 }];
 
 

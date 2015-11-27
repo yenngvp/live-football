@@ -24,5 +24,14 @@
     "sunday": "Chủ nhật",
     "at": "lúc",
     "viewMatchDetail": "Chi tiết",
-    "dateTimeFormat": "HH:mm EEEE, d MMMM, yyyy"
+    "dateTimeFormat": "HH:mm EEEE, d MMMM, yyyy",
+    "teamLineup": "Đội hình ra sân của",
+    "manager": "HLV",
+    "goalkeeper": "Thủ môn",
+    "defender": "Hậu vệ",
+    "midfielder": "Tiền vệ",
+    "forward": "Tiền đạo",
+    "substitute": "Dự bị",
+    "injury": "Chấn thương",
+    "lineupNoAvailable": "Chưa có đội hình ra sân (Đội hình chính thức chỉ được các đội/CLB thông báo trước trận đấu 2 giờ)"
 }

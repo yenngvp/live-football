@@ -1,6 +1,8 @@
 package com.footballun.rest;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.footballun.model.Matchup;
-import com.footballun.model.MatchupDetail;
 import com.footballun.model.MatchupRegister;
+import com.footballun.model.Position;
 import com.footballun.service.FootballunService;
 
 @RestController
@@ -108,7 +110,47 @@ public class MatchupRestController {
 			result.add(register);
 		}
 
+		// Sorts registration lists
+		for (List<MatchupRegister> registers : result) {
+			sortFormation(registers);
+			for (MatchupRegister r : registers) {
+				if (r.getSquadMember().getPosition() != null)
+				System.out.println(r.getSquadMember().getPosition().toString());
+			}
+			
+		}
+		
 		return result.size() > 0 ? result : null;
+	}
+	
+	/**
+	 * Do sort registers by their positions: top-down, right-left
+	 * 
+	 * @param registers
+	 */
+	private void sortFormation(List<MatchupRegister> registers) {
+
+		// Register positions comparator
+		final Comparator<MatchupRegister> FORMATION_ORDER = new Comparator<MatchupRegister>() {
+			public int compare(MatchupRegister reg1, MatchupRegister reg2) {
+				Position p1 = reg1.getSquadMember().getPosition();
+				Position p2 = reg2.getSquadMember().getPosition();
+				
+				if (p1 == null || p2 == null) return 0;
+				
+				// Compares top-down position
+				if (p1.getAreaTopdown() < p2.getAreaTopdown()) {
+					return -1;
+				} else if (p1.getAreaTopdown() > p2.getAreaTopdown()) {
+					return 1;
+				} else {
+					// Compares left-right position
+					return p1.getAreaLeftright() - p2.getAreaLeftright();
+				}
+			}
+		};
+		
+		Collections.sort(registers, FORMATION_ORDER);
 	}
 	
 	/**
@@ -120,4 +162,5 @@ public class MatchupRestController {
 	public @ResponseBody Matchup getMatchup(@PathVariable("id") int id) {
 		return footballunService.findMatchupById(id);
 	}
+	
 }
