@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.footballun.model.Standing;
 import com.footballun.service.FootballunService;
+import com.footballun.util.DataImporter;
 
 
 @RestController
@@ -22,13 +23,22 @@ public class StandingRestController {
 
 	private final FootballunService footballunService;
 
+	private final DataImporter dataImporter;
+	
 	@Autowired
-	public StandingRestController(FootballunService footballunService) {
+	public StandingRestController(FootballunService footballunService, DataImporter dataImporter) {
 		this.footballunService = footballunService;
+		this.dataImporter = dataImporter;
 	}
 
 	@RequestMapping(value = "/standings", method = RequestMethod.GET)
 	public List<Standing> showStandings() {
+		
+		boolean test = true;
+		if (test) {
+			dataImporter.importExcel();
+		}
+		
 		// Understood default competition if it isn't specified
 		return footballunService.findStandingByCompetition(DEFAULT_COMPETITION);
 	}

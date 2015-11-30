@@ -1,7 +1,5 @@
 package com.footballun.repository;
 
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
 
 import com.footballun.model.BaseEntity;
@@ -14,7 +12,7 @@ public interface TeamRepository {
      *
      * @return a <code>Team</code>
      */
-    List<Team> findByName(String name) throws DataAccessException;
+    Team findByName(String name) throws DataAccessException;
 
     /**
      * Retrieve a <code>Team</code> from the data store by id.
@@ -32,5 +30,5 @@ public interface TeamRepository {
      * @param food the <code>Team</code> to save
      * @see BaseEntity#isNew
      */
-    void save(Team team) throws DataAccessException;
+    Team save(Team team) throws DataAccessException;
 }

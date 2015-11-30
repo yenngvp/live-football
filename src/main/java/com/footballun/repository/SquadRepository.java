@@ -43,4 +43,5 @@ public interface SquadRepository {
      */
     Squad findById(Integer id) throws DataAccessException;
     Squad findByTeam_NameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
+    Squad save(Squad squad) throws DataAccessException;
 }

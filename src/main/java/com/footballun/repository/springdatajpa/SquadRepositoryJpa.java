@@ -22,4 +22,8 @@ public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squa
 	
 	@Override
 	Squad findByTeam_NameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	Squad save(Squad squad) throws DataAccessException;
 }

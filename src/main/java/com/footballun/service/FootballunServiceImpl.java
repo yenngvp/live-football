@@ -1,7 +1,6 @@
 package com.footballun.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.footballun.model.Competition;
+import com.footballun.model.Country;
 import com.footballun.model.Event;
 import com.footballun.model.Matchup;
 import com.footballun.model.Matchup.MatchupResult;
@@ -28,7 +28,9 @@ import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
 import com.footballun.model.StandingBase;
 import com.footballun.model.StandingLive;
+import com.footballun.model.Team;
 import com.footballun.repository.CompetitionRepository;
+import com.footballun.repository.CountryRepository;
 import com.footballun.repository.EventRepository;
 import com.footballun.repository.MatchupDetailRepository;
 import com.footballun.repository.MatchupLiveRepository;
@@ -38,13 +40,17 @@ import com.footballun.repository.MatchupStatusRepository;
 import com.footballun.repository.SettingRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
+import com.footballun.repository.TeamRepository;
 import com.footballun.repository.springdatajpa.StandingLiveRepository;
 import com.footballun.repository.springdatajpa.StandingRepository;
 import com.footballun.util.PositionComparator;
 
 @Service
+@Transactional
 public class FootballunServiceImpl implements FootballunService {
 
+	@Autowired
+	private TeamRepository teamRepository;
 	@Autowired
 	private SquadRepository squadRepository;
 	@Autowired
@@ -69,9 +75,12 @@ public class FootballunServiceImpl implements FootballunService {
 	private MatchupStatusRepository matchupStatusRepository;
 	@Autowired
 	private SettingRepository settingRepository;
+	@Autowired
+	private CountryRepository countryRepository;
 		
 	private MatchupStatus statusCountdown;
 	private MatchupStatus statusJustBegin;
+	private MatchupStatus statusNotBegin;
 	private MatchupStatus statusLive;
 	private MatchupStatus statusJustFullTime;
 	private MatchupStatus statusFullTime;
@@ -79,7 +88,7 @@ public class FootballunServiceImpl implements FootballunService {
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
 
 	/**
-	 * Squad's APIs implements 
+	 * Squad services 
 	 */
 	
 	@Override
@@ -100,6 +109,11 @@ public class FootballunServiceImpl implements FootballunService {
 	@Transactional(readOnly = true)
 	public Squad findSquadByName(String name, Integer competitionId) throws DataAccessException {
 		return squadRepository.findByTeam_NameAndCompetitionId(name, competitionId);
+	}
+	
+	@Override
+	public Squad saveSquad(Squad squad) throws DataAccessException {
+		return squadRepository.save(squad);
 	}
 	
 	/**
@@ -533,6 +547,16 @@ public class FootballunServiceImpl implements FootballunService {
 	public Competition findCompetitionById(Integer id) throws DataAccessException {
 		return competitionRepository.findById(id);
 	}
+	
+	@Override
+	public Competition findCompetitionByName(String name) throws DataAccessException {
+		return competitionRepository.findByName(name);
+	}
+	
+	@Override
+	public Competition save(Competition competition) throws DataAccessException {
+		return competitionRepository.save(competition);
+	}
 
 	@Override
 	public MatchupStatus getMatchupStatusCountdown() throws DataAccessException {
@@ -542,6 +566,14 @@ public class FootballunServiceImpl implements FootballunService {
 		return statusCountdown;
 	}
 
+	@Override
+	public MatchupStatus getMatchupStatusNotBegin() throws DataAccessException {
+		if (statusNotBegin == null) {
+			statusNotBegin = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.NOT_BEGIN));
+		}
+		return statusNotBegin;
+	}
+	
 	@Override
 	public MatchupStatus getMatchupStatusJustBegin() throws DataAccessException {
 		if (statusJustBegin == null) {
@@ -573,4 +605,32 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 		return statusFullTime;
 	}
+	
+	/**
+	 * Team services
+	 */
+	@Override
+	public Team findTeamById(int id) throws DataAccessException {
+		return teamRepository.findById(id);
+	}
+	
+	@Override
+	public Team findTeamByName(String name) throws DataAccessException {
+		return teamRepository.findByName(name);
+	}
+	
+	@Override
+	public Team save(Team team) throws DataAccessException {
+		return teamRepository.save(team);
+	}
+
+
+	/**
+	 * Country services
+	 */
+	@Override
+	public Country findCountryByName(String name) throws DataAccessException {
+		return countryRepository.findByName(name);
+	}
+	 
 }

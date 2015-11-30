@@ -29,15 +29,10 @@ public class AppConfigure {
 	
 	@Autowired
 	private FootballunService footballunService;
-
-	@Autowired
-	private DataImporter dataImporter;
 	
 	public static long HOUR_TO_MILLISECONDS = 60 * 60 * 60 * 1000;
 		
 	public Setting getSetting() {
-		
-		dataImporter.importExcel();
 		
 		return footballunService.getSetting(1);
 	}

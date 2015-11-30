@@ -10,4 +10,11 @@ public interface CompetitionRepositoryJpa extends CompetitionRepository, CrudRep
 	
 	@Override
 	Competition findById(Integer id) throws DataAccessException;
+	@Override
+	Competition findByName(String name) throws DataAccessException;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	Competition save(Competition competition) throws DataAccessException;
+	
 }

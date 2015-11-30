@@ -229,12 +229,6 @@ public class Matchup extends NamedEntity implements Serializable {
 		
 		Iterator<MatchupDetail> itr = getDetails().iterator();
 		MatchupDetail first = itr.next();
-		MatchupDetail second = itr.next();
-		if (first.getIsFirstSquad()) {
-			return first;
-		} else if (second.getIsFirstSquad()) {
-			return second;
-		}
 		return first; // believe this has been sorted by detail id
 	}
 	
@@ -244,11 +238,6 @@ public class Matchup extends NamedEntity implements Serializable {
 		Iterator<MatchupDetail> itr = getDetails().iterator();
 		MatchupDetail first = itr.next();
 		MatchupDetail second = itr.next();
-		if (first.getIsFirstSquad()) {
-			return second;
-		} else if (second.getIsFirstSquad()) {
-			return first;
-		}
 		return second; // believe this has been sorted by detail id
 	}
 	

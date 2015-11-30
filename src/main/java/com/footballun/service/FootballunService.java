@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 
 import com.footballun.model.Competition;
+import com.footballun.model.Country;
 import com.footballun.model.Event;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupDetail;
@@ -16,15 +17,17 @@ import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
 import com.footballun.model.StandingLive;
+import com.footballun.model.Team;
 
 public interface FootballunService {
 
 	/**
-	 * Squad's APIs
+	 * Squad services
 	 */
 	List<Squad> findSquadByCompetitionAndGeneration(Integer competitionId, String generation) throws DataAccessException;
 	Squad findSquadById(Integer id) throws DataAccessException;
 	Squad findSquadByName(String name, Integer competitionId) throws DataAccessException;
+	Squad saveSquad(Squad squad) throws DataAccessException;
 	
 	/**
 	 * Matchup's APIs
@@ -58,6 +61,7 @@ public interface FootballunService {
 	 * Matchup status service 
 	 */
 	MatchupStatus findMatchupStatusByName(String name) throws DataAccessException;
+	MatchupStatus getMatchupStatusNotBegin() throws DataAccessException;
 	MatchupStatus getMatchupStatusJustBegin() throws DataAccessException;
 	MatchupStatus getMatchupStatusLive() throws DataAccessException;
 	MatchupStatus getMatchupStatusJustFullTime() throws DataAccessException;
@@ -110,4 +114,18 @@ public interface FootballunService {
 	 * Competition services
 	 */
 	Competition findCompetitionById(Integer id) throws DataAccessException;
+	Competition findCompetitionByName(String name) throws DataAccessException;
+	Competition save(Competition competition) throws DataAccessException;
+	
+	/**
+	 * Team services
+	 */
+	Team findTeamById(int id) throws DataAccessException;
+	Team findTeamByName(String name) throws DataAccessException;
+	Team save(Team team) throws DataAccessException;
+
+	/**
+	 * Country services
+	 */
+	Country findCountryByName(String name) throws DataAccessException;
 }
