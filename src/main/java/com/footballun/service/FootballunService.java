@@ -67,6 +67,7 @@ public interface FootballunService {
 	MatchupStatus getMatchupStatusJustFullTime() throws DataAccessException;
 	MatchupStatus getMatchupStatusFullTime() throws DataAccessException;
 	MatchupStatus getMatchupStatusCountdown() throws DataAccessException;
+	MatchupStatus getMatchupStatusPostponed() throws DataAccessException;
 	
 	
 	/**

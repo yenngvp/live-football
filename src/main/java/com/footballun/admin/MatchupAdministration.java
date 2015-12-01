@@ -45,6 +45,7 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.field( "status" ).caption( "Status" )
 				.field( "result" ).caption( "Result" )
 				.field( "startAt" ).caption( "Start" )
+				.field( "startTime" ).caption( "Time" )
 				.field( "endAt" ).caption( "Finish" )
 				.build();
 	}
@@ -52,6 +53,7 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 	public FiltersConfigurationUnit filters( final FiltersConfigurationUnitBuilder filterBuilder ) {
 		return filterBuilder
 				.filter( "ID", "id" )
+				.filter( "Competition", "competition" )
 				.filter( "Details", "details" )
 				.filter( "Status", "status" )
 				.filter( "Result", "result" )

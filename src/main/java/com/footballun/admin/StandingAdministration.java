@@ -7,9 +7,11 @@ package com.footballun.admin;
 import org.lightadmin.api.config.AdministrationConfiguration;
 import org.lightadmin.api.config.builder.EntityMetadataConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.FieldSetConfigurationUnitBuilder;
+import org.lightadmin.api.config.builder.FiltersConfigurationUnitBuilder;
 import org.lightadmin.api.config.builder.ScreenContextConfigurationUnitBuilder;
 import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
+import org.lightadmin.api.config.unit.FiltersConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
 import com.footballun.model.Standing;
@@ -47,6 +49,14 @@ public class StandingAdministration extends AdministrationConfiguration<Standing
 				.field( "drawn" ).caption( "D" )
 				.field( "goalsScored" ).caption( "GF" )
 				.field( "goalsAgainst" ).caption( "GA" )
+				.build();
+	}
+	
+	public FiltersConfigurationUnit filters( final FiltersConfigurationUnitBuilder filterBuilder ) {
+		return filterBuilder
+				.filter( "ID", "id" )
+				.filter( "Squad", "squad" )
+				.filter( "CurrentPosition", "currentPosition" )
 				.build();
 	}
 }

@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -57,9 +58,10 @@ public class DataImporter {
 	/*
 	 *  Constants
 	 */
-	private static final String[] standingSheetsToRead = {"EPL_Standing", "Bundesliga_Standing", "LigaBBVA_Standing", "SerieA_Standing", "France_League1_Standing"};
-	private static final String[] competitionsList = {"English Premier League", "Bundesliga", "LigaBBVA", "SerieA", "France League1"};
-	private static final String[] countriesList = {"England", "Germany", "Spain", "Italy", "France"};
+	private static final String[] standingSheetsToRead = {"EPL_Standing", "Bundesliga_Standing", "LigaBBVA_Standing", "SerieA_Standing", "France_Ligue1_Standing"};
+	private static final String[] competitionsList = {"English Premier League", "Bundesliga", "LigaBBVA", "SerieA", "France Ligue1"};
+//	private static final String[] competitionsList = {"Bundesliga"};
+	private static final String[] countriesList = {"England", "Germany", "Spain", "Italy", "France"};//
 	
 	private static final Map<String, String> standingColsMap = new HashMap<String, String>();
 	
@@ -413,12 +415,10 @@ public class DataImporter {
 								} else {
 									matchString = colStringVal;
 									// Parses and saves the schedule
-									if (week > 0 && dateString != null && matchString != null) {
+									if (week > 0 && dateString.length() > 0 && matchString.length() > 0) {
 										parseAndSaveSchedule(week, dateString, matchString);	
-										dateString = null;
-										matchString = null;
 									} else {
-										logger.error("Something wrong with reading data for week: " + week);
+										logger.error("Something wrong with reading data for week: " + week + " dateString: " + dateString + " matchString: " + matchString);
 									}
 									
 									logger.info("Reading cell: " + colStringVal + " is a fixture");
@@ -436,6 +436,7 @@ public class DataImporter {
 			}
 		}
 
+		logger.info("Complete reading " + len + " sheets");
 	}
 	
 	
@@ -454,7 +455,7 @@ public class DataImporter {
 			int goals1 = 0, goals2 = 0;
 			String team1 = "", team2 = "";
 			String time = "";
-			String ampm = "";
+			String scheduled = "";
 						
 			if (matchString.contains(" FT ")) {
 				fulltime = true;
@@ -490,19 +491,37 @@ public class DataImporter {
 				// ie: Man United 10:00 PM Swansea City
 				if (matchString.contains(" PM ")) {
 					// Afternoon match
-					ampm = "PM";
-				} else {
+					scheduled = "PM";
+				} else if (matchString.contains(" AM ")) {
 					// Morning match
-					ampm = "AM";
+					scheduled = "AM";
+				} else if (matchString.contains(" TBD ")) {
+					// TBD schedule
+					scheduled = "TBD";
+				} else if (matchString.contains(" Postponed ")) {
+					// Match postponed
+					scheduled = "Postponed";
 				}
-				int index = matchString.indexOf(ampm);
-				String[] parsed = {matchString.substring(0, index - 1), matchString.substring(index + ampm.length())};
+				else {
+					logger.error("Don't know the schedule");
+					return;
+				}
+				
+				int index = matchString.indexOf(scheduled);
+				String[] parsed = {matchString.substring(0, index - 1), matchString.substring(index + scheduled.length())};
 			
-				String string = parsed[0].trim();
-				String[] arr = string.split("[ ]");
-				time = arr[arr.length - 1];
-				team1 = string.substring(0, string.indexOf(time) - 1).trim();
-				team2 = parsed[1].trim();
+				if ("AM".equals(scheduled) || "PM".equals(scheduled)) {
+					String string = parsed[0].trim();
+					String[] arr = string.split("[ ]");
+					time = arr[arr.length - 1];
+					team1 = string.substring(0, string.indexOf(time) - 1).trim();
+					team2 = parsed[1].trim();
+					
+				} else {
+					team1 = parsed[0].trim();
+					team2 = parsed[1].trim();
+				}
+				
 				logger.info(String.format("Team1 %s - Team2 %s - Time %s", team1, team2, time));
 			}
 			
@@ -520,17 +539,39 @@ public class DataImporter {
 				if (fulltime) {
 					matchup.setStatus(footballunService.getMatchupStatusFullTime());	
 				} else {
-					matchup.setStatus(footballunService.getMatchupStatusNotBegin());
-					if (time.length() > 0 && ampm.length() > 0) {
-						String[] hrsStr = time.split("[:]");
-						int hour = Integer.valueOf(hrsStr[0].trim());
-						int min = Integer.valueOf(hrsStr[1].trim());
-						calendar.set(Calendar.HOUR, hour);
-						calendar.set(Calendar.MINUTE, min);
-						calendar.set(Calendar.AM_PM, "AM".equals(ampm) ? Calendar.AM : Calendar.PM);
-						matchup.setStartAt(calendar.getTime());
-						calendar.set(Calendar.HOUR, hour + 2); // Supposed to have 2-hours game long
-						matchup.setEndAt(calendar.getTime());
+					if (time.length() > 0 || scheduled.length() > 0) {
+						if ("AM".equals(scheduled) || "PM".equals(scheduled)) {
+							String[] hrsStr = time.split("[:]");
+							int hour = Integer.valueOf(hrsStr[0].trim());
+							int min = Integer.valueOf(hrsStr[1].trim());
+							calendar.set(Calendar.HOUR, hour);
+							calendar.set(Calendar.MINUTE, min);
+							calendar.set(Calendar.AM_PM, "AM".equals(scheduled) ? Calendar.AM : Calendar.PM);
+							matchup.setStartAt(calendar.getTime());
+							
+							calendar.add(Calendar.HOUR, 2); // Supposed to have 2-hours game long
+							matchup.setEndAt(calendar.getTime());
+							
+							// Match time
+							Calendar timeCal = new GregorianCalendar();
+							timeCal.set(Calendar.HOUR, hour);
+							timeCal.set(Calendar.MINUTE, min);
+							timeCal.set(Calendar.AM_PM, "AM".equals(scheduled) ? Calendar.AM : Calendar.PM);
+							
+							matchup.setStartTime(timeCal.getTime());
+							
+							matchup.setStatus(footballunService.getMatchupStatusNotBegin());
+						} else {
+							// TBD schedule or postponed
+							matchup.setStartAt(calendar.getTime());
+							matchup.setEndAt(calendar.getTime());
+							if ("TBD".equals(scheduled)) {
+								matchup.setStatus(footballunService.getMatchupStatusNotBegin());
+							} else {
+								// Postponed
+								matchup.setStatus(footballunService.getMatchupStatusPostponed());
+							}
+						}
 					} else {
 						logger.error("Fatal error when creating matchup, time value is incorect");
 						return;
@@ -557,7 +598,7 @@ public class DataImporter {
 				footballunService.saveMatchupDetail(detail1);
 				footballunService.saveMatchupDetail(detail2);
 			} else {
-				logger.error("Cannot find squads for the team " + team1 + " or " + team2);
+				logger.error("Cannot find squad for the team " + team1 + " or " + team2);
 			}
 			
 		} catch (java.text.ParseException e) {

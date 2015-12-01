@@ -84,6 +84,7 @@ public class FootballunServiceImpl implements FootballunService {
 	private MatchupStatus statusLive;
 	private MatchupStatus statusJustFullTime;
 	private MatchupStatus statusFullTime;
+	private MatchupStatus statusPostponed;
 	
 	final Logger logger = LoggerFactory.getLogger("FootballunService");
 
@@ -604,6 +605,15 @@ public class FootballunServiceImpl implements FootballunService {
 			statusFullTime = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		}
 		return statusFullTime;
+	}
+	
+	
+	@Override
+	public MatchupStatus getMatchupStatusPostponed() throws DataAccessException {
+		if (statusPostponed == null) {
+			statusPostponed = matchupStatusRepository.findByName(MatchupStatus.getNameByCode(MatchupStatusCode.POSTPOSED));
+		}
+		return statusPostponed;
 	}
 	
 	/**
