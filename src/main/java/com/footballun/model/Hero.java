@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "hero")
-public class Hero extends BaseEntity {
+public class Hero extends NamedEntity {
 
 	/**
 	 * Field in relationships
