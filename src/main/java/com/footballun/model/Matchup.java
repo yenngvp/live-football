@@ -94,10 +94,10 @@ public class Matchup extends NamedEntity implements Serializable {
 	@Column(name = "manual_mode")
 	private Boolean manualMode;
 	
-	@Column(name = "start_time")
+	@Column(name = "kick-off")
 	@Temporal(TemporalType.TIME)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	private Date startTime;
+	private Date kickoff;
 	
 	/**
 	 * Getters/Setters
@@ -334,12 +334,12 @@ public class Matchup extends NamedEntity implements Serializable {
 		this.manualMode = manualMode;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	public Date getKickoff() {
+		return kickoff;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setKickoff(Date kickoff) {
+		this.kickoff = kickoff;
 	}
 
 	@Override

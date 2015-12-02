@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "squad")
 @PersistenceContext(type = PersistenceContextType.EXTENDED)
-public class Squad extends BaseEntity implements Serializable {
+public class Squad extends NamedEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -49,6 +49,19 @@ public class Squad extends BaseEntity implements Serializable {
 	
 	@Column
 	private String generation;
+	
+	@Column(name = "shirt_sponsor")
+	private String shirtSponsor;
+	
+	@Column(name = "kit_manufacturer")
+	private String kitManufacturer;
+	
+	@Column(name = "full_name")
+	private String fullName;
+	
+	@Column(name = "logo")
+	private String logo;
+	
 	
 	/**
 	 * Getters/Setters
@@ -93,12 +106,45 @@ public class Squad extends BaseEntity implements Serializable {
 		this.formation = formation;
 	}
 
+	public String getShirtSponsor() {
+		return shirtSponsor;
+	}
+
+	public void setShirtSponsor(String shirtSponsor) {
+		this.shirtSponsor = shirtSponsor;
+	}
+
+	public String getKitManufacturer() {
+		return kitManufacturer;
+	}
+
+	public void setKitManufacturer(String kitManufacturer) {
+		this.kitManufacturer = kitManufacturer;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
 	@Override
 	public String toString() {
 		if ("First Team".equals(generation)) {
-			return String.format("%s", team == null ? "" : team.toString());
+			return String.format("%s", getName() == null ? getName() : team.toString());
 		} else {
-			return String.format("%s (%s)", team == null ? "" : team.toString(), generation == null ? "" : generation);
+			return String.format("%s (%s)", getName() == null ? getName() : team.toString(),
+					generation == null ? "" : generation);
 		}
 	}
 }

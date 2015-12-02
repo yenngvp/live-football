@@ -23,6 +23,11 @@ public class Competition extends NamedEntity {
 	@Column(name = "type")
 	private String type;
 	
+	@Column(name = "year_from")
+	private int yearFrom;
+	
+	@Column(name = "year_to")
+	private int yearTo;
 	
 	public String getType() {
 		return type;
@@ -38,6 +43,22 @@ public class Competition extends NamedEntity {
 
 	public void setHostCountry(Country hostCountry) {
 		this.hostCountry = hostCountry;
+	}
+
+	public int getYearFrom() {
+		return yearFrom;
+	}
+
+	public void setYearFrom(int yearFrom) {
+		this.yearFrom = yearFrom;
+	}
+
+	public int getYearTo() {
+		return yearTo;
+	}
+
+	public void setYearTo(int yearTo) {
+		this.yearTo = yearTo;
 	}
 	
 }

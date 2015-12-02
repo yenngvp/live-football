@@ -48,6 +48,10 @@ public class Team extends NamedEntity {
 	@Column(name = "type")
 	private String type;
 
+	@Column(name = "logo")
+	private String logo;
+	
+	
 	/**
 	 * Getters/Setters
 	 */
@@ -102,6 +106,14 @@ public class Team extends NamedEntity {
 
 	public String getType() {
 		return type;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
 	public void setType(String type) {
