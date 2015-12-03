@@ -34,11 +34,11 @@ public class StandingRestController {
 	@RequestMapping(value = "/standings", method = RequestMethod.GET)
 	public List<Standing> showStandings() {
 		
-		boolean test = true;
-		if (test) {
-			dataImporter.importExcel();
-		}
-		
+//		boolean test = true;
+//		if (test) {
+//			dataImporter.importExcel();
+//		}
+//		
 		// Understood default competition if it isn't specified
 		return footballunService.findStandingByCompetition(DEFAULT_COMPETITION);
 	}

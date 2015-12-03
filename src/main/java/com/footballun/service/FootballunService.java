@@ -7,11 +7,15 @@ import org.springframework.dao.DataAccessException;
 import com.footballun.model.Competition;
 import com.footballun.model.Country;
 import com.footballun.model.Event;
+import com.footballun.model.Hero;
+import com.footballun.model.HeroRole;
+import com.footballun.model.HeroStatus;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupDetail;
 import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
+import com.footballun.model.Position;
 import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
@@ -27,6 +31,7 @@ public interface FootballunService {
 	List<Squad> findSquadByCompetitionAndGeneration(Integer competitionId, String generation) throws DataAccessException;
 	Squad findSquadById(Integer id) throws DataAccessException;
 	Squad findSquadByName(String name, Integer competitionId) throws DataAccessException;
+	Squad findSquadByFullName(String fullname, Integer competitionId) throws DataAccessException;
 	Squad saveSquad(Squad squad) throws DataAccessException;
 	
 	/**
@@ -75,6 +80,7 @@ public interface FootballunService {
 	 */
 	List<SquadMember> findSquadMembersBySquad(Integer squadId) throws DataAccessException;
 	SquadMember findSquadMemberByLastNameAndSquad(String lastName, Integer squadId) throws DataAccessException;
+	SquadMember saveSquadMember(SquadMember squadMember) throws DataAccessException;
 	
 	/**
 	 * Standing's APIs
@@ -129,4 +135,26 @@ public interface FootballunService {
 	 * Country services
 	 */
 	Country findCountryByName(String name) throws DataAccessException;
+	
+	/**
+	 * Hero services
+	 */
+	Hero findHeroByFullName(String name) throws DataAccessException;
+	Hero findHeroByLastName(String name) throws DataAccessException;
+	Hero saveHero(Hero hero) throws DataAccessException;
+	
+	/**
+	 * Hero Status services
+	 */
+	HeroStatus findHeroStatusByName(String name) throws DataAccessException;
+	
+	/**
+	 * Hero Role services
+	 */
+	HeroRole findHeroRoleByName(String name) throws DataAccessException;
+	
+	/**
+	 * Position services
+	 */
+	Position findPositionByName(String name) throws DataAccessException;
 }

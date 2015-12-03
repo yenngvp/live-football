@@ -20,5 +20,10 @@ public interface HeroRepositoryJpa extends HeroRepository,
 	@Override
 	Hero findById(Integer id) throws DataAccessException;
 	@Override
+	Hero findByName(String name) throws DataAccessException;
+	@Override
 	Hero findByLastName(String name) throws DataAccessException;
+	@SuppressWarnings("unchecked")
+	@Override
+	Hero save(Hero hero) throws DataAccessException;
 }

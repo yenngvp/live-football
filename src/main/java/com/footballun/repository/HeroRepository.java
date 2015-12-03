@@ -15,5 +15,7 @@ import com.footballun.model.Hero;
 public interface HeroRepository {
 
 	Hero findById(Integer id) throws DataAccessException;
+	Hero findByName(String name) throws DataAccessException;
 	Hero findByLastName(String name) throws DataAccessException;
+	Hero save(Hero hero) throws DataAccessException;
 }

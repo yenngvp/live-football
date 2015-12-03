@@ -94,7 +94,7 @@ public class Matchup extends NamedEntity implements Serializable {
 	@Column(name = "manual_mode")
 	private Boolean manualMode;
 	
-	@Column(name = "kick-off")
+	@Column(name = "kickoff")
 	@Temporal(TemporalType.TIME)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	private Date kickoff;
@@ -213,18 +213,23 @@ public class Matchup extends NamedEntity implements Serializable {
 		if (getDetails() == null || getDetails().size() < 2) return;
 			
 		if (getStatus() == null 
-				|| MatchupStatusCode.NOT_BEGIN.equals(getStatus().getCode())
-				|| MatchupStatusCode.UNKNOWN.equals(getStatus().getCode())
-				|| MatchupStatusCode.POSTPOSED.equals(getStatus().getCode())
-				|| MatchupStatusCode.CANCELLED.equals(getStatus().getCode())) {
+				|| MatchupStatusCode.NOT_BEGIN == getStatus().getCode()
+				|| MatchupStatusCode.UNKNOWN == getStatus().getCode()
+				|| MatchupStatusCode.POSTPOSED == getStatus().getCode()
+				|| MatchupStatusCode.CANCELLED == getStatus().getCode()) {
 			setResult((short) -1); // match is not started yet or cancelled
-		}
-		if (getFirstDetail().getGoal() > getSecondDetail().getGoal()) {
-			setResult((short) 1); 
-		} else if (getFirstDetail().getGoal() < getSecondDetail().getGoal()) {
-			setResult((short) 2); 
+		} else if (MatchupStatusCode.FULL_TIME == getStatus().getCode()
+				|| MatchupStatusCode.LIVE == getStatus().getCode()) {
+
+			if (getFirstDetail().getGoal() > getSecondDetail().getGoal()) {
+				setResult((short) 1); 
+			} else if (getFirstDetail().getGoal() < getSecondDetail().getGoal()) {
+				setResult((short) 2); 
+			} else {
+				setResult((short) 0); 
+			}
 		} else {
-			setResult((short) 0); 
+			setResult((short) -1); // Unknown match status
 		}
 	}
 	

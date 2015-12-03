@@ -15,5 +15,5 @@ public interface AbstractFootballunRepository<T> {
 	T findOne(Integer Id) throws DataAccessException;
 	T findById(Integer id) throws DataAccessException;
 	T findByName(String name) throws DataAccessException;
-	T save(T t) throws DataAccessException;
+	<S extends T> S save(S entity)throws DataAccessException;
 }

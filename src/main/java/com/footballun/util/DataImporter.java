@@ -10,14 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,24 +23,23 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.YamlProcessor.MatchCallback;
 import org.springframework.stereotype.Component;
 
 import com.footballun.model.Competition;
 import com.footballun.model.Country;
+import com.footballun.model.Hero;
+import com.footballun.model.HeroRole;
+import com.footballun.model.HeroStatus;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupDetail;
-import com.footballun.model.MatchupStatus;
-import com.footballun.model.MatchupStatus.MatchupStatusCode;
+import com.footballun.model.Position;
 import com.footballun.model.Squad;
-import com.footballun.model.Standing;
+import com.footballun.model.SquadMember;
 import com.footballun.model.Team;
 import com.footballun.service.FootballunService;
 
@@ -69,9 +66,8 @@ public class DataImporter {
 	private static final Map<String, Country> COUNTRIES_LIST = new HashMap<>();
 	
 	
-	private static final String[] STANDING_SHEETS_LIST = {"EPL_Standing", "Bundesliga_Standing", "LigaBBVA_Standing", "SerieA_Standing", "France_Ligue1_Standing"};
+	//private static final String[] STANDING_SHEETS_LIST = {"EPL_Standing", "Bundesliga_Standing", "LigaBBVA_Standing", "SerieA_Standing", "France_Ligue1_Standing"};
 	
-	private static final String CLUB_REFS_SHEET = "Club_Refs";
 	private static final String TEAM_PERSONELS_KITS_SHEET = "Personels_Kits";
 	private static final String[] LEAGUES_CALENDAR_SHEETS_LIST = {"EPL_Cal", "Bundesliga_Cal", "LigaBBVA_Cal", "SerieA_Cal", "Ligue1_Cal"};
 	private static final String STADIA_SHEET = "Stadia";
@@ -90,6 +86,8 @@ public class DataImporter {
 	 *  The pairs (key, value) below must be always going together with the sheet data
 	 */
 	private static final String[] COLUMN_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"};
+
+	private static final String KEY_COL_NAME = "_KEY_COL_NAME_";
 	
 	// ie: #	Team	GP	W	D	L	GF	GA	GD	PTS
 	private static final String COL_NAME_POS = "#";
@@ -117,6 +115,7 @@ public class DataImporter {
 	private static final String COL_NAME_LOGO = "Logo";
 	private static final String COL_NAME_PRESIDENTCHAIRMAN = "President/Chairman";
 	private static final String[] TEAM_PERSKIT_COL_HEADERS = {
+		KEY_COL_NAME,
 		COL_NAME_FULLNAME, COL_NAME_MANAGER, COL_NAME_CAPTAIN, COL_NAME_KITMANUFACTURER,
 		COL_NAME_SHIRTSPONSOR, COL_NAME_LOGO, COL_NAME_PRESIDENTCHAIRMAN, COL_NAME_SHORTNAME
 	};
@@ -131,28 +130,56 @@ public class DataImporter {
 	
 	// PLAYERS
 	// IE: Team	No.	Position	Player
-	private static final String COL_NAME_CLUB = "Club";
+	//private static final String COL_NAME_CLUB = "Club";
 	private static final String COL_NAME_SHIRTNUMBER = "No.";
 	private static final String COL_NAME_POSITION = "Position";
 	private static final String COL_NAME_PLAYER = "Player";
 	private static final String[] LEAGUES_PLAYER_COL_HEADERS = {
-		COL_NAME_CLUB, COL_NAME_SHIRTNUMBER, COL_NAME_POSITION, COL_NAME_PLAYER
+		KEY_COL_NAME, COL_NAME_SHIRTNUMBER, COL_NAME_POSITION, COL_NAME_PLAYER
 	};
 
 	
 	private static final String[] MON_2_FRI = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 	
 	private static final String[] KEY_COMPETITION_NAMES = {"EPL", "Bundesliga", "LigaBBVA", "SerieA", "Ligue1"};
-	private static final String[] COMPETITION_NAMES = {"English Premier League", "Bundesliga", "La Liga", "Serie A", "France Ligue1"};
+	private static final String[] COMPETITION_NAMES = {"English Premier League", "Bundesliga", "La Liga", "Serie A", "Ligue1"};
 	private static final String[] COUNTRIES_NAMES = {"England", "Germany", "Spain", "Italy", "France"};
 	
-	private static final String KEY_COL_NAME = "_KEY_COL_NAME_";
 	
 	private FootballunService footballunService;
 
 	private Country currentCountry;
 	private Competition currentCompetition;
-	private int currentYear = 2015;
+	private int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+	
+	/*
+	 * Hero role
+	 */
+	private static final String HERO_ROLE_PLAYER = "Player";
+	private static final String HERO_ROLE_MANAGER = "Manager";
+	private static final String HERO_ROLE_PRESIDENT = "President";
+	private static final String HERO_ROLE_CAPTAIN = "Captain";
+	private static final String HERO_ROLE_VICECAPTAIN = "Vice Captain";
+	private static final String HERO_ROLE_3RDCAPTAIN = "3rd Captain";
+	private static final Map<String, HeroRole> HERO_ROLES = new HashMap<String, HeroRole>();
+	
+	/*
+	 * Hero status
+	 */
+	private static final String HERO_STATUS_ACTIVE = "Active";
+	private static final String HERO_STATUS_OUTONLOAN = "Out on loan";
+	private static final Map<String, HeroStatus> HERO_STATUS = new HashMap<String, HeroStatus>();
+	
+	/*
+	 * Position
+	 */
+	private static final String POSITION_DF = "Defender";
+	private static final String POSITION_MF = "Midfielder";
+	private static final String POSITION_GK = "Goalkeeper";
+	private static final String POSITION_FW = "Forward";
+	private static final Map<String, Position> POSITIONS = new HashMap<String, Position>();
+	
+	private static int playersCounter = 0;
 	
 	@Autowired
 	public DataImporter(FootballunService footballunService) {
@@ -170,25 +197,37 @@ public class DataImporter {
 		// Team personels and kits columns mapping
 		for (int i = 0; i < TEAM_PERSKIT_COL_HEADERS.length; i++) {
 			// Ignore column 'A' 
-			TEAM_PERSONELS_KITS_COLS_MAP.put(COLUMN_LETTERS[i + 1], TEAM_PERSKIT_COL_HEADERS[i]);
+			TEAM_PERSONELS_KITS_COLS_MAP.put(COLUMN_LETTERS[i], TEAM_PERSKIT_COL_HEADERS[i]);
 		}
 		
 		// Leagues calendar columns mapping
 		for (int i = 0; i < LEAGUES_CAL_COL_HEADERS.length; i++) {
 			LEAGUES_CALENDAR_COLS_MAP.put(COLUMN_LETTERS[i], LEAGUES_CAL_COL_HEADERS[i]);
 		}
-
 		
 		// Leagues player map
 		for (int i = 0; i < LEAGUES_PLAYER_COL_HEADERS.length; i++) {
 			LEAGUES_PLAYER_COLS_MAP.put(COLUMN_LETTERS[i], LEAGUES_PLAYER_COL_HEADERS[i]);
 		}
 		
-		// Builds competitions list and countries list
-		for (int i = 0; i < COUNTRIES_NAMES.length; i++) {
-			COMPETITIONS_LIST.put(KEY_COMPETITION_NAMES[i], findOrCreateCompetition(COMPETITION_NAMES[i]));
-			COUNTRIES_LIST.put(KEY_COMPETITION_NAMES[i], findCountry(COUNTRIES_NAMES[i]));
-		}
+		// Hero roles initialization
+		HERO_ROLES.put(HERO_ROLE_PRESIDENT, footballunService.findHeroRoleByName((HERO_ROLE_PRESIDENT)));
+		HERO_ROLES.put(HERO_ROLE_MANAGER, footballunService.findHeroRoleByName(HERO_ROLE_MANAGER));
+		HERO_ROLES.put(HERO_ROLE_PLAYER, footballunService.findHeroRoleByName(HERO_ROLE_PLAYER));
+		HERO_ROLES.put(HERO_ROLE_CAPTAIN, footballunService.findHeroRoleByName(HERO_ROLE_CAPTAIN));
+		HERO_ROLES.put(HERO_ROLE_VICECAPTAIN, footballunService.findHeroRoleByName(HERO_ROLE_VICECAPTAIN));
+		HERO_ROLES.put(HERO_ROLE_3RDCAPTAIN, footballunService.findHeroRoleByName(HERO_ROLE_3RDCAPTAIN));
+		
+		// Hero status initialization
+		HERO_STATUS.put(HERO_STATUS_ACTIVE, footballunService.findHeroStatusByName(HERO_STATUS_ACTIVE));
+		HERO_STATUS.put(HERO_STATUS_OUTONLOAN, footballunService.findHeroStatusByName(HERO_STATUS_OUTONLOAN));
+		
+		// Position initialization
+		POSITIONS.put(POSITION_GK, footballunService.findPositionByName(POSITION_GK));
+		POSITIONS.put(POSITION_DF, footballunService.findPositionByName(POSITION_DF));
+		POSITIONS.put(POSITION_MF, footballunService.findPositionByName(POSITION_MF));
+		POSITIONS.put(POSITION_FW, footballunService.findPositionByName(POSITION_FW));
+		
 	}
 	
 	public void importExcel() {
@@ -204,6 +243,7 @@ public class DataImporter {
 		 
 			// Cleanup database before doing import?
 			
+			createCompetition();
 	    
 			if (!importTeamsData(workbook)) {
 				logger.error("Importing teams data failed. Should stop further processing!");
@@ -221,7 +261,8 @@ public class DataImporter {
 				return;
 			}
 
-		    
+			calculateStandings();
+					    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
@@ -245,6 +286,17 @@ public class DataImporter {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	private void createCompetition() {
+		// Builds competitions list and countries list
+		for (int i = 0; i < COUNTRIES_NAMES.length; i++) {
+			COUNTRIES_LIST.put(KEY_COMPETITION_NAMES[i], findCountry(COUNTRIES_NAMES[i]));
+		}
+		
+		for (int i = 0; i < COUNTRIES_NAMES.length; i++) {
+			COMPETITIONS_LIST.put(KEY_COMPETITION_NAMES[i], findOrCreateCompetition(COMPETITION_NAMES[i]));
 		}
 	}
 	
@@ -294,11 +346,31 @@ public class DataImporter {
 									fullName, shortName, manager, captain, kitManufacturer, shirtSponsor, president, logo));
 
 							// Creates objects
-							Squad squad = createSquad(fullName, shortName, logo);
-							squad.setKitManufacturer(kitManufacturer);
-							squad.setShirtSponsor(shirtSponsor);
-							footballunService.saveSquad(squad);
-
+							Squad squad = createSquad(fullName, shortName, kitManufacturer, shirtSponsor, logo);
+							
+							// Creates the squad's manager and president
+							if (manager != null && manager.length() > 0) {
+								// Creates new hero
+								// Parses player fullname to get first and last name separately
+								String[] namesAndRole = parsePlayerName(manager);
+								String firstName = namesAndRole[0], lastName = namesAndRole[1];
+								
+								
+								Hero hero = createHero(firstName, lastName, manager);
+								createSquadMember(squad, hero, "", null, HERO_ROLE_MANAGER, HERO_STATUS_ACTIVE);
+							}
+							
+							if (president != null && president.length() > 0) {
+								// Creates new hero
+								// Parses player fullname to get first and last name separately
+								String[] namesAndRole = parsePlayerName(president);
+								String firstName = namesAndRole[0], lastName = namesAndRole[1];
+								
+								
+								Hero hero = createHero(firstName, lastName, president);
+								createSquadMember(squad, hero, "", null, HERO_ROLE_PRESIDENT, HERO_STATUS_ACTIVE);
+							}
+	
 						} else {
 							logger.error("Reading cell error: Number of columns is not identical with expected. Ignore row!");
 						}
@@ -364,10 +436,9 @@ public class DataImporter {
 									kickoff.setTime((Date) cellValues.get(COL_NAME_KICKOFF));
 								}
 								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff.getTime().toString()));
-
-								// Parses fixture
-								parseAndSaveSchedule(1, matchCal, kickoff, fixture, fulltime);
 								
+								// Parses fixture
+								parseAndSaveSchedule(1, matchCal, kickoff, fixture, fulltime);							
 
 							} else {
 								logger.error("Reading cell error: Number of columns is not identical with expected. Ignore row!");
@@ -418,11 +489,18 @@ public class DataImporter {
 		} else {
 			// Future match
 			// ie: Man United V Swansea City
-			String[] parsed = matchString.split("[V]");
-			team1 = parsed[0].trim();
-			team2 = parsed[1].trim();
+			final String separator = " V ";
+			int index = matchString.indexOf(separator);
+			if (index < 0) {
+				logger.error("Cannot find a matchup as: " + matchString);
+				return;
+			}  else {
+				String[] parsed = {matchString.substring(0, index), matchString.substring(index + separator.length())};
+				team1 = parsed[0].trim();
+				team2 = parsed[1].trim();
 
-			logger.info(String.format("Team1 %s V Team2 %s", team1, team2));
+				logger.info(String.format("Team1 %s V Team2 %s", team1, team2));
+			}
 		}
 
 		/*
@@ -438,6 +516,8 @@ public class DataImporter {
 			matchup.setMatchday(week);
 			if (fulltime) {
 				matchup.setStatus(footballunService.getMatchupStatusFullTime());	
+				matchup.setStartAt(matchCal.getTime());
+				matchup.setEndAt(matchCal.getTime());
 			} else {
 
 				Calendar	calendar = (Calendar) matchCal.clone();
@@ -470,8 +550,10 @@ public class DataImporter {
 			footballunService.saveMatchup(matchup);
 			footballunService.saveMatchupDetail(detail1);
 			footballunService.saveMatchupDetail(detail2);
+		} else if (squad1 == null) {
+			logger.error("Cannot find squad for the squad:  " + team1);
 		} else {
-			logger.error("Cannot find squad for the team " + team1 + " or " + team2);
+			logger.error("Cannot find squad for the squad:  " + team2);
 		}
 	}
 
@@ -494,6 +576,7 @@ public class DataImporter {
 				Map<String, String> colsMap = LEAGUES_PLAYER_COLS_MAP;
 				
 				Squad currentSquad = null;
+				boolean isOutOnLoan = false;
 				
 				//Iterate through each rows from first sheet
 				Iterator<Row> rowIterator = sheet.iterator();
@@ -507,22 +590,31 @@ public class DataImporter {
 						if (!cellValues.isEmpty()) {
 							// Checks found key cell first
 							if (cellValues.containsKey(KEY_COL_NAME)) {
-								currentSquad = footballunService.findSquadByName(trimString(String.valueOf(cellValues.get(KEY_COL_NAME))), currentCompetition.getId());
-								if (currentSquad == null) {
-									logger.error("Cannot find a squad for name is ", String.valueOf(cellValues.get(KEY_COL_NAME)));
+								String clubNameOrOutOnLoan = trimString(String.valueOf(cellValues.get(KEY_COL_NAME)));
+								if ("Out on loan".equals(clubNameOrOutOnLoan)) {
+									isOutOnLoan = true;
+								} else {
+									isOutOnLoan = false;
+
+									currentSquad = footballunService.findSquadByFullName(clubNameOrOutOnLoan, currentCompetition.getId());
+									if (currentSquad == null) {
+										logger.error("Cannot find a squad for name is ", String.valueOf(cellValues.get(KEY_COL_NAME)));
+									}
 								}
-							} else  if (cellValues.size() > 2) {
+							} else  {
 								// Extracts cell values
 								String shirtNo = trimString(String.valueOf(cellValues.get(COL_NAME_SHIRTNUMBER)));
 								String position = trimString(String.valueOf(cellValues.get(COL_NAME_POSITION)));
-								String player = trimString(String.valueOf(cellValues.get(COL_NAME_PLAYER)));
+								String player = String.valueOf(cellValues.get(COL_NAME_PLAYER)).trim();
+
 								logger.info(String.format("Reading cell [%s, %s, %s]", 
 										shirtNo, position, player));
-
+								if (player != null && player.length() > 0) {
+									playersCounter++;
+								}
+								
 								// Creates objects
-								// createPlayer(currentSquad, shirtNo, position, player);
-							} else {
-								logger.error("Reading cell error: Number of columns is not identical with expected. Ignore row!");
+								createPlayer(currentSquad, isOutOnLoan, shirtNo, position, player);
 							}
 						}
 					}
@@ -535,6 +627,110 @@ public class DataImporter {
 		return true;
 	}
 	
+	private void createPlayer(Squad squad, boolean isOutOnLoan, String shirtNo, String position, String player) {
+		
+		// Parses number 
+		Integer number;
+		if (shirtNo.contains(".")) {
+			shirtNo = shirtNo.substring(0, shirtNo.indexOf("."));
+		}
+		shirtNo = shirtNo.replaceAll("\\D", " ").trim(); // Replaces all non-digit characters by space and then strim it out
+		
+		if (shirtNo == null || shirtNo.length() < 1) {
+			number = null; // unknown shirt number
+		} else {
+			number = Integer.valueOf(shirtNo);
+		}
+		
+		// Parses player fullname to get first and last name separately
+		String[] namesAndRole = parsePlayerName(player);
+		String firstName = namesAndRole[0], lastName = namesAndRole[1], role;
+		if (namesAndRole[2].length() > 0) {
+			role = namesAndRole[2];
+		} else {
+			role = HERO_ROLE_PLAYER;
+		}
+		
+		// Creates new hero
+		Hero hero = createHero(firstName, lastName, player);
+		createSquadMember(squad, hero, position, number, role, isOutOnLoan ? HERO_STATUS_OUTONLOAN : HERO_STATUS_ACTIVE);
+	}
+	
+	private String[] parsePlayerName(String player) {
+		String firstName = "", lastName = "", role = "";
+	
+		if (player != null) {
+			
+			String name, caption;
+			int indexCaption = player.indexOf("("); // Find index of and open parenthesis known as 'a caption'
+			if (indexCaption >= 0) {
+				name = player.substring(0, indexCaption);
+				caption = player.substring(indexCaption);
+			} else {
+				name = player;
+				caption = "";
+			}
+			name = name.trim();
+			// Parses name
+			int firstSpaceIndex = name.indexOf(" ");
+			if (firstSpaceIndex > 0) {
+				firstName = name.substring(0, firstSpaceIndex).trim();
+				lastName = name.substring(firstSpaceIndex).trim();
+			} else {
+				// Player's name has single word 
+				firstName = name;
+				lastName = name;
+			}
+			
+			if (firstName == null || lastName == null) {
+				logger.error("Unexpected that name is NULL for input string: " + player);
+			}
+			
+			// Parses caption to find player role, ie: captain, vice-captain, third-captain
+			if (caption.length() > 0) {
+				if (caption.contains("vice-captain") 
+						|| caption.contains("vice captain")
+						|| caption.contains("Vice-captain")) {
+					role = HERO_ROLE_VICECAPTAIN;
+				} else if (caption.contains("third-captain")
+						|| caption.contains("third captain")
+						|| caption.contains("Third-captain")
+						|| caption.contains("3rd-captain")
+						|| caption.contains("3rd captain")) {
+					role = HERO_ROLE_3RDCAPTAIN;
+				} else if (caption.contains("captain")
+						|| caption.contains("captain")) {
+					role = HERO_ROLE_CAPTAIN;
+				} else {
+					logger.warn("Ignore caption: " + caption);
+				}
+			}
+		}
+		
+		return new String[]{firstName, lastName, role};
+	}
+	
+	private Hero createHero(String firstName, String lastName, String fullName) {
+		Hero hero = new Hero();
+		hero.setFirstName(firstName);
+		hero.setLastName(lastName);
+		hero.setName(fullName);
+		footballunService.saveHero(hero);
+		return hero;
+	}
+	
+	private void createSquadMember(Squad squad, Hero hero, String position, Integer shirtNumber, String role, String status) {
+		SquadMember member;
+		member = new SquadMember();
+		member.setSquad(squad);
+		member.setHero(hero);
+		member.setHeroRole(HERO_ROLES.get(role));
+		member.setHeroStatus(HERO_STATUS.get(status));
+		member.setPosition(POSITIONS.get(position));
+		member.setShirtNumber(shirtNumber);
+
+		footballunService.saveSquadMember(member);
+	}
 	
 	private void readRowDataIntoMap(Row row, Map<String, String> colsMaps,  Map<String, Object> values, boolean searchForKeyCol, String keyCol) {
 
@@ -645,30 +841,16 @@ public class DataImporter {
 	 * 
 	 * Also initialize its current standing.
 	 */
-	private void createTeamStanding(int index, int standingPosition, String teamName,
-			int gamePlayed, int wins, int draws, int loses, int goalScored, int goalAgainst, int points) {
-		System.out.println(String.format("%d,%s,%d,%d,%d,%d,%d,%d,%d", standingPosition, teamName, gamePlayed, wins, draws, loses, goalScored, goalAgainst, points));
-		
-		Squad squad = createSquad(teamName, null, null);
-		// Updates standing for the squad
-		Standing standing = footballunService.findStandingBySquad(squad);
-		if (standing != null) {
-			standing.setPreviousPosition(standing.getCurrentPosition());
-			standing.setCurrentPosition(standingPosition);
-			standing.setPlayed(gamePlayed);
-			standing.setWon(wins);
-			standing.setDrawn(draws);
-			standing.setLost(loses);
-			standing.setGoalsScored(goalScored);
-			standing.setGoalsAgainst(goalAgainst);
-			standing.setPoint(points);
-			
-			footballunService.saveStanding(standing);
-			logger.info("Created standing for squad: " + squad.getName());
+	private void calculateStandings() {
+
+		for (Map.Entry<String, Competition> entry : COMPETITIONS_LIST.entrySet()) {
+			System.out.println(entry.getKey() + "/" + entry.getValue());
+			Competition competition = entry.getValue();
+			footballunService.recalculateStandingForTheCompetition(competition.getId());
 		}
 	}
 	
-	private Squad createSquad(String fullName, String shortName, String logo) {
+	private Squad createSquad(String fullName, String shortName, String kitManufacturer, String shirtSponsor, String logo) {
 		Competition competition = currentCompetition;
 		Squad squad;
 		Team team = footballunService.findTeamByName(shortName);
@@ -695,6 +877,9 @@ public class DataImporter {
 			squad.setFullName(fullName);
 			squad.setLogo(logo);
 			squad.setTeam(team);
+			squad.setKitManufacturer(kitManufacturer);
+			squad.setShirtSponsor(shirtSponsor);
+			footballunService.saveSquad(squad);
 
 			footballunService.saveSquad(squad);
 			logger.info("Created squad for team: " + team.getName());
@@ -708,6 +893,8 @@ public class DataImporter {
 			squad = footballunService.findSquadByName(shortName, competition.getId());
 			squad.setName(shortName);
 			squad.setFullName(fullName);
+			squad.setKitManufacturer(kitManufacturer);
+			squad.setShirtSponsor(shirtSponsor);
 			squad.setLogo(logo);
 			logger.info("Query squad: " + team.getName());
 		}
@@ -759,6 +946,9 @@ public class DataImporter {
 	private Competition findOrCreateCompetition(String name) {
 		Competition competition = null;
 		try{
+			if (currentCountry == null) {
+				currentCountry = COUNTRIES_LIST.get(name);
+			}
 			competition = footballunService.findCompetitionByName(name);
 			if (competition == null) {
 				competition = new Competition();
@@ -766,9 +956,7 @@ public class DataImporter {
 				competition.setType("LEAGUE");
 				competition.setYearFrom(2015);
 				competition.setYearTo(2016);
-				if (currentCountry == null) {
-					currentCountry = COUNTRIES_LIST.get(name);
-				}
+				
 				competition.setHostCountry(currentCountry);
 				footballunService.save(competition);
 				logger.info("Created competition: " + competition.getName());

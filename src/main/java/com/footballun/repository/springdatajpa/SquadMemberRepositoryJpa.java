@@ -23,4 +23,8 @@ public interface SquadMemberRepositoryJpa extends SquadMemberRepository, CrudRep
 	
 	@Override
 	SquadMember findByHero_LastNameAndSquadId(String lastName, Integer squadId) throws DataAccessException;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	SquadMember save(SquadMember squadMember) throws DataAccessException;
 }

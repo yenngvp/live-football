@@ -18,4 +18,5 @@ public interface SquadMemberRepository {
 
 	List<SquadMember> findBySquadId(Integer squadId)  throws DataAccessException;
 	SquadMember findByHero_LastNameAndSquadId(String lastName, Integer squadId)  throws DataAccessException;
+	SquadMember save(SquadMember squadMember) throws DataAccessException;
 }

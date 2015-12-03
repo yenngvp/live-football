@@ -1,6 +1,7 @@
 package com.footballun.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.footballun.model.Competition;
 import com.footballun.model.Country;
 import com.footballun.model.Event;
+import com.footballun.model.Hero;
+import com.footballun.model.HeroRole;
+import com.footballun.model.HeroStatus;
 import com.footballun.model.Matchup;
 import com.footballun.model.Matchup.MatchupResult;
 import com.footballun.model.MatchupDetail;
@@ -22,6 +26,8 @@ import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
+import com.footballun.model.NamedEntity;
+import com.footballun.model.Position;
 import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
@@ -29,14 +35,19 @@ import com.footballun.model.Standing;
 import com.footballun.model.StandingBase;
 import com.footballun.model.StandingLive;
 import com.footballun.model.Team;
+import com.footballun.repository.AbstractFootballunRepository;
 import com.footballun.repository.CompetitionRepository;
 import com.footballun.repository.CountryRepository;
 import com.footballun.repository.EventRepository;
+import com.footballun.repository.HeroRepository;
+import com.footballun.repository.HeroRoleRepository;
+import com.footballun.repository.HeroStatusRepository;
 import com.footballun.repository.MatchupDetailRepository;
 import com.footballun.repository.MatchupLiveRepository;
 import com.footballun.repository.MatchupRegisterRepository;
 import com.footballun.repository.MatchupRepository;
 import com.footballun.repository.MatchupStatusRepository;
+import com.footballun.repository.PositionRepository;
 import com.footballun.repository.SettingRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
@@ -77,7 +88,15 @@ public class FootballunServiceImpl implements FootballunService {
 	private SettingRepository settingRepository;
 	@Autowired
 	private CountryRepository countryRepository;
-		
+	@Autowired
+	private HeroRepository heroRepository;
+	@Autowired
+	private HeroRoleRepository heroRoleRepository;
+	@Autowired
+	private HeroStatusRepository heroStatusRepository;
+	@Autowired
+	private PositionRepository positionRepository;
+	
 	private MatchupStatus statusCountdown;
 	private MatchupStatus statusJustBegin;
 	private MatchupStatus statusNotBegin;
@@ -109,7 +128,13 @@ public class FootballunServiceImpl implements FootballunService {
 	@Override
 	@Transactional(readOnly = true)
 	public Squad findSquadByName(String name, Integer competitionId) throws DataAccessException {
-		return squadRepository.findByTeam_NameAndCompetitionId(name, competitionId);
+		return squadRepository.findByNameAndCompetitionId(name, competitionId);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Squad findSquadByFullName(String fullname, Integer competitionId) throws DataAccessException {
+		return squadRepository.findByFullNameAndCompetitionId(fullname, competitionId);
 	}
 	
 	@Override
@@ -198,6 +223,11 @@ public class FootballunServiceImpl implements FootballunService {
 	@Transactional(readOnly = true)
 	public SquadMember findSquadMemberByLastNameAndSquad(String lastName, Integer squadId) throws DataAccessException {
 		return squadMemberRepository.findByHero_LastNameAndSquadId(lastName, squadId);
+	}
+	
+	@Override
+	public SquadMember saveSquadMember(SquadMember squadMember) throws DataAccessException {
+		return squadMemberRepository.save(squadMember);
 	}
 	
 	/**
@@ -438,7 +468,12 @@ public class FootballunServiceImpl implements FootballunService {
 		/*
 		 * Rejects to reset the standing if there is still have matchups in LIVE mode.
 		 */
-		List<Matchup> matchups = matchupRepository.findByCompetitionIdOrderByStartAtAsc(competitionId);
+		//findByCompetitionIdAndStatus_NameIn
+		Collection<String> gettingStatuses = new ArrayList<String>();
+		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.LIVE));
+		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameIn(competitionId, gettingStatuses);
 		
 		for (Matchup matchup : matchups) {
 			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
@@ -643,4 +678,47 @@ public class FootballunServiceImpl implements FootballunService {
 		return countryRepository.findByName(name);
 	}
 	 
+	
+	/**
+	 * Hero services
+	 */
+	@Override
+	public Hero findHeroByFullName(String name) throws DataAccessException {
+		return heroRepository.findByName(name);
+	}
+	
+	@Override
+	public Hero findHeroByLastName(String name) throws DataAccessException {
+		return heroRepository.findByLastName(name);
+	}
+	
+	@Override
+	public Hero saveHero(Hero hero) throws DataAccessException {
+		return heroRepository.save(hero);
+	}
+	
+	/**
+	 * Hero Status services
+	 */
+	@Override
+	public HeroStatus findHeroStatusByName(String name) throws DataAccessException {
+		return heroStatusRepository.findByName(name);
+	}
+	
+	/**
+	 * Hero Role services
+	 */
+	@Override
+	public HeroRole findHeroRoleByName(String name) throws DataAccessException {
+		return heroRoleRepository.findByName(name);
+	}
+	
+	/**
+	 * Position services
+	 */
+	@Override
+	public Position findPositionByName(String name) throws DataAccessException {
+		return positionRepository.findByPosition(name);
+	}
+	
 }

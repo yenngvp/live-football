@@ -39,6 +39,10 @@ public class SquadMember extends BaseEntity {
 	@JoinColumn
 	private Position position;
 
+	@OneToOne
+	@JoinColumn(name = "hero_status_id")
+	private HeroStatus heroStatus;
+	
 	/**
 	 * Columns
 	 */
@@ -86,6 +90,14 @@ public class SquadMember extends BaseEntity {
 
 	public void setShirtNumber(Integer shirtNumber) {
 		this.shirtNumber = shirtNumber;
+	}
+
+	public HeroStatus getHeroStatus() {
+		return heroStatus;
+	}
+
+	public void setHeroStatus(HeroStatus heroStatus) {
+		this.heroStatus = heroStatus;
 	}
 
 	@Override
