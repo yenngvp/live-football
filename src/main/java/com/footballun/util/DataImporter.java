@@ -71,8 +71,7 @@ public class DataImporter {
 	private static final String TEAM_PERSONELS_KITS_SHEET = "Personels_Kits";
 	private static final String[] LEAGUES_CALENDAR_SHEETS_LIST = {"EPL_Cal", "Bundesliga_Cal", "LigaBBVA_Cal", "SerieA_Cal", "Ligue1_Cal"};
 	private static final String STADIA_SHEET = "Stadia";
-//	private static final String[] LEAGUES_PLAYERS_SHEETS_LIST = {"EPL_Players", "Bundesliga_Players", "LigaBBVA_Players", "SerieA_Players", "Ligue1_Players"};
-	private static final String[] LEAGUES_PLAYERS_SHEETS_LIST = {"EPL_Players"};
+	private static final String[] LEAGUES_PLAYERS_SHEETS_LIST = {"EPL_Players", "Bundesliga_Players", "LigaBBVA_Players", "SerieA_Players", "Ligue1_Players"};
 	
 	/*
 	 * Columns mapping
@@ -180,6 +179,7 @@ public class DataImporter {
 	private static final Map<String, Position> POSITIONS = new HashMap<String, Position>();
 	
 	private static int playersCounter = 0;
+	private static int createdPlayersCounter = 0;
 	
 	@Autowired
 	public DataImporter(FootballunService footballunService) {
@@ -262,7 +262,9 @@ public class DataImporter {
 			}
 
 			calculateStandings();
-					    
+			
+			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
+			
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
@@ -303,7 +305,8 @@ public class DataImporter {
 	private boolean importTeamsData(XSSFWorkbook  workbook) {
 
 		String sheetName = TEAM_PERSONELS_KITS_SHEET;			
-
+		logger.info("Reading sheet: " + sheetName);
+		
 		//Get sheet by name from the workbook
 		XSSFSheet sheet = workbook.getSheet(sheetName);
 
@@ -355,6 +358,7 @@ public class DataImporter {
 								String[] namesAndRole = parsePlayerName(manager);
 								String firstName = namesAndRole[0], lastName = namesAndRole[1];
 								
+								playersCounter++;
 								
 								Hero hero = createHero(firstName, lastName, manager);
 								createSquadMember(squad, hero, "", null, HERO_ROLE_MANAGER, HERO_STATUS_ACTIVE);
@@ -366,6 +370,7 @@ public class DataImporter {
 								String[] namesAndRole = parsePlayerName(president);
 								String firstName = namesAndRole[0], lastName = namesAndRole[1];
 								
+								playersCounter++;
 								
 								Hero hero = createHero(firstName, lastName, president);
 								createSquadMember(squad, hero, "", null, HERO_ROLE_PRESIDENT, HERO_STATUS_ACTIVE);
@@ -386,6 +391,8 @@ public class DataImporter {
 		
 		for (String sheetName : LEAGUES_CALENDAR_SHEETS_LIST) {
 
+			logger.info("Reading sheet: " + sheetName);
+			
 			//Get sheet by name from the workbook
 			XSSFSheet sheet = workbook.getSheet(sheetName);
 
@@ -561,6 +568,8 @@ public class DataImporter {
 
 		for (String sheetName : LEAGUES_PLAYERS_SHEETS_LIST) {
 
+			logger.info("Reading sheet: " + sheetName);
+			
 			//Get sheet by name from the workbook
 			XSSFSheet sheet = workbook.getSheet(sheetName);
 
@@ -620,8 +629,6 @@ public class DataImporter {
 					}
 				}
 			}
-
-			return success;
 		}
 
 		return true;
@@ -716,6 +723,7 @@ public class DataImporter {
 		hero.setLastName(lastName);
 		hero.setName(fullName);
 		footballunService.saveHero(hero);
+		createdPlayersCounter++;
 		return hero;
 	}
 	
@@ -954,8 +962,8 @@ public class DataImporter {
 				competition = new Competition();
 				competition.setName(name);
 				competition.setType("LEAGUE");
-				competition.setYearFrom(2015);
-				competition.setYearTo(2016);
+				competition.setYearFrom(currentYear);
+				competition.setYearTo(currentYear + 1);
 				
 				competition.setHostCountry(currentCountry);
 				footballunService.save(competition);
