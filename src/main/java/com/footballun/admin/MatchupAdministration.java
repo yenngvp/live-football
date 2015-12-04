@@ -44,9 +44,9 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.field( "details" ).caption( "Details" )
 				.field( "status" ).caption( "Status" )
 				.field( "result" ).caption( "Result" )
-				.field( "startAt" ).caption( "Start" )
+				//.field( "startAt" ).caption( "Start" )
 				.field( "kickoff" ).caption( "Kick-off" )
-				.field( "endAt" ).caption( "Finish" )
+				//.field( "endAt" ).caption( "Finish" )
 				.build();
 	}
 	
@@ -57,8 +57,8 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.filter( "Details", "details" )
 				.filter( "Status", "status" )
 				.filter( "Result", "result" )
-				.filter( "Start At", "startAt" )
-				.filter( "Finish At", "endAt" )
+				//.filter( "Start At", "startAt" )
+				//.filter( "Finish At", "endAt" )
 				.build();
 	}
 }

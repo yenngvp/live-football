@@ -1,6 +1,7 @@
 package com.footballun.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -17,6 +18,9 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -70,14 +74,16 @@ public class Matchup extends NamedEntity implements Serializable {
 	 */
 	
 	@Column(name = "start_at")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	private Date startAt;
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate startAt;
 	
 	@Column(name = "end_at")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	private Date endAt;
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate endAt;
 	
 	@Column(name = "matchday")
 	private Integer matchday;
@@ -135,19 +141,19 @@ public class Matchup extends NamedEntity implements Serializable {
 		refreshResult(); // Refreshes match result whenever match's details has changed
 	}
 	
-	public Date getStartAt() {
+	public LocalDate getStartAt() {
 		return startAt;
 	}
 	
-	public void setStartAt(Date startAt) {
+	public void setStartAt(LocalDate startAt) {
 		this.startAt = startAt;
 	}
 	
-	public Date getEndAt() {
+	public LocalDate getEndAt() {
 		return endAt;
 	}
 	
-	public void setEndAt(Date endAt) {
+	public void setEndAt(LocalDate endAt) {
 		this.endAt = endAt;
 	}
 	

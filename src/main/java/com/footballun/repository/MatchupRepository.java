@@ -9,9 +9,11 @@ import com.footballun.model.Matchup;
 
 public interface MatchupRepository {
 
-	List<Matchup> findByMatchdayOrderByStartAtAsc(Integer matchday) throws DataAccessException;
+	List<Matchup[]> findByMatchdayOrderByStartAtAsc(Integer matchday) throws DataAccessException;
 	
-	List<Matchup> findByRoundOrderByStartAtAsc(String round) throws DataAccessException;
+	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAsc(Integer matchday, Integer competitionId) throws DataAccessException;
+	
+	//List<Matchup[]> findByRoundAndCompetitionIdOrderByCompetitionAscAndStartAtAscc(String round, Integer competitionId) throws DataAccessException;
 	
 	List<Matchup> findByFeaturedOrderByStartAtAsc(Boolean featured) throws DataAccessException;
 	

@@ -145,19 +145,25 @@ public class FootballunServiceImpl implements FootballunService {
 	/**
 	 * Matchup's APIs implements
 	 */
-	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException {
+	public List<Matchup[]> findMatchupByMatchday(Integer matchday) throws DataAccessException {
 		
 		return  matchupRepository.findByMatchdayOrderByStartAtAsc(matchday);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Matchup> findMatchupByRound(String round) throws DataAccessException {
+	public List<Matchup> findMatchupByMatchday(Integer matchday, Integer competitionId) throws DataAccessException {
 		
-		return  matchupRepository.findByRoundOrderByStartAtAsc(round);
+		return  matchupRepository.findByMatchdayAndCompetitionIdOrderByStartAtAsc(matchday, competitionId);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException {
+		
+		return  null;
 	}
 
 	@Override

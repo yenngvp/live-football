@@ -34,6 +34,8 @@ public class StandingRestController {
 	@RequestMapping(value = "/standings", method = RequestMethod.GET)
 	public List<Standing> showStandings() {
 		
+		//dataImporter.updateMatchday();
+		
 		// Understood default competition if it isn't specified
 		return footballunService.findStandingByCompetition(DEFAULT_COMPETITION);
 	}

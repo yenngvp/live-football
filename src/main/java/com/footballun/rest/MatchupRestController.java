@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,19 +27,40 @@ public class MatchupRestController {
 	private FootballunService footballunService;
 		
 	@RequestMapping(value = "/matchdays", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatchDays() {
+	public List<List<Matchup>> showMatches() {
 		
+		return getMatchesByMatchdayAndCompetition(15, 9);
+	}
+	
+	
+	@RequestMapping(value = "/matchdays/competition/{id}", method = RequestMethod.GET)
+	public List<List<Matchup>> showMatchesByCompetition(@PathVariable("id") int id) {
+		
+		return getMatchesByMatchdayAndCompetition(15, id);
+	}
+
+	@RequestMapping(value = "/matchdays/{week}/competition/{id}", method = RequestMethod.GET)
+	public List<List<Matchup>> showMatchesByDayAndCompetition(@PathVariable("week") int week, @PathVariable("id") int id) {
+		
+		return getMatchesByMatchdayAndCompetition(week, id);
+	}
+	
+	private List<List<Matchup>> getMatchesByMatchdayAndCompetition(Integer matchday, Integer competitionId) {
 		List<List<Matchup>> groupedMatchupsByDate = new ArrayList<List<Matchup>>();
 		
 		// Query sorted matches by start time
-		List<Matchup> matchups = footballunService.findMatchupByRound("11");
+		List<Matchup> matchups = footballunService.findMatchupByMatchday(matchday, competitionId);
 		
 		List<Matchup> grouped = new ArrayList<Matchup>();
 		Matchup prev = null;
+		
+	
 		// Group matches by date
 		for (Matchup matchup : matchups) {
 			if (matchup.getDetails() != null && matchup.getStartAt() != null) {
-				if (prev != null && !matchup.getStartAt().equals(prev.getStartAt())) {
+			
+				if (prev != null 
+						&& Days.daysBetween(new DateTime(matchup.getStartAt()), new DateTime(prev.getStartAt())).getDays() != 0) {
 					// Adds the matchup to the new group
 					groupedMatchupsByDate.add(grouped);
 					// Prepare to create a new group

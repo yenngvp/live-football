@@ -10,14 +10,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,6 +26,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,6 +231,56 @@ public class DataImporter {
 		POSITIONS.put(POSITION_MF, footballunService.findPositionByName(POSITION_MF));
 		POSITIONS.put(POSITION_FW, footballunService.findPositionByName(POSITION_FW));
 		
+
+		// Creates or queries for existing competitions
+		createCompetition();
+	}
+	
+	/**
+	 * Calculates matchday for matchups in competitions
+	 */
+	public void updateMatchday() {
+		
+		for (Map.Entry<String, Competition> entry : COMPETITIONS_LIST.entrySet()) {
+			
+			logger.info("Processing competition: " + entry.getKey());
+			Competition competition = entry.getValue();
+			
+			// Gets all matchups for the competition ordered by match date
+			List<Matchup> matchups = footballunService.findMatchupByCompetitionId(competition.getId());
+			if (matchups.size() == 0) return;
+			
+			LocalDate currentDate, matchDate;
+			
+			// Gets season kick-off date
+			currentDate = matchups.get(0).getStartAt();
+			int matchday = 1;
+			
+			for (Matchup matchup : matchups) {
+				matchDate= matchup.getStartAt();
+				
+				int diffDays = Days.daysBetween(new DateTime(currentDate),	new DateTime(matchDate)).getDays();
+				logger.info("Matchup: " + matchup.toString());
+				logger.info("DiffDays: " + diffDays);
+				if (diffDays >= 7) {
+					matchday++;
+					currentDate = matchDate;
+				}
+				
+				// Updates matchday for the matchup
+				matchup.setMatchday(matchday);
+				
+				// By the way, update match name if it not yet set
+				if (matchup.getName() == null && matchup.getDetails() != null) {
+					matchup.setName(String.format("%s V %s", matchup.getFirstDetail().getSquad().getName(), matchup.getSecondDetail().getSquad().getName()));
+				}
+				
+				footballunService.saveMatchup(matchup);
+				
+				logger.info(String.format("Update matchup %s with matchday %d", matchup.getName(), matchday));
+			}
+		}
+		
 	}
 	
 	public void importExcel() {
@@ -241,9 +294,6 @@ public class DataImporter {
 		    //Get the workbook instance for XLS file 
 			workbook = new XSSFWorkbook (file);
 		 
-			// Cleanup database before doing import?
-			
-			createCompetition();
 	    
 			if (!importTeamsData(workbook)) {
 				logger.error("Importing teams data failed. Should stop further processing!");
@@ -255,6 +305,8 @@ public class DataImporter {
 				logger.error("Importing leagues calenddar failed. Should stop further processing!");
 				return;
 			}
+			
+			updateMatchday();
 			
 			if (!importPlayers(workbook)) {
 				logger.error("Importing leagues player failed. Should stop further processing!");
@@ -352,7 +404,7 @@ public class DataImporter {
 							Squad squad = createSquad(fullName, shortName, kitManufacturer, shirtSponsor, logo);
 							
 							// Creates the squad's manager and president
-							if (manager != null && manager.length() > 0) {
+							if (manager != null && !"null".equals(manager) && manager.length() > 0) {
 								// Creates new hero
 								// Parses player fullname to get first and last name separately
 								String[] namesAndRole = parsePlayerName(manager);
@@ -364,7 +416,7 @@ public class DataImporter {
 								createSquadMember(squad, hero, "", null, HERO_ROLE_MANAGER, HERO_STATUS_ACTIVE);
 							}
 							
-							if (president != null && president.length() > 0) {
+							if (president != null && !"null".equals(president) && president.length() > 0) {
 								// Creates new hero
 								// Parses player fullname to get first and last name separately
 								String[] namesAndRole = parsePlayerName(president);
@@ -521,18 +573,14 @@ public class DataImporter {
 			Matchup matchup = new Matchup();
 			matchup.setCompetition(currentCompetition);
 			matchup.setMatchday(week);
+			matchup.setName(String.format("%s V %s", team1, team2));
+			
+			matchup.setStartAt(LocalDate.of(matchCal.get(Calendar.YEAR), matchCal.get(Calendar.MONTH), matchCal.get(Calendar.DAY_OF_MONTH)));
+			matchup.setEndAt(matchup.getStartAt());
+			
 			if (fulltime) {
 				matchup.setStatus(footballunService.getMatchupStatusFullTime());	
-				matchup.setStartAt(matchCal.getTime());
-				matchup.setEndAt(matchCal.getTime());
 			} else {
-
-				Calendar	calendar = (Calendar) matchCal.clone();
-				calendar.set(Calendar.HOUR_OF_DAY, kickoff.get(Calendar.HOUR_OF_DAY));
-				calendar.set(Calendar.MINUTE, kickoff.get(Calendar.MINUTE));						
-				matchup.setStartAt(calendar.getTime());
-				calendar.add(Calendar.HOUR, 2); // Supposed to have 2-hours game long
-				matchup.setEndAt(calendar.getTime());
 
 				matchup.setKickoff(kickoff.getTime());
 				matchup.setStatus(footballunService.getMatchupStatusNotBegin());
