@@ -6,9 +6,14 @@ package com.footballun.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.footballun.util.LocalDateTimePersistenceConverter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.footballun.util.LocalDatePersistenceConverter;
+import com.footballun.util.LocalTimePersistenceConverter;
 
 /**
  * @author yen.nt
@@ -16,7 +21,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "matchup_live")
-public class MatchupLive extends BaseEntity {
+public class MatchupLive extends BaseEntity  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 	/**
 	 * Field in relationships
@@ -46,6 +53,7 @@ public class MatchupLive extends BaseEntity {
 	 */
 	
 	@Column(name = "timestamp")
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
 	private LocalDateTime timestamp;
 	
 	@Column(name = "update_minute")

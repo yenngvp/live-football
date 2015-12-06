@@ -37,7 +37,7 @@ public class SettingRepositoryAdministration extends
 				.field( "name" ).caption( "Team" )
 				.field( "competition" ).caption( "Selected Competition" )
 				.field( "timeZoneId" ).caption( "TimeZone" )
-				.field( "overrideServerTime" ).caption( "Override Server Time" )
+				//.field( "overrideServerTime" ).caption( "Override Server Time" )
 				.field( "startCountdown" ).caption( "Start Countdown (hours)" )
 				.build();
 	}

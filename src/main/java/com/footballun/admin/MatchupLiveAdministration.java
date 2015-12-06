@@ -43,7 +43,7 @@ public class MatchupLiveAdministration extends AdministrationConfiguration<Match
 				.field( "matchupRegister" ).caption( "Matchup Register" )
 				.field( "event" ).caption( "Event" )
 				.field( "updateMinute" ).caption( "Update Minute" )
-				.field( "timestamp" ).caption( "Timestamp" )
+				//.field( "timestamp" ).caption( "Timestamp" )
 				.build();
 	}
 

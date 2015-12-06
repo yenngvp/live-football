@@ -45,7 +45,7 @@ public class MatchupAdministration extends AdministrationConfiguration<Matchup> 
 				.field( "status" ).caption( "Status" )
 				.field( "result" ).caption( "Result" )
 				//.field( "startAt" ).caption( "Start" )
-				.field( "kickoff" ).caption( "Kick-off" )
+				//.field( "kickoff" ).caption( "Kick-off" )
 				//.field( "endAt" ).caption( "Finish" )
 				.build();
 	}

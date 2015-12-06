@@ -7,18 +7,10 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
+import com.footballun.util.LocalDatePersistenceConverter;
+import com.footballun.util.LocalTimePersistenceConverter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -77,12 +69,14 @@ public class Matchup extends NamedEntity implements Serializable {
 //	@Temporal(TemporalType.DATE)
 	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	//@DateTimeFormat(iso = ISO.DATE)
+	@Convert(converter = LocalDatePersistenceConverter.class)
 	private LocalDate startAt;
 	
 	@Column(name = "end_at")
 //	@Temporal(TemporalType.DATE)
 	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	//@DateTimeFormat(iso = ISO.DATE)
+	@Convert(converter = LocalDatePersistenceConverter.class)
 	private LocalDate endAt;
 	
 	@Column(name = "matchday")
@@ -99,10 +93,11 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@Column(name = "manual_mode")
 	private Boolean manualMode;
-	
+
 	@Column(name = "kickoff")
 	//@Temporal(TemporalType.TIME)
 	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+	@Convert(converter = LocalTimePersistenceConverter.class)
 	private LocalTime kickoff;
 	
 	/**

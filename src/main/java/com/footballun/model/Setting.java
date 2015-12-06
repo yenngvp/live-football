@@ -4,13 +4,9 @@
  */
 package com.footballun.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.footballun.util.LocalDateTimePersistenceConverter;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -32,6 +28,7 @@ public class Setting extends NamedEntity {
 	 * Columns
 	 */
 	@Column(name = "override_server_time")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	private LocalDateTime overrideServerTime;
 
 	@Column(name = "timezone_id")

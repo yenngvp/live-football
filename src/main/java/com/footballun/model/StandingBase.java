@@ -4,10 +4,9 @@
  */
 package com.footballun.model;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import com.footballun.util.LocalDateTimePersistenceConverter;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -58,6 +57,7 @@ public abstract class StandingBase extends BaseEntity {
 	private int previousPosition;
 	
 	@Column(name = "timestamp")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	private LocalDateTime timestamp;
 	
 	@Column(name = "goals_scored")

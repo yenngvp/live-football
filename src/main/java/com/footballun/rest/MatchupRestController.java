@@ -1,12 +1,11 @@
 package com.footballun.rest;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,8 +58,9 @@ public class MatchupRestController {
 		for (Matchup matchup : matchups) {
 			if (matchup.getDetails() != null && matchup.getStartAt() != null) {
 			
-				if (prev != null 
-						&& Days.daysBetween(new DateTime(matchup.getStartAt()), new DateTime(prev.getStartAt())).getDays() != 0) {
+				if (prev != null
+						&& !matchup.getStartAt().isEqual(prev.getStartAt())) {
+
 					// Adds the matchup to the new group
 					groupedMatchupsByDate.add(grouped);
 					// Prepare to create a new group
