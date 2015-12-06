@@ -115,17 +115,23 @@ app.controller('MatchupDetailController', MatchupDetailController);
 app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
                                        function($scope, MatchDay, enableCache, localStorageService,locale) {
 
-	if (enableCache) {
-		// Query matchdays
-		// Gets localStorage cached
+        // Query matchdays
+        // Gets localStorage cached
+        var key = 'matchdaysCache';
+        if (enableCache) {
+            $scope.matchdays = localStorageService.get(key);
+        } else {
+            $scope.matchdays = undefined;
+        }
 
-		var key = 'matchdaysCache'; 
-		$scope.matchdays = localStorageService.get(key);
-		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
+		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == 0) {
 			MatchDay.matchdays.query().$promise.then(
 					//success
 					function( value ) {
-						localStorageService.set(key, value);
+                        if (enableCache) {
+                            localStorageService.set(key, value);
+                        }
+
 						$scope.matchdays = value;
 					},
 					//error
@@ -135,20 +141,23 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 					}
 					);
 		}
-	} else {
-		$scope.matchdays = MatchDay.matchdays.query();
-	}
 		
-	if (enableCache) {
 		// Query featured players
 		// Gets localStorage cached
 		key = 'featuredMatchupsCache'; 
-		$scope.featuredMatchups = localStorageService.get(key);
-		if (angular.isUndefined($scope.featuredMatchups) || $scope.featuredMatchups == null || $scope.featuredMatchups == 0) {
+        if (enableCache) {
+            $scope.featuredMatchups = localStorageService.get(key);
+        } else {
+            $scope.featuredMatchups = undefined;
+        }
+		if (angular.isUndefined($scope.featuredMatchups) || $scope.featuredMatchups == 0) {
 			MatchDay.featuredMatchups.query().$promise.then(
 					//success
 					function( value ) {
-						localStorageService.set(key, value);
+                        if (enableCache) {
+                            localStorageService.set(key, value);
+                        }
+
 						$scope.featuredMatchups = value;
 					},
 					//error
@@ -158,19 +167,16 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 					}
 					);
 		}
-	} else {
-		$scope.featuredMatchups = MatchDay.featuredMatchups.query();
-	}
-	
-	// Carousel directive
-	$scope.myInterval = 5000;
-	$scope.noWrapSlides = false;
-	
-	// Clicked matchup
-	$scope.saveSelectedMatchup = function($obj) {
-		MatchDay.setSelectedMatchup($obj);
-	};
-}]);
+
+        // Carousel directive
+        $scope.myInterval = 5000;
+        $scope.noWrapSlides = false;
+
+        // Clicked matchup
+        $scope.saveSelectedMatchup = function($obj) {
+            MatchDay.setSelectedMatchup($obj);
+        };
+ }]);
 
 
 /** Services **/

@@ -34,9 +34,9 @@
 
 					<!-- Heading -->
 					<div class="panel-heading">
-						<h2 class="panel-title" ng-if="matchday[0].startAt" ng-init="timeIndicator(matchday[0].startAt)"> {{ matchday[0].startAt | date:dateTimeFormatString }}</h2>
+						<h2 class="panel-title" ng-if="matchday[0].startAt" ng-init="timeIndicator(matchday[0].startAt)"> {{ matchday[0].startAt | date:dateFormatString }}</h2>
 						<h2 class="panel-title" ng-if="!matchday[0].startAt">{{'common.scheduleTBD' | i18n }}</h2>
-						<span style="text-align: center !important;"><timer ng-if="matchday[0].startAt"  countdown="matchday[0].startAt" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></span>
+						<span style="text-align: center !important;"><timer ng-if="matchday[0].countdown > 0"  countdown="matchday[0].countdown" max-time-unit="'day'" interval="1000">{{ddays}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer></span>
 					</div>
 					<!-- /Heading -->
 
@@ -46,8 +46,8 @@
 						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >
-						    	<h4 ng-if="!(matchup.status.name='Live')">vs</h4>
-						    	<h4 ng-if="matchup.status.name='Live'">0:0</h4>
+						    	<h4 ng-if="matchup.status.code='NOT_BEGIN' || matchup.status.code='ENTER_COUNTDOWN'">vs</h4>
+						    	<h4 ng-if="matchup.status.code='LIVE'">0:0</h4>
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
 						    <div class="table-cell cell-matchup-right2">

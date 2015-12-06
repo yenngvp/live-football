@@ -25,6 +25,8 @@
     "at": "lúc",
     "viewMatchDetail": "Chi tiết",
     "dateTimeFormat": "HH:mm EEEE, d MMMM, yyyy",
+    "dateFormat": "EEEE d MMMM, yyyy",
+    "timeFormat": "hh:mm",
     "teamLineup": "Đội hình ra sân của",
     "manager": "HLV",
     "goalkeeper": "Thủ môn",

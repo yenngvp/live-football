@@ -1,7 +1,9 @@
 package com.footballun.model;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -9,6 +11,10 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.footballun.util.JsonDateDeserializer;
+import com.footballun.util.JsonDateSerializer;
 import com.footballun.util.LocalDatePersistenceConverter;
 import com.footballun.util.LocalTimePersistenceConverter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -66,23 +72,21 @@ public class Matchup extends NamedEntity implements Serializable {
 	 */
 	
 	@Column(name = "start_at")
-//	@Temporal(TemporalType.DATE)
-	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	//@DateTimeFormat(iso = ISO.DATE)
 	@Convert(converter = LocalDatePersistenceConverter.class)
-	private LocalDate startAt;
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDate startAt;
 	
 	@Column(name = "end_at")
-//	@Temporal(TemporalType.DATE)
-	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	//@DateTimeFormat(iso = ISO.DATE)
 	@Convert(converter = LocalDatePersistenceConverter.class)
+    @Transient
 	private LocalDate endAt;
 	
 	@Column(name = "matchday")
 	private Integer matchday;
 	
 	@Column(name = "round")
+    @Transient
 	private String round;
 	
 	@Column(name = "featured")
@@ -92,14 +96,13 @@ public class Matchup extends NamedEntity implements Serializable {
 	private Short result;
 	
 	@Column(name = "manual_mode")
+    @Transient
 	private Boolean manualMode;
 
 	@Column(name = "kickoff")
-	//@Temporal(TemporalType.TIME)
-	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 	@Convert(converter = LocalTimePersistenceConverter.class)
 	private LocalTime kickoff;
-	
+
 	/**
 	 * Getters/Setters
 	 */
@@ -347,6 +350,15 @@ public class Matchup extends NamedEntity implements Serializable {
 	public void setKickoff(LocalTime kickoff) {
 		this.kickoff = kickoff;
 	}
+
+    public long getCountdown() {
+        if (getStatus().getCode() == MatchupStatusCode.ENTER_COUNTDOWN) {
+            LocalDateTime matchBegin = LocalDateTime.of(getStartAt(), getKickoff());
+            Duration duration = Duration.between(LocalDateTime.now(), matchBegin);
+            return  duration.getSeconds();
+        }
+        return 0;
+    }
 
 	@Override
 	public String toString() {

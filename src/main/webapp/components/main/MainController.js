@@ -131,11 +131,11 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
         $scope.flagClass = $scope.localeData[locale.getLocale()].flagClass;
         $scope.langDisplayText = $scope.localeData[locale.getLocale()].langDisplayText;
         
-        $rootScope.dateTimeFormatString = locale.getString('common.dateTimeFormat');
+        $rootScope.dateFormatString = locale.getString('common.dateFormat');
     });
 
     $scope.$on(localeEvents.localeChanges, function (event, data) {
-    	$rootScope.dateTimeFormatString = locale.getString('common.dateTimeFormat');
+    	$rootScope.dateFormatString = locale.getString('common.dateFormat');
     	
         $scope.flagClass = $scope.localeData[data].flagClass;
         $scope.langDisplayText = $scope.localeData[data].langDisplayText;
