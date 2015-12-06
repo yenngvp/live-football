@@ -20,7 +20,11 @@
     <div class="row">
       <div class="col-md-3" data-ng-repeat="team in teams">
         <div class="thumbnail">
-          <a data-ui-sref="teamDetails({id: team.id})"><img class="img-responsive img-thumbnail" width="510px" height="510px" data-ng-src="images/teams/{{team.competition.name}}/500x500/{{team.logo}}" alt="{{team.name}}"></img></a>
+          <a data-ui-sref="teamDetails({id: team.id})">
+              <img class="img-responsive img-thumbnail"
+                   width="510px" height="510px"
+                   data-ng-src="images/teams/{{team.competition.name}}/500x500/{{team.logo}}" alt="{{team.name}}">
+              </img></a>
           <div class="caption">
             <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{team.name}}</a></h3>
 
