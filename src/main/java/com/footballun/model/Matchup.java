@@ -2,7 +2,7 @@ package com.footballun.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -75,14 +75,14 @@ public class Matchup extends NamedEntity implements Serializable {
 	
 	@Column(name = "start_at")
 //	@Temporal(TemporalType.DATE)
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	@DateTimeFormat(iso = ISO.DATE)
+	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+	//@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate startAt;
 	
 	@Column(name = "end_at")
 //	@Temporal(TemporalType.DATE)
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	@DateTimeFormat(iso = ISO.DATE)
+	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+	//@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate endAt;
 	
 	@Column(name = "matchday")
@@ -101,9 +101,9 @@ public class Matchup extends NamedEntity implements Serializable {
 	private Boolean manualMode;
 	
 	@Column(name = "kickoff")
-	@Temporal(TemporalType.TIME)
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-	private Date kickoff;
+	//@Temporal(TemporalType.TIME)
+	//@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+	private LocalTime kickoff;
 	
 	/**
 	 * Getters/Setters
@@ -345,11 +345,11 @@ public class Matchup extends NamedEntity implements Serializable {
 		this.manualMode = manualMode;
 	}
 
-	public Date getKickoff() {
+	public LocalTime getKickoff() {
 		return kickoff;
 	}
 
-	public void setKickoff(Date kickoff) {
+	public void setKickoff(LocalTime kickoff) {
 		this.kickoff = kickoff;
 	}
 

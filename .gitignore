@@ -32,3 +32,4 @@ buildNumber.properties
 .gitignore.txt
 .springBeans
 .tern-project
+.idea

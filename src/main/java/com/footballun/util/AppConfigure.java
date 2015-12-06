@@ -4,6 +4,7 @@
  */
 package com.footballun.util;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -45,15 +46,13 @@ public class AppConfigure {
 		return TimeZone.getTimeZone(getSetting().getTimeZoneId());
 	}
 	
-	public Calendar getServerCalendarUTC() {
+	public LocalDateTime getServerCalendarUTC() {
 		if (getSetting().getOverrideServerTime() != null) {
-			Calendar overrideCalendar = GregorianCalendar.getInstance();
-			overrideCalendar.setTime(getSetting().getOverrideServerTime());
 			logger.warn("The server time used for the calendar has been overriden. Watch out!");
-			return overrideCalendar;
+			return getSetting().getOverrideServerTime();
 		} else {
 			// Current server time
-			return GregorianCalendar.getInstance();
+			return LocalDateTime.now();
 		}
 	}
 

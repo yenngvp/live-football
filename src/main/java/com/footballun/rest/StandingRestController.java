@@ -1,15 +1,13 @@
 package com.footballun.rest;
 
-import java.util.List;
-
+import com.footballun.model.Standing;
+import com.footballun.service.FootballunService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.footballun.model.Standing;
-import com.footballun.service.FootballunService;
-import com.footballun.util.DataImporter;
+import java.util.List;
 
 
 @RestController
@@ -23,12 +21,12 @@ public class StandingRestController {
 
 	private final FootballunService footballunService;
 
-	private final DataImporter dataImporter;
+	//private final DataImporter dataImporter;
 	
 	@Autowired
-	public StandingRestController(FootballunService footballunService, DataImporter dataImporter) {
+	public StandingRestController(FootballunService footballunService) {
 		this.footballunService = footballunService;
-		this.dataImporter = dataImporter;
+//		this.dataImporter = dataImporter;
 	}
 
 	@RequestMapping(value = "/standings", method = RequestMethod.GET)

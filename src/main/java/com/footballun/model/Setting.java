@@ -4,8 +4,6 @@
  */
 package com.footballun.model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.time.LocalDateTime;
 
 /**
  * @author yen.nt
@@ -33,8 +32,7 @@ public class Setting extends NamedEntity {
 	 * Columns
 	 */
 	@Column(name = "override_server_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date overrideServerTime;
+	private LocalDateTime overrideServerTime;
 
 	@Column(name = "timezone_id")
 	private String timeZoneId;
@@ -71,12 +69,12 @@ public class Setting extends NamedEntity {
 	}
 
 
-	public Date getOverrideServerTime() {
+	public LocalDateTime getOverrideServerTime() {
 		return overrideServerTime;
 	}
 
 
-	public void setOverrideServerTime(Date overrideServerTime) {
+	public void setOverrideServerTime(LocalDateTime overrideServerTime) {
 		this.overrideServerTime = overrideServerTime;
 	}
 

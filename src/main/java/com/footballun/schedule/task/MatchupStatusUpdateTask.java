@@ -4,21 +4,15 @@
  */
 package com.footballun.schedule.task;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.joda.time.Hours;
+import com.footballun.model.Matchup;
+import com.footballun.service.FootballunService;
+import com.footballun.util.AppConfigure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.footballun.model.Matchup;
-import com.footballun.model.MatchupStatus;
-import com.footballun.model.MatchupStatus.MatchupStatusCode;
-import com.footballun.service.FootballunService;
-import com.footballun.util.AppConfigure;
+import java.util.List;
 
 /**
  * @author yen.nt
@@ -54,20 +48,15 @@ public class MatchupStatusUpdateTask {
 	}
 
 	public void updateMatchupStatus(Matchup matchup) {
-		
-		Calendar calendar = appConfigure.getServerCalendarUTC();
-		Calendar matchCalendar = GregorianCalendar.getInstance();
-		
+
+/*
 		long currentTime = calendar.getTimeInMillis();
 		long matchStartTime;
 		long diffTime;
 		long startCountdown = appConfigure.getStartCountDownInMiliseconds();
-		
-		/*
-		 * Checks for match's statuses
-		 */
+
 		if (matchup.getStartAt() != null) {
-			matchCalendar.setTime(matchup.getStartAt());
+//			matchCalendar.setTime(matchup.getStartAt());
 			matchStartTime = matchCalendar.getTimeInMillis();
 			diffTime = currentTime - matchStartTime;
 			
@@ -81,7 +70,8 @@ public class MatchupStatusUpdateTask {
 					// Match is taking place, needs to check for fulltime or still in live
 					long matchDuration;
 					if (matchup.getEndAt() != null) {
-						matchDuration = matchup.getEndAt().getTime() - matchStartTime; 
+//						matchDuration = matchup.getEndAt().getTime() - matchStartTime;
+						matchDuration = 0;
 					} else {
 						// Maximum for 2 hours long game
 						matchDuration = appConfigure.getDefaultMatchDuration() / 60 * AppConfigure.HOUR_TO_MILLISECONDS ;
@@ -100,7 +90,7 @@ public class MatchupStatusUpdateTask {
 						footballunService.onFinishMatchup(matchup);
 					} 
 						
-					/* Otherwise the status shouldn't be changed  */
+					// Otherwise the status shouldn't be changed
 				}
 				
 				footballunService.saveMatchup(matchup);
@@ -110,6 +100,9 @@ public class MatchupStatusUpdateTask {
 			logger.info("matchCalendar: " + matchCalendar.getTime().toString());
 			logger.info("diffTime: " + diffTime);
 		}
+
+		*/
+		return;
 	}
 	
 	

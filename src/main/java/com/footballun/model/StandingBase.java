@@ -4,12 +4,11 @@
  */
 package com.footballun.model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 /**
  * @author yen.nt
@@ -59,7 +58,7 @@ public abstract class StandingBase extends BaseEntity {
 	private int previousPosition;
 	
 	@Column(name = "timestamp")
-	private Date timestamp;
+	private LocalDateTime timestamp;
 	
 	@Column(name = "goals_scored")
 	private int goalsScored;
@@ -134,11 +133,11 @@ public abstract class StandingBase extends BaseEntity {
 		this.previousPosition = previousPosition;
 	}
 
-	public Date getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 

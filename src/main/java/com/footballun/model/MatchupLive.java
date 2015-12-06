@@ -4,19 +4,11 @@
  */
 package com.footballun.model;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author yen.nt
@@ -54,8 +46,7 @@ public class MatchupLive extends BaseEntity {
 	 */
 	
 	@Column(name = "timestamp")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+	private LocalDateTime timestamp;
 	
 	@Column(name = "update_minute")
 	private Short updateMinute;
@@ -88,11 +79,11 @@ public class MatchupLive extends BaseEntity {
 		this.event = event;
 	}
 
-	public Date getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 
