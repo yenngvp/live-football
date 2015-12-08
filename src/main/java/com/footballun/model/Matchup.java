@@ -1,29 +1,37 @@
 package com.footballun.model;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.footballun.model.MatchupStatus.MatchupStatusCode;
 import com.footballun.util.JsonDateDeserializer;
 import com.footballun.util.JsonDateSerializer;
 import com.footballun.util.LocalDatePersistenceConverter;
 import com.footballun.util.LocalTimePersistenceConverter;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.footballun.model.MatchupStatus.MatchupStatusCode;
 
 /**
  * 
@@ -249,7 +257,7 @@ public class Matchup extends NamedEntity implements Serializable {
 		if (getDetails() == null || getDetails().size() < 2) return null;
 		
 		Iterator<MatchupDetail> itr = getDetails().iterator();
-		MatchupDetail first = itr.next();
+		itr.next();
 		MatchupDetail second = itr.next();
 		return second; // believe this has been sorted by detail id
 	}
@@ -359,7 +367,36 @@ public class Matchup extends NamedEntity implements Serializable {
         }
         return 0;
     }
+    
+    public boolean getIsToday() {
+    	if (getStartAt() == null) return false;
+    	return LocalDate.now().equals(getStartAt());
+    }
+    
+    public boolean getIsThisWeek() {
+    	if (getStartAt() == null) return false;
+    	LocalDate now = LocalDate.now();
+    	LocalDate lastSunday = now.with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+    	LocalDate nextModay = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+    	if (getStartAt().isAfter(lastSunday) && getStartAt().isBefore(nextModay)) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
 
+    public boolean getIsNextWeek() {
+    	if (getStartAt() == null) return false;
+    	LocalDate now = LocalDate.now();
+    	LocalDate thisSunday = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+    	LocalDate mondayAfterNextSunDay = thisSunday.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+    	if (getStartAt().isAfter(thisSunday) && getStartAt().isBefore(mondayAfterNextSunDay)) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
 	@Override
 	public String toString() {
 		return String.format("[%s]", getName());
