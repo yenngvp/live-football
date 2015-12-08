@@ -14,5 +14,5 @@ import com.footballun.model.Position;
  */
 public interface PositionRepository extends AbstractFootballunRepository<Position> {
 
-	Position findByPosition(String name) throws DataAccessException;
+	Position findOneByPosition(String name) throws DataAccessException;
 }

@@ -20,6 +20,9 @@ public class Competition extends NamedEntity {
 	@JoinColumn(name = "host_country_id")
 	private Country hostCountry;
 	
+	/**
+	 * Columns
+	 */
 	@Column(name = "type")
 	private String type;
 	
@@ -28,6 +31,9 @@ public class Competition extends NamedEntity {
 	
 	@Column(name = "year_to")
 	private int yearTo;
+	
+	@Column(name = "total_matchdays")
+	private int totalMatchdays;
 	
 	public String getType() {
 		return type;
@@ -59,6 +65,14 @@ public class Competition extends NamedEntity {
 
 	public void setYearTo(int yearTo) {
 		this.yearTo = yearTo;
+	}
+
+	public int getTotalMatchdays() {
+		return totalMatchdays;
+	}
+
+	public void setTotalMatchdays(int totalMatchdays) {
+		this.totalMatchdays = totalMatchdays;
 	}
 	
 }

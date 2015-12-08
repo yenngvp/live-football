@@ -1,5 +1,6 @@
 package com.footballun.repository.springdatajpa;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,11 +13,6 @@ import com.footballun.repository.MatchupRepository;
 
 public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<Matchup, Integer> {
 
-	@Override
-	@Query(value = "SELECT m FROM Matchup m GROUP BY competition ORDER BY competition Asc, startAt Asc", 
-		   countQuery = "SELECT COUNT(1) FROM (SELECT COUNT(1) FROM Matchup m GROUP BY competition")
-	List<Matchup[]> findByMatchdayOrderByStartAtAsc(Integer matchday) throws DataAccessException;
-	
 	@Override
 	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAsc(Integer matchday, Integer competitionId) throws DataAccessException;
 	
@@ -38,4 +34,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	
 	@Override
 	Matchup findById(Integer id) throws DataAccessException;
+	
+	@Override
+	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 }

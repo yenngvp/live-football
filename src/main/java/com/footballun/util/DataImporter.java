@@ -4,31 +4,49 @@
  */
 package com.footballun.util;
 
-import com.footballun.model.*;
-import com.footballun.service.FootballunService;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.footballun.model.Competition;
+import com.footballun.model.Country;
+import com.footballun.model.Hero;
+import com.footballun.model.HeroRole;
+import com.footballun.model.HeroStatus;
+import com.footballun.model.Matchup;
+import com.footballun.model.MatchupDetail;
+import com.footballun.model.Position;
+import com.footballun.model.Squad;
+import com.footballun.model.SquadMember;
+import com.footballun.model.Team;
+import com.footballun.service.FootballunService;
 
 
 /**
@@ -67,6 +85,7 @@ public class DataImporter {
 	private static final Map<String, String> TEAM_PERSONELS_KITS_COLS_MAP = new HashMap<String, String>();
 	private static final Map<String, String> LEAGUES_CALENDAR_COLS_MAP = new HashMap<String, String>();
 	private static final Map<String, String> LEAGUES_PLAYER_COLS_MAP = new HashMap<String, String>();
+	private static final Map<String, String> MATCHDAYS_COLS_MAP = new HashMap<String, String>();
 	
 	/*
 	 *  The pairs (key, value) below must be always going together with the sheet data
@@ -124,6 +143,14 @@ public class DataImporter {
 		KEY_COL_NAME, COL_NAME_SHIRTNUMBER, COL_NAME_POSITION, COL_NAME_PLAYER
 	};
 
+	// Matchdays beginning
+	private static final String MATCHDAYS_SHEET = "Matchdays";
+	private static final String COL_NAME_MATCHDAY = "Matchday";
+	private static final String COL_NAME_MATCHDAY_STARTDATE = "Matchday Start Date";
+	private static final String[] MATCHDAY_COL_HEADERS = {
+		KEY_COL_NAME, COL_NAME_MATCHDAY, COL_NAME_MATCHDAY_STARTDATE
+	};
+
 	
 	private static final String[] MON_2_FRI = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 	
@@ -168,6 +195,8 @@ public class DataImporter {
 	private static int playersCounter = 0;
 	private static int createdPlayersCounter = 0;
 	
+	private FormulaEvaluator evaluator;
+	
 	@Autowired
 	public DataImporter(FootballunService footballunService) {
 		this.footballunService = footballunService;
@@ -197,6 +226,11 @@ public class DataImporter {
 			LEAGUES_PLAYER_COLS_MAP.put(COLUMN_LETTERS[i], LEAGUES_PLAYER_COL_HEADERS[i]);
 		}
 		
+		// Matchdays map
+		for (int i = 0; i < MATCHDAY_COL_HEADERS.length; i++) {
+			MATCHDAYS_COLS_MAP.put(COLUMN_LETTERS[i], MATCHDAY_COL_HEADERS[i]);
+		}
+		
 		// Hero roles initialization
 		HERO_ROLES.put(HERO_ROLE_PRESIDENT, footballunService.findHeroRoleByName((HERO_ROLE_PRESIDENT)));
 		HERO_ROLES.put(HERO_ROLE_MANAGER, footballunService.findHeroRoleByName(HERO_ROLE_MANAGER));
@@ -220,52 +254,6 @@ public class DataImporter {
 		createCompetition();
 	}
 	
-	/**
-	 * Calculates matchday for matchups in competitions
-	 */
-	public void updateMatchday() {
-		
-		for (Map.Entry<String, Competition> entry : COMPETITIONS_LIST.entrySet()) {
-			
-			logger.info("Processing competition: " + entry.getKey());
-			Competition competition = entry.getValue();
-			
-			// Gets all matchups for the competition ordered by match date
-			List<Matchup> matchups = footballunService.findMatchupByCompetitionId(competition.getId());
-			if (matchups.size() == 0) return;
-			
-			LocalDate currentDate, matchDate;
-			
-			// Gets season kick-off date
-			currentDate = matchups.get(0).getStartAt();
-			int matchday = 1;
-			
-			for (Matchup matchup : matchups) {
-				matchDate= matchup.getStartAt();
-				
-				int diffDays = Days.daysBetween(new DateTime(currentDate),	new DateTime(matchDate)).getDays();
-				logger.info("Matchup: " + matchup.toString());
-				logger.info("DiffDays: " + diffDays);
-				if (diffDays >= 7) {
-					matchday++;
-					currentDate = matchDate;
-				}
-				
-				// Updates matchday for the matchup
-				matchup.setMatchday(matchday);
-				
-				// By the way, update match name if it not yet set
-				if (matchup.getName() == null && matchup.getDetails() != null) {
-					matchup.setName(String.format("%s V %s", matchup.getFirstDetail().getSquad().getName(), matchup.getSecondDetail().getSquad().getName()));
-				}
-				
-				footballunService.saveMatchup(matchup);
-				
-				logger.info(String.format("Update matchup %s with matchday %d", matchup.getName(), matchday));
-			}
-		}
-		
-	}
 	
 	public void importExcel() {
 		
@@ -278,27 +266,32 @@ public class DataImporter {
 		    //Get the workbook instance for XLS file 
 			workbook = new XSSFWorkbook (file);
 		 
-	    
-			if (!importTeamsData(workbook)) {
-				logger.error("Importing teams data failed. Should stop further processing!");
-				return;
-			}
+			evaluator =  workbook.getCreationHelper().createFormulaEvaluator();
+//	    
+//			if (!importTeamsData(workbook)) {
+//				logger.error("Importing teams data failed. Should stop further processing!");
+//				return;
+//			}
+//			
+//
+//			if (!importLeaguesCalendar(workbook)) {
+//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
+//				return;
+//			}
 			
-
-			if (!importLeaguesCalendar(workbook)) {
+			if (!importMatchdays(workbook)) {
 				logger.error("Importing leagues calenddar failed. Should stop further processing!");
 				return;
 			}
 			
-			updateMatchday();
 			
-			if (!importPlayers(workbook)) {
-				logger.error("Importing leagues player failed. Should stop further processing!");
-				return;
-			}
-
-			calculateStandings();
-			
+//			if (!importPlayers(workbook)) {
+//				logger.error("Importing leagues player failed. Should stop further processing!");
+//				return;
+//			}
+//
+//			calculateStandings();
+//			
 			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 			
 		} catch (FileNotFoundException e) {
@@ -774,6 +767,90 @@ public class DataImporter {
 		footballunService.saveSquadMember(member);
 	}
 	
+	/**
+	 * Calculates matchday for matchups in competitions
+	 */
+	public boolean importMatchdays(XSSFWorkbook  workbook) {
+		
+		String sheetName = MATCHDAYS_SHEET;			
+		logger.info("Reading sheet: " + sheetName);
+		
+		//Get sheet by name from the workbook
+		XSSFSheet sheet = workbook.getSheet(sheetName);
+
+		boolean success = true;
+		if (sheet == null) {
+			logger.error("ERROR: Could not found sheet: " + sheetName);
+			success = false;
+		} else {
+
+			Map<String, Object> cellValues = new HashMap<String, Object>();
+			Map<String, String> colsMap = MATCHDAYS_COLS_MAP;
+			
+			int matchday, prevMatchday = 0;
+			Date startDate, prevDate = null;
+			
+			//Iterate through each rows from first sheet
+			Iterator<Row> rowIterator = sheet.iterator();
+			while(rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+
+				// Ignores the first row (header row)
+				if (row.getRowNum() > 0) {
+					readRowDataIntoMap(row, colsMap, cellValues, true, "A");
+
+					if (!cellValues.isEmpty()) {
+						// Checks found key cell first
+						if (cellValues.containsKey(KEY_COL_NAME)) {
+							currentCompetition = COMPETITIONS_LIST.get(String.valueOf(cellValues.get(KEY_COL_NAME)));
+							if (currentCompetition == null) {
+								logger.error("Cannot find a competition for cell value is ", String.valueOf(cellValues.get(KEY_COL_NAME)));
+							}
+						} else if (cellValues.size() == 2){
+							// Extracts cell values
+							matchday = (int) Math.floor((Double) cellValues.get(COL_NAME_MATCHDAY));
+							startDate = (Date)  cellValues.get(COL_NAME_MATCHDAY_STARTDATE);
+							
+							logger.info(String.format("Reading cell pair [%d, %s]", matchday, startDate.toString()));
+							
+							if (prevMatchday > 0) {
+								updateMatchday(prevMatchday, prevDate, startDate);
+							} 
+							
+							if (currentCompetition.getTotalMatchdays() == matchday) {
+								// The last round
+								// Don't worry from/to date is the same date because it has to be like that on the last day :)
+								updateMatchday(matchday, startDate, startDate);
+							}
+							
+							prevMatchday = matchday;
+							prevDate = startDate;
+							
+						} else {
+							logger.error("Reading cell error: Number of columns is not identical with expected. Ignore row!");
+						}
+					}
+				}
+			}
+		}
+		return success;
+	}
+		
+	private void updateMatchday(int matchday, Date prevDate, Date startDate) {
+		LocalDate from = Instant.ofEpochMilli(prevDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		//from = from.minusDays(1);
+		LocalDate to = Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		to = to.minusDays(1);
+		
+		// Finds matchups has start date between from and to date
+		List<Matchup> matchups = footballunService.findMatchupByStartAtBetween(currentCompetition.getId(), from, to);
+		for (Matchup matchup : matchups) {
+			// Updates the matchups' matchday
+			matchup.setMatchday(matchday);
+			footballunService.saveMatchup(matchup);
+		}
+	}
+	
 	private void readRowDataIntoMap(Row row, Map<String, String> colsMaps,  Map<String, Object> values, boolean searchForKeyCol, String keyCol) {
 
 		values.clear();
@@ -794,7 +871,8 @@ public class DataImporter {
 			String colName = colsMaps.get(colLetter);
 			if (colName != null) {
 				// Get cell value
-				switch(cell.getCellType()) {
+				//CellValue cellValue = evaluator.evaluate(cell);
+				switch(evaluator.evaluateInCell(cell).getCellType()) {
 				case Cell.CELL_TYPE_BOOLEAN:
 					System.out.print(cell.getBooleanCellValue() + "\t\t");
 					colBooleanVal = cell.getBooleanCellValue();

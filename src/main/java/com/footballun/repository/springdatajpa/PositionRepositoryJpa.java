@@ -22,11 +22,9 @@ public interface PositionRepositoryJpa extends PositionRepository,
 	Position findOne(Integer Id) throws DataAccessException;
 	@Override
 	Position findById(Integer id) throws DataAccessException;
-	@Override
-	Position findByName(String name) throws DataAccessException;
 	@SuppressWarnings("unchecked")
 	@Override
 	Position save(Position position)throws DataAccessException;
 	@Override
-	Position findByPosition(String name) throws DataAccessException;
+	Position findOneByPosition(String name) throws DataAccessException;
 }

@@ -27,7 +27,7 @@
 
     <!-- Call monitoring aspect that monitors call count and call invocation time -->
     <bean id="callMonitor" class="com.footballun.util.CallMonitoringAspect"/>
-	<!--<bean id="dataImporter" class="com.footballun.util.DataImporter"/>-->
+	<bean id="dataImporter" class="com.footballun.util.DataImporter"/>
     <!--<bean id="localDateConverter" class="com.footballun.util.LocalDatePersistenceConverter"/>-->
     <!--<bean id="localTimeConverter" class="com.footballun.util.LocalTimePersistenceConverter"/>-->
     <!--<bean id="localDateTimeConverter" class="com.footballun.util.LocalDateTimePersistenceConverter"/>-->

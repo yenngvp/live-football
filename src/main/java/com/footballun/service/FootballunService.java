@@ -1,5 +1,6 @@
 package com.footballun.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -37,13 +38,13 @@ public interface FootballunService {
 	/**
 	 * Matchup's APIs
 	 */
-	List<Matchup[]> findMatchupByMatchday(Integer matchday) throws DataAccessException;
 	List<Matchup> findMatchupByMatchday(Integer matchday, Integer competitionId) throws DataAccessException;
 	List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException;
 	List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException;
 	List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException;
 	void saveMatchup(Matchup matchup) throws DataAccessException;
 	Matchup findMatchupById(Integer id) throws DataAccessException;
+	List<Matchup> findMatchupByStartAtBetween(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	
 	void onStartMatchup(Matchup matchup);
 	void onFinishMatchup(Matchup matchup);

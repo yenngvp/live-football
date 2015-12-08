@@ -1,5 +1,6 @@
 package com.footballun.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -147,13 +148,6 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Matchup[]> findMatchupByMatchday(Integer matchday) throws DataAccessException {
-		
-		return  matchupRepository.findByMatchdayOrderByStartAtAsc(matchday);
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByMatchday(Integer matchday, Integer competitionId) throws DataAccessException {
 		
 		return  matchupRepository.findByMatchdayAndCompetitionIdOrderByStartAtAsc(matchday, competitionId);
@@ -185,6 +179,11 @@ public class FootballunServiceImpl implements FootballunService {
 	@Override
 	public Matchup findMatchupById(Integer id) throws DataAccessException {
 		return matchupRepository.findById(id);
+	}
+	
+	@Override
+	public List<Matchup> findMatchupByStartAtBetween(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException {
+		return matchupRepository.findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(competitionId, from, to);
 	}
 	
 	/**
@@ -724,7 +723,7 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	public Position findPositionByName(String name) throws DataAccessException {
-		return positionRepository.findByPosition(name);
+		return positionRepository.findOneByPosition(name);
 	}
 	
 }
