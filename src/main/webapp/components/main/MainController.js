@@ -106,13 +106,13 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 	 */
 	$scope.supportedLang = localeSupported;
     $scope.localeData = {
-        'en-US': {
-            flagClass: 'flag-us',
-            langDisplayText: 'English'
-        },
         'vi-VN': {
             flagClass: 'flag-vi',
             langDisplayText: 'Tiếng Việt'
+        },
+        'en-US': {
+            flagClass: 'flag-us',
+            langDisplayText: 'English'
         },
         'fr-FR': {
             flagClass: 'flag-fr',

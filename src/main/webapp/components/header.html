@@ -56,9 +56,16 @@
 					class="caret"></span>
 			</button>
 			<ul class="dropdown-menu navbar-dropdown-menu">
+			<!-- 
 				<li data-ng-repeat="lang in supportedLang"><a href=""
 					ng-click="setLocale(lang)"> <i
 						ng-class="localeData[lang].flagClass"></i> <span>{{localeData[lang].langDisplayText
+							}}</span>
+				</a></li>
+			 -->	
+				<li><a href=""
+					ng-click="setLocale(supportedLang[2])"> <i
+						ng-class="localeData[supportedLang[2]].flagClass"></i> <span>{{localeData[supportedLang[2]].langDisplayText
 							}}</span>
 				</a></li>
 			</ul>
