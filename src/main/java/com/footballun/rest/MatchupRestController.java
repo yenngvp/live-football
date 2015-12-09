@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,44 +27,76 @@ public class MatchupRestController {
 	@Autowired
 	private FootballunService footballunService;
 		
+	private final Logger logger = LoggerFactory.getLogger(MatchupRestController.class);
+	
+	/**
+	 * Gets matchups will be taking place in next matchday.
+	 * The matchups are grouped by competitions and order by date.
+	 * 
+	 * @return List of matchups for each of the competitions
+	 */
 	@RequestMapping(value = "/matchdays", method = RequestMethod.GET)
 	public List<List<Matchup>> showMatches() {
 		
-		return getMatchesByMatchdayAndCompetition(15, 9);
+		List<Matchup> matchups = footballunService.findMatchupFeaturedByMatchday();
+		
+		return groupByCompetition(matchups);
 	}
 	
-	
-	@RequestMapping(value = "/matchdays/competition/{id}", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatchesByCompetition(@PathVariable("id") int id) {
+	/**
+	 * Gets matchups will be taking place in next matchday for a competition.
+	 * 
+	 * @param id competition id
+	 * @return List of matchups for a competition in next matchday
+	 */
+	@RequestMapping(value = "/matchdays/competition/{competitionId}", method = RequestMethod.GET)
+	public List<List<Matchup>> showMatchesByCompetition(@PathVariable("competitionId") int competitionId) {
 		
-		return getMatchesByMatchdayAndCompetition(15, id);
+		return getMatchesByMatchdayAndCompetition(0, competitionId);
 	}
 
-	@RequestMapping(value = "/matchdays/{week}/competition/{id}", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatchesByDayAndCompetition(@PathVariable("week") int week, @PathVariable("id") int id) {
+	@RequestMapping(value = "/matchdays/{matchday}/competition/{competitionId}", method = RequestMethod.GET)
+	public List<List<Matchup>> showMatchesByDayAndCompetition(
+			@PathVariable("matchday") int matchday, @PathVariable("competitionId") int competitionId) {
 		
-		return getMatchesByMatchdayAndCompetition(week, id);
+		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
+	
+	
 	private List<List<Matchup>> getMatchesByMatchdayAndCompetition(Integer matchday, Integer competitionId) {
-		List<List<Matchup>> groupedMatchupsByDate = new ArrayList<List<Matchup>>();
-		
+	
 		// Query sorted matches by start time
-		List<Matchup> matchups = footballunService.findMatchupByMatchday(matchday, competitionId);
+		List<Matchup> matchups;
+		if (matchday > 0 && competitionId > 0) {
+			matchups = footballunService.findMatchupByMatchdayAndCompetition(matchday, competitionId);
+		} else if (matchday > 0 && competitionId == 0) {
+			matchups = footballunService.findMatchupFeaturedByMatchday();
+		} else if (matchday == 0 && competitionId > 0) {
+			matchups = footballunService.findMatchupByCompetitionId(competitionId);
+		} else {
+			matchups = footballunService.findAllMatchupMatchday();
+		}
 		
+		return groupByCompetition(matchups);
+	}
+	
+	private List<List<Matchup>> groupByCompetition(List<Matchup> matchups) {
+
+		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
 		List<Matchup> grouped = new ArrayList<Matchup>();
 		Matchup prev = null;
 		
 	
-		// Group matches by date
+		// Group matches by competition
 		for (Matchup matchup : matchups) {
 			if (matchup.getDetails() != null && matchup.getStartAt() != null) {
 			
 				if (prev != null
-						&& !matchup.getStartAt().isEqual(prev.getStartAt())) {
+						&& !matchup.getCompetition().equals(prev.getCompetition())) {
 
 					// Adds the matchup to the new group
-					groupedMatchupsByDate.add(grouped);
+					groupedMatchupsByCompetition.add(grouped);
 					// Prepare to create a new group
 					grouped = new ArrayList<Matchup>();
 				}
@@ -74,7 +108,7 @@ public class MatchupRestController {
 		
 		// The last piece
 		if (grouped.size() > 0) {
-			groupedMatchupsByDate.add(grouped);
+			groupedMatchupsByCompetition.add(grouped);
 			grouped = null;
 		}
 		
@@ -84,13 +118,14 @@ public class MatchupRestController {
 			if (matchup.getDetails() != null && matchup.getStartAt() == null) {
 				if (grouped == null) {
 					grouped = new ArrayList<Matchup>();
-					groupedMatchupsByDate.add(grouped);
+					groupedMatchupsByCompetition.add(grouped);
 				}
 				grouped.add(matchup);
 			}
 		}
 
-		return groupedMatchupsByDate;
+				
+		return groupedMatchupsByCompetition;
 	}
 	
 	@RequestMapping(value = "/featured-matchups", method = RequestMethod.GET)

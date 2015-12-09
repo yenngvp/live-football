@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
 import com.footballun.util.JsonDateDeserializer;
 import com.footballun.util.JsonDateSerializer;
+import com.footballun.util.JsonTimeDeserializer;
+import com.footballun.util.JsonTimeSerializer;
 import com.footballun.util.LocalDatePersistenceConverter;
 import com.footballun.util.LocalTimePersistenceConverter;
 
@@ -109,6 +111,8 @@ public class Matchup extends NamedEntity implements Serializable {
 
 	@Column(name = "kickoff")
 	@Convert(converter = LocalTimePersistenceConverter.class)
+	@JsonDeserialize(using = JsonTimeDeserializer.class)
+    @JsonSerialize(using = JsonTimeSerializer.class)
 	private LocalTime kickoff;
 
 	/**

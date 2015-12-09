@@ -12,14 +12,17 @@ var MatchDay = ['$resource','context', function($resource, context) {
 	};
 	
 	return {
-		 // matchups schedules service
-	      matchdays: $resource(context + '/api/matchdays', {}, {
+		  /*
+		   * matchups schedules service
+		   */
+		  featured: $resource(context + '/api/matchdays', {}, {
 	    	  query: {method: 'GET', params: {}, isArray: true}
 	      }),
-	      // Featured matchups service
-	      featuredMatchups: $resource(context + '/api/featured-matchups', {}, {
-	    	  query: { method: 'GET', params: {}, isArray: true}
+	      matchdays: $resource(context + '/api/matchdays/:day/competition/:id', {}, {
+	    	  query: { method: 'GET', params: {day: '@day', id: '@id'}, isArray: true}
 	      }),
+	      
+	     
 	      // Matchup Register service
 	      registers: $resource(context + '/api/match-register/:id', {}, {
 	    	  query: { method: 'GET', params: {id: '@id'}, isArray: true}

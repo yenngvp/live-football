@@ -73,33 +73,6 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 		}
 	});
 	
-
-	$scope.timeIndicator = function($date) {
-		var now = new Date();
-		var ahead = new Date(parseInt($date, 10));
-		var diff = ahead - now;
-		var dayNow = now.getDay(); // Day in week (0-6)
-		var dayAhead = ahead.getDay();
-		
-		if (diff == 0) {
-			// Today
-			console.log(toString(ahead) + ' is today');
-		} else if (diff > 0 && diff <= 7) {
-			// Future within 7 days but needs to check it is in the week or next week
-			if (dayAhead > dayNow) {
-				// Same week
-				console.log(toString(ahead) + ' is in this week');
-			} else {
-				// day ahead is next week
-				console.log(toString(ahead) + ' is next week');
-			}
-		} else if (diff > 7 && diff < (dayNow + 7 * dayAhead)) {
-			// day ahead is still within next week
-			console.log(toString(ahead) + ' is next week');
-			
-		}
-	};
-			
 	
 	/*
 	 * Localization supported

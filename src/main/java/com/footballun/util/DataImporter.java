@@ -814,13 +814,13 @@ public class DataImporter {
 							logger.info(String.format("Reading cell pair [%d, %s]", matchday, startDate.toString()));
 							
 							if (prevMatchday > 0) {
-								updateMatchday(prevMatchday, prevDate, startDate);
+								updateMatchday(prevMatchday, prevDate, startDate, false);
 							} 
 							
 							if (currentCompetition.getTotalMatchdays() == matchday) {
 								// The last round
 								// Don't worry from/to date is the same date because it has to be like that on the last day :)
-								updateMatchday(matchday, startDate, startDate);
+								updateMatchday(matchday, startDate, startDate, true);
 							}
 							
 							prevMatchday = matchday;
@@ -836,11 +836,12 @@ public class DataImporter {
 		return success;
 	}
 		
-	private void updateMatchday(int matchday, Date prevDate, Date startDate) {
+	private void updateMatchday(int matchday, Date prevDate, Date startDate, boolean isLastMatchday) {
 		LocalDate from = Instant.ofEpochMilli(prevDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		//from = from.minusDays(1);
 		LocalDate to = Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		to = to.minusDays(1);
+		if (!isLastMatchday) {
+			to = to.minusDays(1);
+		}
 		
 		// Finds matchups has start date between from and to date
 		List<Matchup> matchups = footballunService.findMatchupByStartAtBetween(currentCompetition.getId(), from, to);

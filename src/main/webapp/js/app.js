@@ -48,8 +48,14 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "matchdays",
-		url: "/competition/:id/matchdays",
+		url: "/matchdays/:day/competition/:id",
 		templateUrl: "components/matchdays/matchdays.html",
+		controller: "MatchDayController",
+		data: { requireLogin : false }
+	}).state({
+		name: "results",
+		url: "/competition/:id/results",
+		templateUrl: "components/results/results.html",
 		controller: "MatchDayController",
 		data: { requireLogin : false }
 	}).state({
@@ -125,7 +131,7 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
         }
 
 		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == 0) {
-			MatchDay.matchdays.query().$promise.then(
+			MatchDay.featured.query().$promise.then(
 					//success
 					function( value ) {
                         if (enableCache) {
@@ -133,7 +139,39 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
                         }
 
 						$scope.matchdays = value;
+						
+						$scope.todayCounter = 0;
+						$scope.thisWeekCounter = 0;
+						$scope.nextWeekCounter = 0;
+						
+						for (var i = 0; i < $scope.matchdays.length; i++) {
+							
+							var matchups = $scope.matchdays[i];
+
+							for (var index in matchups) {
+								if (matchups[index].isToday) {
+									$scope.todayCounter++;
+								}
+								else if (matchups[index].isThisWeek) {
+									$scope.thisWeekCounter++;
+								}
+								else if (matchups[index].isNextWeek) {
+									$scope.nextWeekCounter++;
+								}
+							}
+						}
+						
+						// Countdown for the soonest match
+						var soonestMatch = $scope.matchdays[0][0];
+						if (!angular.isUndefined(soonestMatch)) {
+							var startDate = new Date(soonestMatch.startAt);
+							$scope.soonestCountdown = startDate.getTime();
+						} else {
+							$scope.soonestCountdown = 0;
+						}
+			
 					},
+					
 					//error
 					function( error ) {
 						// TODO: Handle request returns error
@@ -142,33 +180,7 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 					);
 		}
 		
-		// Query featured players
-		// Gets localStorage cached
-		key = 'featuredMatchupsCache'; 
-        if (enableCache) {
-            $scope.featuredMatchups = localStorageService.get(key);
-        } else {
-            $scope.featuredMatchups = undefined;
-        }
-		if (angular.isUndefined($scope.featuredMatchups) || $scope.featuredMatchups == 0) {
-			MatchDay.featuredMatchups.query().$promise.then(
-					//success
-					function( value ) {
-                        if (enableCache) {
-                            localStorageService.set(key, value);
-                        }
-
-						$scope.featuredMatchups = value;
-					},
-					//error
-					function( error ) {
-						// TODO: Handle request returns error
-						console.log("Failed with: " + error);
-					}
-					);
-		}
-
-        // Carousel directive
+		// Carousel directive
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
 
@@ -208,9 +220,9 @@ app.value('localeSupported', [
                            'vi-VN'
                        ]);
 app.value('localeFallbacks', {
+						   'vi': 'vi-VN',
                            'en': 'en-US',
-                           'fr': 'fr-FR',
-                           'vi': 'vi-VN'
+                           'fr': 'fr-FR'
                        });
 
 /** Custom filters **/

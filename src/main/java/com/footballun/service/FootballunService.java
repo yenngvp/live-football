@@ -36,15 +36,18 @@ public interface FootballunService {
 	Squad saveSquad(Squad squad) throws DataAccessException;
 	
 	/**
-	 * Matchup's APIs
+	 * Matchup services
 	 */
-	List<Matchup> findMatchupByMatchday(Integer matchday, Integer competitionId) throws DataAccessException;
+	List<Matchup> findMatchupByMatchdayAndCompetition(Integer matchday, Integer competitionId) throws DataAccessException;
 	List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException;
 	List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException;
 	List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException;
 	void saveMatchup(Matchup matchup) throws DataAccessException;
 	Matchup findMatchupById(Integer id) throws DataAccessException;
 	List<Matchup> findMatchupByStartAtBetween(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
+	List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException;
+	List<Matchup> findAllMatchupMatchday() throws DataAccessException;
+	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
 	
 	void onStartMatchup(Matchup matchup);
 	void onFinishMatchup(Matchup matchup);

@@ -148,7 +148,7 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Matchup> findMatchupByMatchday(Integer matchday, Integer competitionId) throws DataAccessException {
+	public List<Matchup> findMatchupByMatchdayAndCompetition(Integer matchday, Integer competitionId) throws DataAccessException {
 		
 		return  matchupRepository.findByMatchdayAndCompetitionIdOrderByStartAtAsc(matchday, competitionId);
 	}
@@ -184,6 +184,22 @@ public class FootballunServiceImpl implements FootballunService {
 	@Override
 	public List<Matchup> findMatchupByStartAtBetween(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException {
 		return matchupRepository.findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(competitionId, from, to);
+	}
+	
+	
+	@Override
+	public List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException {
+		return matchupRepository.findByFeaturedMatchday();
+	}
+	
+	@Override
+	public List<Matchup> findAllMatchupMatchday() throws DataAccessException {
+		return matchupRepository.findAllByMatchday();
+	}
+	
+	@Override
+	public List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException {
+		return matchupRepository.findByMatchday(matchday);
 	}
 	
 	/**

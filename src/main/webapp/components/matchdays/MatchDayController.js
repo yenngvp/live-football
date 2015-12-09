@@ -1,5 +1,5 @@
-var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageService',
-                          function($scope, MatchDay, enableCache, localStorageService) {
+var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
+                          function($scope, $stateParams, MatchDay, enableCache, localStorageService) {
 
 	/*
 	$scope.$on('$viewContentLoaded', function(event){
@@ -8,29 +8,76 @@ var MatchDayController = ['$scope', 'MatchDay','enableCache','localStorageServic
 		}, 1000);
 	});*/
 
-	if (enableCache) {
-		// Gets localStorage cached
-		console.log("Cache service enabled");
-		var key = 'matchdaysCache'; 
-		$scope.matchdays = localStorageService.get(key);
-		if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
-			MatchDay.matchdays.query().$promise.then(
-					//success
-					function( value ) {
-						localStorageService.set(key, value);
-						$scope.matchdays = value;
-					},
-					//error
-					function( error ) {
-						// TODO: Handle request returns error
-						console.log("Failed with: " + error);
-					}
-					);
-		}
-	} else {
-		$scope.matchdays = MatchDay.matchdays.query();
-	}
 	
+		// Gets localStorage cached
+	console.log("Cache service enabled");
+	var key = 'matchdaysCache'; 
+	if (enableCache) {
+		$scope.matchdays = localStorageService.get(key);
+	} else {
+		$scope.matchdays = undefined;
+	}
+	if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
+		var matchday;
+		if (angular.isUndefined($stateParams.day)) {
+			matchday = 0;
+		} else {
+			matchday = $stateParams.day;
+		}
+		var compId;
+		if (angular.isUndefined($stateParams.id)) {
+			compId = 0;
+		} else {
+			compId = $stateParams.id;
+		}
+		
+		console.log(matchday + compId);
+		MatchDay.matchdays.query({day: matchday, id: compId}).$promise.then(
+				//success
+				function( value ) {
+					if (enableCache) {
+						localStorageService.set(key, value);
+					}
+						
+					$scope.matchdays = value;
+					
+					$scope.todayCounter = 0;
+					$scope.thisWeekCounter = 0;
+					$scope.nextWeekCounter = 0;
+					
+					for (var i = 0; i < $scope.matchdays.length; i++) {
+						
+						var matchups = $scope.matchdays[i];
+
+						for (var index in matchups) {
+							if (matchups[index].isToday) {
+								$scope.todayCounter++;
+							}
+							else if (matchups[index].isThisWeek) {
+								$scope.thisWeekCounter++;
+							}
+							else if (matchups[index].isNextWeek) {
+								$scope.nextWeekCounter++;
+							}
+						}
+					}
+					
+					// Countdown for the soonest match
+					var soonestMatch = $scope.matchdays[0][0];
+					if (!angular.isUndefined(soonestMatch)) {
+						var startDate = new Date(soonestMatch.startAt);
+						$scope.soonestCountdown = startDate.getTime();
+					} else {
+						$scope.soonestCountdown = 0;
+					}
+				},
+				//error
+				function( error ) {
+					// TODO: Handle request returns error
+					console.log("Failed with: " + error);
+				}
+				);
+	}
 }];
 
 

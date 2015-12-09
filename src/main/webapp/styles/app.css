@@ -200,7 +200,8 @@ li.ng-enter-active {
 .table-row-even {background-color: #F2EFDF;}
 
 
-.cell-matchup-left {width: 32%; text-align: right !important;}
+.cell-matchup-left0 {width: 15%; text-align: center !important;}
+.cell-matchup-left {width: 17%; text-align: right !important;}
 .cell-matchup-right {width: 30%; text-align: left !important;}
 .cell-matchup-right2 {width: 10%; text-align: center !important;}
 .cell-matchup-center {width: 28%; text-align: center !important;}

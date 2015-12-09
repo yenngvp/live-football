@@ -2,7 +2,8 @@
     "yes": "Có",
     "no": "Không",
     "matchdays": "Lịch Thi Đấu",
-    "dashboard": "Trang Chủ",
+    "result": "Kết Quả",
+    "dashboard": "Tiêu điểm",
     "standings": "Bảng Xếp Hạng",
     "teams": "Đội Bóng",
     "stats": "Thống Kê",
@@ -13,6 +14,7 @@
     "laliga": "Laliga (TBN)",
     "seria": "Seri-A (Ý)",
     "scheduleTBD": "Chưa có lịch",
+    "today": "Hôm nay",
     "thisWeek": "Tuần này",
     "nextWeek": "Tuần sau",
     "monday": "Thứ 2",
@@ -35,5 +37,13 @@
     "forward": "Tiền đạo",
     "substitute": "Dự bị",
     "injury": "Chấn thương",
-    "lineupNoAvailable": "Chưa có đội hình ra sân (Đội hình chính thức chỉ được các đội/CLB thông báo trước trận đấu 2 giờ)"
+    "lineupNoAvailable": "Chưa có đội hình ra sân (Đội hình chính thức chỉ được các đội/CLB thông báo trước trận đấu 2 giờ)",
+    "noMatchToday": "Không có trận đấu nào hôm nay",
+    "matches": "trận",
+    "match2": "Trận đấu",
+    "and": "và",
+    "soonestMatch": "Trận đấu sớm nhất bất đầu trong:",
+    "matchweek": "Vòng",
+    "noticableMatches": "Các trận đáng xem nhất vòng đấu",
+    "viewFull": "Xem tất cả >>"
 }

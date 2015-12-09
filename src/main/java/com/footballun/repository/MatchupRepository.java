@@ -12,8 +12,6 @@ public interface MatchupRepository {
 	
 	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAsc(Integer matchday, Integer competitionId) throws DataAccessException;
 	
-	//List<Matchup[]> findByRoundAndCompetitionIdOrderByCompetitionAscAndStartAtAscc(String round, Integer competitionId) throws DataAccessException;
-	
 	List<Matchup> findByFeaturedOrderByStartAtAsc(Boolean featured) throws DataAccessException;
 	
 	Matchup save(Matchup matchup) throws DataAccessException;
@@ -25,4 +23,10 @@ public interface MatchupRepository {
 	Matchup findById(Integer id) throws DataAccessException;
 	
 	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
+	
+	List<Matchup> findByFeaturedMatchday() throws DataAccessException;
+	
+	List<Matchup> findAllByMatchday() throws DataAccessException;
+	
+	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
 }

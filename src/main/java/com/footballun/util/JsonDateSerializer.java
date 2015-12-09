@@ -26,7 +26,6 @@ public class JsonDateSerializer extends JsonSerializer<LocalDate> {
             JsonProcessingException {
 
         String dateString = date.format(formatter);
-//        String dateString = String.valueOf(date.toEpochDay());
         generator.writeString(dateString);
     }
 }
