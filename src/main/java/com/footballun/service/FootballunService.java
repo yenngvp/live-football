@@ -1,6 +1,7 @@
 package com.footballun.service;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -48,6 +49,10 @@ public interface FootballunService {
 	List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException;
 	List<Matchup> findAllMatchupMatchday() throws DataAccessException;
 	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
+	// Matchup results
+	List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findMatchupLatestResults(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findMatchupLatestResults(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
 	
 	void onStartMatchup(Matchup matchup);
 	void onFinishMatchup(Matchup matchup);
@@ -128,6 +133,7 @@ public interface FootballunService {
 	Competition findCompetitionById(Integer id) throws DataAccessException;
 	Competition findCompetitionByName(String name) throws DataAccessException;
 	Competition save(Competition competition) throws DataAccessException;
+	List<Competition> findAllCompetition(Integer yearFrom, Integer yearTo, String type) throws DataAccessException;
 	
 	/**
 	 * Team services

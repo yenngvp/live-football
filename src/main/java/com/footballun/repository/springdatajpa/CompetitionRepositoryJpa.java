@@ -1,5 +1,7 @@
 package com.footballun.repository.springdatajpa;
 
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,4 +19,6 @@ public interface CompetitionRepositoryJpa extends CompetitionRepository, CrudRep
 	@Override
 	Competition save(Competition competition) throws DataAccessException;
 	
+	@Override
+	List<Competition> findByYearFromAndYearToAndType(Integer yearFrom, Integer yearTo, String type) throws DataAccessException;
 }

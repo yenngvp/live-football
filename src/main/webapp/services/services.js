@@ -22,7 +22,16 @@ var MatchDay = ['$resource','context', function($resource, context) {
 	    	  query: { method: 'GET', params: {day: '@day', id: '@id'}, isArray: true}
 	      }),
 	      
-	     
+	      /*
+	       * Results services
+	       */
+	      results: $resource(context + '/api/results', {}, {
+	    	  query: { method: 'GET', params: {}, isArray: true}
+	      }),
+	      results2: $resource(context + '/api/results/competition/:id/matchday/:matchday', {}, {
+	    	  query: { method: 'GET', params: {id: '@id', matchday: '@matchday'}, isArray: true}
+	      }),
+	      
 	      // Matchup Register service
 	      registers: $resource(context + '/api/match-register/:id', {}, {
 	    	  query: { method: 'GET', params: {id: '@id'}, isArray: true}
@@ -33,7 +42,7 @@ var MatchDay = ['$resource','context', function($resource, context) {
 		  }),
 		  
 		  setSelectedMatchup: setSelectedMatchup,
-		  getSelectedMatchup: getSelectedMatchup
+		  getSelectedMatchup: getSelectedMatchup,
 	};
 }];
 

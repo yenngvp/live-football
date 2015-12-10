@@ -1,7 +1,8 @@
 package com.footballun.rest;
 
-import java.time.Duration;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.footballun.model.Competition;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupRegister;
+import com.footballun.model.MatchupStatus;
+import com.footballun.model.MatchupStatus.MatchupStatusCode;
 import com.footballun.model.Position;
 import com.footballun.service.FootballunService;
 
@@ -40,7 +44,7 @@ public class MatchupRestController {
 		
 		List<Matchup> matchups = footballunService.findMatchupFeaturedByMatchday();
 		
-		return groupByCompetition(matchups);
+		return groupMatchupByCompetition(matchups);
 	}
 	
 	/**
@@ -62,7 +66,44 @@ public class MatchupRestController {
 		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
+	@RequestMapping(value = "/results", method = RequestMethod.GET)
+	public List<List<Matchup>> showResults() {
+		
+		Collection<String> statuses = new ArrayList<>();
+		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		
+		// TODO: Remove hard-coded yearFrom and yearTo when query all year's competitions list
+		List<Competition> competitions = footballunService.findAllCompetition(2015,	2016, "LEAGUE");
+		
+		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
+		for (Competition competition : competitions) {
+			groupedMatchupsByCompetition.add(footballunService.findMatchupLatestResults(competition.getId(), statuses));
+		}
+		
+		return groupedMatchupsByCompetition;
+	}
 	
+	@RequestMapping(value = "/results/competition/{competitionId}", method = RequestMethod.GET)
+	public List<List<Matchup>> showResults(@PathVariable("competitionId") int competitionId) {
+		
+		Collection<String> statuses = new ArrayList<>();
+		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		
+		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, statuses);
+		
+		return groupMatchupByCompetition(matchups);
+	}
+	
+	@RequestMapping(value = "/results/competition/{competitionId}/matchday/{matchday}", method = RequestMethod.GET)
+	public List<List<Matchup>> showResults(@PathVariable("competitionId") int competitionId, @PathVariable("matchday") int matchday) {
+		
+		Collection<String> statuses = new ArrayList<>();
+		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+		
+		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, matchday, statuses);
+		
+		return groupMatchupByCompetition(matchups);
+	}
 	
 	private List<List<Matchup>> getMatchesByMatchdayAndCompetition(Integer matchday, Integer competitionId) {
 	
@@ -78,10 +119,10 @@ public class MatchupRestController {
 			matchups = footballunService.findAllMatchupMatchday();
 		}
 		
-		return groupByCompetition(matchups);
+		return groupMatchupByCompetition(matchups);
 	}
 	
-	private List<List<Matchup>> groupByCompetition(List<Matchup> matchups) {
+	private List<List<Matchup>> groupMatchupByCompetition(List<Matchup> matchups) {
 
 		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
 		List<Matchup> grouped = new ArrayList<Matchup>();

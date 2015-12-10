@@ -202,6 +202,21 @@ public class FootballunServiceImpl implements FootballunService {
 		return matchupRepository.findByMatchday(matchday);
 	}
 	
+	@Override
+	public List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException {
+		return matchupRepository.findTop10ByStatus_NameInOrderByCompetitionAscStartAtDescKickoffDesc(statuses);
+	}
+	
+	@Override
+	public List<Matchup> findMatchupLatestResults(Integer competitionId, Collection<String> statuses) throws DataAccessException {
+		return matchupRepository.findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(competitionId, statuses);
+	}
+	
+	@Override
+	public List<Matchup> findMatchupLatestResults(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException {
+		return matchupRepository.findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(competitionId, matchday, statuses);
+	}
+	
 	/**
 	 * Matchup Detail's APIs
 	 */
@@ -615,6 +630,11 @@ public class FootballunServiceImpl implements FootballunService {
 		return competitionRepository.save(competition);
 	}
 
+	@Override
+	public List<Competition> findAllCompetition(Integer yearFrom, Integer yearTo, String type) throws DataAccessException {
+		return competitionRepository.findByYearFromAndYearToAndType(yearFrom, yearTo, type);
+	}
+	
 	@Override
 	public MatchupStatus getMatchupStatusCountdown() throws DataAccessException {
 		if (statusCountdown == null) {

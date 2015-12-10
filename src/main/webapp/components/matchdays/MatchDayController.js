@@ -9,11 +9,11 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 	});*/
 
 	
-		// Gets localStorage cached
-	console.log("Cache service enabled");
+	// Gets localStorage cached
 	var key = 'matchdaysCache'; 
 	if (enableCache) {
 		$scope.matchdays = localStorageService.get(key);
+		console.log("Cache service enabled");
 	} else {
 		$scope.matchdays = undefined;
 	}

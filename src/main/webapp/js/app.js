@@ -23,7 +23,7 @@ var app = angular.module('footballun', ['ui.router',
 /** Start of Configurable constants **/
 app.constant('useMockData', false);
 app.constant('context', '/footballun');
-app.constant('enableCache', false);
+app.constant('enableCache', true);
 
 
 /** End of Configurable constants **/
@@ -54,9 +54,9 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "results",
-		url: "/competition/:id/results",
+		url: "/results",
 		templateUrl: "components/results/results.html",
-		controller: "MatchDayController",
+		controller: "ResultController",
 		data: { requireLogin : false }
 	}).state({
 		name: "teams",
@@ -117,6 +117,8 @@ app.controller('StatsController', StatsController);
 app.controller('SearchController', SearchController);
 app.controller('TeamDetailsController', TeamDetailsController);
 app.controller('MatchupDetailController', MatchupDetailController);
+app.controller('ResultController', ResultController);
+app.controller('MatchdayPagedController', MatchdayPagedController);
 
 app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
                                        function($scope, MatchDay, enableCache, localStorageService,locale) {
@@ -190,6 +192,7 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
         };
  }]);
 
+// Making a dummy change
 
 /** Services **/
 app.factory('MatchDay', MatchDay);
@@ -251,6 +254,13 @@ app.filter('smarterTime', function($filter) {
 		return smarterDate;
 	};
 });
+app.filter('startFrom', function() {
+  return function(input, start) {
+      start = +start; //parse to int
+      return input.slice(start);
+  }
+});
+
 
 
 app.run(function(useMockData, MockService) {

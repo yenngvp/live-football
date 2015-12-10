@@ -51,4 +51,15 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.start_at >= CURDATE() AND matchday=?0 ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
 	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
 	
+	/*
+	 * Matchup results
+	 */
+	@Override
+	List<Matchup> findTop10ByStatus_NameInOrderByCompetitionAscStartAtDescKickoffDesc(Collection<String> statuses) throws DataAccessException;
+	
+	@Override
+	List<Matchup> findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	
+	@Override
+	List<Matchup> findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
 }

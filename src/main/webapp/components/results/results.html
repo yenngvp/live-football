@@ -1,0 +1,103 @@
+<section id="results" class="sections sections-body">
+ 
+<div class="container section sections-body">
+	<div class="row">
+		<div class="col-md-12">
+			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
+		</div>
+	</div>
+ 
+ <div class="row">
+	<div class="col-md-10">
+	
+	<div class="row">
+			<!-- Page header -->
+			<div class="page-header">
+				<h3>
+					<span>{{ 'common.results' | i18n }}</span>
+				</h3>
+			</div>
+			<!-- /Page header -->
+
+			<!-- Timeline -->
+			<div class="timeline">
+
+				<!-- Line component -->
+				<div class="line text-muted"></div>
+
+
+				<!-- Panel -->
+				<div class="panel panel-primary" ng-repeat="result in results">
+
+					<!-- Icon -->
+					<div class="panel-heading thumbnail icon">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</div>
+					<!-- /Icon -->
+
+
+					<!-- Heading -->
+					<div class="panel-heading">
+						<h2 class="panel-title">{{result[0].competition.name}} {{ 'common.matchweek' | i18n }} {{result[0].matchday}}</h2>
+						<div ng-controller="MatchdayPagedController" ng-init="init(result[0].competition.totalMatchdays)">
+						    <ul class="list-inline" style="width: 100%">
+						        <li ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
+						           <a data-ui-sref="results()">{{item}}</a>
+						        </li>
+						    </ul>
+						    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+						        <
+						    </button>
+						    {{currentPage+1}}/{{numberOfPages()}}
+						    <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+						        >
+						    </button>
+						</div>
+
+					</div>
+					<!-- /Heading -->
+
+					<!-- Body -->
+					<div class="panel-body">
+						<div class="table">
+						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in result" ng-if="!matchup.isToday">
+						  	<div class="table-cell cell-matchup-left0"><h4 class="caption-heading">{{matchup.status.shortName}}</h4></div>
+						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
+						    <div class="table-cell cell-matchup-center" >
+						    	<h4 class="caption-heading">{{matchup.firstDetail.goal}}:{{matchup.secondDetail.goal}}</h4>
+						    </div>
+						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
+						    <div class="table-cell cell-matchup-right2">
+						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{'common.viewMatchDetail'  | i18n}}</a></h5>
+						    </div>
+						  </div>
+						</div>
+					</div>
+					<!-- /Body -->
+					
+					<!-- Footer -->
+					<!-- 
+		            <div class="panel-footer">
+		                <small>Footer is also supported!</small>
+		            </div>
+          			<!-- /Footer -->
+
+				</div>
+				<!-- /Panel -->
+			</div>
+			<!-- /Timeline -->
+	</div>
+	
+	</div> <!-- !col-md-10 -->
+	
+	<div class="col-md-2">
+		<div class="row">
+			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
+		</div>
+		<div class="row">
+			<ng-include src="'components/dashboard/_standing.html'"></ng-include>
+		</div>
+	</div> <!-- col-md-2 -->
+
+</div> <!-- End container -->
+</section>
