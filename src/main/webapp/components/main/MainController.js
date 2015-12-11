@@ -1,7 +1,7 @@
 var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'context',
-                       'locale', 'localeSupported', 'localeEvents',
+                       'locale', 'localeSupported', 'localeEvents','localStorageService',
                        function($scope, $rootScope, $state, $sessionStorage, context,
-                               locale, localeSupported, localeEvents) {
+                               locale, localeSupported, localeEvents, localStorageService) {
     
 	$scope.$storage = $sessionStorage;
 	
@@ -114,6 +114,15 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
         $scope.langDisplayText = $scope.localeData[data].langDisplayText;
     });
     
-    
+    /*
+     * Saves user preferences to local storage 
+     */
+    // From a click event
+    $rootScope.savePreferencesWhenClickedWith = function(competition) {
+    	if (competition > 0) {
+    		localStorageService.set("PREFERENCES_COMPETITION", competition);
+    		console.log("selected competition: " + localStorageService.get("PREFERENCES_COMPETITION"));
+    	}
+    };
 }];
 

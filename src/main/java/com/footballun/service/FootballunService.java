@@ -60,12 +60,12 @@ public interface FootballunService {
 	
 	
 	/**
-	 * Matchup Detail's APIs
+	 * Matchup Detail services
 	 */
 	void saveMatchupDetail(MatchupDetail detail) throws DataAccessException;
 	
 	/**
-	 * Matchup Live's APIs
+	 * Matchup Live services
 	 */
 	// For testing purpose only
 	void deleteAllMachupLives() throws DataAccessException; 
@@ -86,14 +86,14 @@ public interface FootballunService {
 	
 	
 	/**
-	 * Squad Member's APIs
+	 * Squad Member services
 	 */
 	List<SquadMember> findSquadMembersBySquad(Integer squadId) throws DataAccessException;
 	SquadMember findSquadMemberByLastNameAndSquad(String lastName, Integer squadId) throws DataAccessException;
 	SquadMember saveSquadMember(SquadMember squadMember) throws DataAccessException;
 	
 	/**
-	 * Standing's APIs
+	 * Standing services
 	 */
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	Standing findStandingBySquad(Squad squad) throws DataAccessException;
@@ -101,22 +101,24 @@ public interface FootballunService {
 	List<Standing> refreshStanding(int competitionId, List<Standing> standings) throws DataAccessException;
 	Standing createStandingForSquad(Squad squad);
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
+	List<Standing> findShortList() throws DataAccessException;
+	
 	
 	/**
-	 * Standing Live's APIs
+	 * Standing Live services
 	 */
 	List<StandingLive> findStandingLiveByCompetition(Integer competitionId) throws DataAccessException;
 	StandingLive findStandingLiveBySquad(Squad squad) throws DataAccessException;
 	void saveStandingLive(StandingLive standing) throws DataAccessException;
 	
 	/**
-	 * Event's repo APIs
+	 * Event services
 	 */
 	Event findEventByName(String name) throws DataAccessException;
 	
 
 	/**
-	 * Matchup Register's APIs
+	 * Matchup Register services
 	 */
 	void saveMatchupRegister(MatchupRegister register) throws DataAccessException;
 	List<MatchupRegister> findMatchupRegisterByMatchupId(int matchupId) throws DataAccessException;

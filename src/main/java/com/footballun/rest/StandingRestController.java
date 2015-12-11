@@ -1,25 +1,21 @@
 package com.footballun.rest;
 
-import com.footballun.model.Standing;
-import com.footballun.service.FootballunService;
-import com.footballun.util.DataImporter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.footballun.model.Standing;
+import com.footballun.service.FootballunService;
+import com.footballun.util.DataImporter;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/standings")
 public class StandingRestController {
-
-	// Current competition by default
-	// TODO: should be getting from settings
-	private static final int DEFAULT_COMPETITION = 9;
-	private static final String DEFAULT_GENERATION = "First Team";
 
 	private final FootballunService footballunService;
 
@@ -31,12 +27,44 @@ public class StandingRestController {
 		this.dataImporter = dataImporter;
 	}
 
-	@RequestMapping(value = "/standings", method = RequestMethod.GET)
-	public List<Standing> showStandings() {
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public List<List<Standing>> showStandings() {
 		
 		//dataImporter.importExcel();
 		
-		// Understood default competition if it isn't specified
-		return footballunService.findStandingByCompetition(DEFAULT_COMPETITION);
+		return groupStandingByCompetition(footballunService.findShortList());
+	}
+	
+	
+	private List<List<Standing>> groupStandingByCompetition(List<Standing> standings) {
+
+		List<List<Standing>> groupedStandingsByCompetition = new ArrayList<List<Standing>>();
+		List<Standing> grouped = new ArrayList<Standing>();
+		Standing prev = null;
+
+
+		// Group matches by competition
+		for (Standing standing : standings) {
+			if (prev != null
+					&& !standing.getSquad().getCompetition().equals(prev.getSquad().getCompetition())) {
+
+				// Adds the Standing to the new group
+				groupedStandingsByCompetition.add(grouped);
+				// Prepare to create a new group
+				grouped = new ArrayList<Standing>();
+			}
+
+			grouped.add(standing);
+			prev = standing;
+		}
+
+		// The last piece
+		if (grouped.size() > 0) {
+			groupedStandingsByCompetition.add(grouped);
+			grouped = null;
+		}
+		
+				
+		return groupedStandingsByCompetition;
 	}
 }

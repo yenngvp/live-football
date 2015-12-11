@@ -72,15 +72,16 @@ public class MatchupRestController {
 		Collection<String> statuses = new ArrayList<>();
 		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		
-		// TODO: Remove hard-coded yearFrom and yearTo when query all year's competitions list
-		List<Competition> competitions = footballunService.findAllCompetition(2015,	2016, "LEAGUE");
+//		// TODO: Remove hard-coded yearFrom and yearTo when query all year's competitions list
+//		List<Competition> competitions = footballunService.findAllCompetition(2015,	2016, "LEAGUE");
+//		
+//		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
+//		for (Competition competition : competitions) {
+//			groupedMatchupsByCompetition.add(footballunService.findMatchupLatestResults(competition.getId(), statuses));
+//		}
 		
-		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
-		for (Competition competition : competitions) {
-			groupedMatchupsByCompetition.add(footballunService.findMatchupLatestResults(competition.getId(), statuses));
-		}
-		
-		return groupedMatchupsByCompetition;
+		List<Matchup> matchups = footballunService.findMatchupLatestResults(statuses);
+		return groupMatchupByCompetition(matchups);
 	}
 	
 	@RequestMapping(value = "/results/competition/{competitionId}", method = RequestMethod.GET)
@@ -94,7 +95,7 @@ public class MatchupRestController {
 		return groupMatchupByCompetition(matchups);
 	}
 	
-	@RequestMapping(value = "/results/competition/{competitionId}/matchday/{matchday}", method = RequestMethod.GET)
+	@RequestMapping(value = "/results-day/competition/{competitionId}/matchday/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showResults(@PathVariable("competitionId") int competitionId, @PathVariable("matchday") int matchday) {
 		
 		Collection<String> statuses = new ArrayList<>();

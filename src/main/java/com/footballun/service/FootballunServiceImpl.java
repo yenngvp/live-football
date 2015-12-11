@@ -144,7 +144,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	/**
-	 * Matchup's APIs implements
+	 * Matchup services implements
 	 */
 	@Override
 	@Transactional(readOnly = true)
@@ -204,7 +204,7 @@ public class FootballunServiceImpl implements FootballunService {
 	
 	@Override
 	public List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException {
-		return matchupRepository.findTop10ByStatus_NameInOrderByCompetitionAscStartAtDescKickoffDesc(statuses);
+		return matchupRepository.findNearestTenResults();
 	}
 	
 	@Override
@@ -218,7 +218,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	/**
-	 * Matchup Detail's APIs
+	 * Matchup Detail services
 	 */
 	@Override
 	public void saveMatchupDetail(MatchupDetail detail) throws DataAccessException {
@@ -226,7 +226,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	/**
-	 * Matchup Live's APIs
+	 * Matchup Live services
 	 */
 	// For testing purpose only
 	@Override
@@ -246,7 +246,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	/**
-	 * Squad Member's APIs implement
+	 * Squad Member services implement
 	 */
 	
 	@Override
@@ -267,7 +267,7 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	/**
-	 * Standing's APIs
+	 * Standing services
 	 */
 	@Override
 	@Transactional(readOnly = true)
@@ -547,8 +547,13 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 	}
 	
+	@Override
+	public List<Standing> findShortList() throws DataAccessException {
+		return standingRepository.findShortList();
+	}
+	
 	/**
-	 * Standing Live's APIs
+	 * Standing Live services
 	 */
 	@Override
 	public List<StandingLive> findStandingLiveByCompetition(Integer competitionId) throws DataAccessException {
@@ -576,7 +581,7 @@ public class FootballunServiceImpl implements FootballunService {
 	
 
 	/**
-	 * Matchup Register's APIs
+	 * Matchup Register services
 	 */
 	@Override
 	public void saveMatchupRegister(MatchupRegister register) throws DataAccessException {

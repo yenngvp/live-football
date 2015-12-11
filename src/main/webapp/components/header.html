@@ -22,10 +22,10 @@
         <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.stats' | i18n| uppercase }}</a></li> -->
         <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.leagues' | i18n | uppercase }}</a>
         </li>
-        <li data-ng-class="$state.is('leagues.epl') ? 'active' : ''"><a href="#">{{ 'common.epl' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('leagues.laliga') ? 'active' : ''"><a href="#">{{ 'common.laliga' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('leagues.bundesliga') ? 'active' : ''"><a href="#">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('leagues.seria') ? 'active' : ''"><a href="#">{{ 'common.seria' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('leagues.epl') ? 'active' : ''"><a href="" ng-click="savePreferencesWhenClickedWith(9)">{{ 'common.epl' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('leagues.laliga') ? 'active' : ''"><a href="" ng-click="savePreferencesWhenClickedWith(72)">{{ 'common.laliga' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('leagues.bundesliga') ? 'active' : ''"><a href="">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('leagues.seria') ? 'active' : ''"><a href="">{{ 'common.seria' | i18n | uppercase }}</a></li>
         
         <!-- <li data-ng-class="$state.is('brackets') ? 'active' : ''"><a data-ui-sref="brackets">Brackets</a></li> -->
         <!-- <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">{{ 'common.championLeague' | i18n | uppercase }}</a></li> -->

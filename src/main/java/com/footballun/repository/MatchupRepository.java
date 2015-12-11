@@ -33,7 +33,7 @@ public interface MatchupRepository {
 	/*
 	 * Matchup results
 	 */
-	List<Matchup> findTop10ByStatus_NameInOrderByCompetitionAscStartAtDescKickoffDesc(Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findNearestTenResults() throws DataAccessException;
 	List<Matchup> findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	List<Matchup> findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
 }

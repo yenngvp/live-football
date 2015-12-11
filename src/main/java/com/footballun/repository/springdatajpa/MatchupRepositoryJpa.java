@@ -55,7 +55,16 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	 * Matchup results
 	 */
 	@Override
-	List<Matchup> findTop10ByStatus_NameInOrderByCompetitionAscStartAtDescKickoffDesc(Collection<String> statuses) throws DataAccessException;
+	@Query(value = "(SELECT * from matchup where start_at <= CURDATE() and status = 6 and competition_id = 9 order by start_at desc,kickoff desc  limit 0, 10) "
+			+ "union "  
+			+ "(SELECT * from matchup where start_at <= CURDATE() and status = 6  and competition_id = 72 order by start_at desc,kickoff desc limit 0, 10) "  
+			+ "union   "  
+			+ "(SELECT * from matchup where start_at <= CURDATE() and status = 6 and competition_id = 73 order by start_at desc,kickoff desc limit 0, 10) "  
+			+ "union   "  
+			+ "(SELECT * from matchup where start_at <= CURDATE() and status = 6  and competition_id = 74 order by start_at desc,kickoff desc limit 0, 10) "  
+			+ "union   "  
+			+ "(SELECT * from matchup where start_at <= CURDATE() and status = 6 and competition_id = 75 order by start_at desc,kickoff desc limit 0, 10)", nativeQuery = true)
+	List<Matchup> findNearestTenResults() throws DataAccessException;
 	
 	@Override
 	List<Matchup> findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Collection<String> statuses) throws DataAccessException;

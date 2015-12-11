@@ -28,8 +28,8 @@ var MatchDay = ['$resource','context', function($resource, context) {
 	      results: $resource(context + '/api/results', {}, {
 	    	  query: { method: 'GET', params: {}, isArray: true}
 	      }),
-	      results2: $resource(context + '/api/results/competition/:id/matchday/:matchday', {}, {
-	    	  query: { method: 'GET', params: {id: '@id', matchday: '@matchday'}, isArray: true}
+	      resultsByDay: $resource(context + '/api/results-day/competition/:id/matchday/:day', {}, {
+	    	  query: { method: 'GET', params: {id: '@id', day: '@day'}, isArray: true}
 	      }),
 	      
 	      // Matchup Register service
