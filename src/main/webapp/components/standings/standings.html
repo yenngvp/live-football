@@ -1,37 +1,100 @@
-<section class="sections sections-body">
-	<div class="container">
-	  <div class="row">
-	    <div class="col-md-8 col-md-offset-2">
-	      <div class="text-center">
-	        <h3>Standing</h3>
-	        <p class="section-desc">Live Standing Now</p>
-	      </div>
-	    </div>
-	  </div>
-	  <div ng-if="!standings">No results found</div>
-	  <div ng-repeat="standing in standings">
-	  	<div class="table">
-		  	<div class="table-row">
-			  	<div class="table-cell">#</div>
-			  	<div class="table-cell">-</div>
-			  	<div class="table-cell">Team</div>
-			  	<div class="table-cell">Point</div>
-			  	<div class="table-cell">P</div>
-			  	<div class="table-cell">W</div>
-			  	<div class="table-cell">D</div>
-			  	<div class="table-cell">L</div> 
-		 	</div>
-		  	<div class="table-row" ng-repeat="p in standing" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" >
-			  	<div class="table-cell">{{p.currentPosition}}</div>
-			  	<div class="table-cell">{{(p.previousPosition * 1) - (p.curentPosition * 1)}}</div>
-			  	<div class="table-cell">{{p.squad.team.name}}</div>
-			  	<div class="table-cell">{{p.point}}</div>
-			  	<div class="table-cell">{{p.played}}</div>
-			  	<div class="table-cell">{{p.won}}</div>
-			  	<div class="table-cell">{{p.drawn}}</div>
-			  	<div class="table-cell">{{p.lost}}</div> 
-		  	</div>
+
+<section id="standings" class="sections sections-body">
+ 
+<div class="container section sections-body">
+	<div class="row">
+		<div class="col-md-12">
+			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
 		</div>
-	  </div>
 	</div>
+ 
+ <div class="row">
+	<div class="col-md-10">
+	
+	<div class="row">
+			<!-- Page header -->
+			<div class="page-header">
+				<h3>
+					<span>{{ 'common.standings' | i18n }}</span>
+				</h3>
+			</div>
+			<!-- /Page header -->
+
+			<!-- Timeline -->
+			<div class="timeline">
+
+				<!-- Line component -->
+				<div class="line text-muted"></div>
+
+
+				<!-- Panel -->
+				<div class="panel panel-primary" ng-repeat="standing in standings">
+
+					<!-- Icon -->
+					<div class="panel-heading thumbnail icon">
+						<i class="glyphicon glyphicon-list"></i>
+					</div>
+					<!-- /Icon -->
+
+
+					<!-- Heading -->
+					<div class="panel-heading" >
+						<h2 class="panel-title">{{ 'common.standings' | i18n }} {{standing[0].squad.competition.name}}</h2>
+					</div>
+					<!-- /Heading -->
+
+					<!-- Body -->
+					<div class="panel-body">
+						<div class="table">
+							<div class="table-row">
+								<div class="table-cell">#</div>
+								<div class="table-cell">-</div>
+								<div class="table-cell">Team</div>
+								<div class="table-cell">Point</div>
+								<div class="table-cell">P</div>
+								<div class="table-cell">W</div>
+								<div class="table-cell">D</div>
+								<div class="table-cell">L</div>
+							</div>
+							<div class="table-row" ng-repeat="p in standing"
+								ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'">
+								<div class="table-cell">{{p.currentPosition}}</div>
+								<div class="table-cell">{{(p.previousPosition * 1) -
+									(p.curentPosition * 1)}}</div>
+								<div class="table-cell">{{p.squad.team.name}}</div>
+								<div class="table-cell">{{p.point}}</div>
+								<div class="table-cell">{{p.played}}</div>
+								<div class="table-cell">{{p.won}}</div>
+								<div class="table-cell">{{p.drawn}}</div>
+								<div class="table-cell">{{p.lost}}</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Body -->
+					
+					<!-- Footer -->
+					<!-- 
+		            <div class="panel-footer">
+		                <small>Footer is also supported!</small>
+		            </div>
+          			<!-- /Footer -->
+
+				</div>
+				<!-- /Panel -->
+			</div>
+			<!-- /Timeline -->
+	</div>
+	
+	</div> <!-- !col-md-10 -->
+	
+	<div class="col-md-2">
+		<div class="row">
+			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
+		</div>
+		<div class="row">
+			<ng-include src="'components/_partials/_standings_shortlist.html'"></ng-include>
+		</div>
+	</div> <!-- col-md-2 -->
+
+</div> <!-- End container -->
 </section>

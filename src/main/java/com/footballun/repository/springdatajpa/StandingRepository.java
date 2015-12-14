@@ -23,6 +23,10 @@ public interface StandingRepository  extends StandingBaseRepository<Standing> {
 	@Override
 	Standing save(Standing standing) throws DataAccessException;
 	
-	@Query(value = "select s.* from standing s inner join  squad  on  s.squad_id=squad.id where current_position <= 5 order by squad.competition_id, current_position", nativeQuery = true)
+	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position <= 5 order by squad.competition_id, current_position", nativeQuery = true)
 	List<Standing> findShortList() throws DataAccessException;
+	
+//	@Override
+	@Query(value = "select distinct s.* from standing s inner join squad on s.squad_id=squad.id where squad.competition_id = ?1 order by s.current_position asc", nativeQuery = true)
+	List<Standing> findByCompetition(Integer id) throws DataAccessException;
 }

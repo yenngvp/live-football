@@ -60,9 +60,17 @@ var Team = ['$resource','context', function($resource, context) {
 }];
 
 var Standing = ['$resource','context', function($resource, context) {
-	return $resource(context + '/api/standings', {}, {
-        query: {method: 'GET', params: {}, isArray: true}
-      });
+	return {
+		standingsShortlist: $resource(context + '/api/standings', {}, {
+			query: {method: 'GET', params: {}, isArray: true}
+		}),
+      
+		standings: $resource(context + '/api/standings?competition=:competitionId', {}, {}, {
+			query: {method: 'GET', params: {competitionId: "@competitionId"}, isArray: true}
+		}),
+      
+	};
+		
 }];
 
 var Stats = ['$resource','context', function($resource, context) {
@@ -97,4 +105,13 @@ var MockService = ['$httpBackend', '$http', '$q', 'context', function($httpBacke
 			}
 		}
 	}	
+}];
+
+var Preferences = ['$resource','context', function($resource, context) {
+	return {
+		pref: $resource(context + '/api/_____/prefs', {}, {
+			query: {method: 'GET', params: {}, isArray: true}
+		}),
+	
+	};
 }];

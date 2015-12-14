@@ -71,8 +71,13 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		controller: "TeamController",
 		data: { requireLogin : false }
 	}).state({
+		name: "standingsShortlist",
+		templateUrl: "components/_partials/_standings_shortlist.html",
+		controller: "MainController",
+		data: { requireLogin : false }
+	}).state({
 		name: "standings",
-		url: "/standings",
+		url: "/standings?competition=:competitionId",
 		templateUrl: "components/standings/standings.html",
 		controller: "StandingController",
 		data: { requireLogin : false }
@@ -207,6 +212,7 @@ app.factory('Team', Team);
 app.factory('Standing', Standing);
 app.factory('Stats', Stats);
 app.factory('MockService', MockService);
+app.factory('Preferences', Preferences);
 
 /** Directives **/
 
@@ -225,14 +231,10 @@ app.directive('datePicker', DatePickerDirective);
 app.directive('myMatchup', MatchupDirective);
 
 app.value('localeSupported', [
-                           'en-US',
-                           'fr-FR',
                            'vi-VN'
                        ]);
 app.value('localeFallbacks', {
-						   'vi': 'vi-VN',
-                           'en': 'en-US',
-                           'fr': 'fr-FR'
+						   'vi': 'vi-VN'
                        });
 
 /** Custom filters **/

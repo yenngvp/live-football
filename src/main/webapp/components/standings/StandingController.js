@@ -1,5 +1,5 @@
-var StandingController = ['$scope','$http','Standing','enableCache','localStorageService',
-                          function ($scope, $http, Standing, enableCache, localStorageService) {
+var StandingController = ['$scope','$http','Standing','enableCache','localStorageService','$stateParams',
+                          function ($scope, $http, Standing, enableCache, localStorageService, $stateParams) {
 	
 	if (enableCache) {
 		// Gets localStorage cached
@@ -10,7 +10,15 @@ var StandingController = ['$scope','$http','Standing','enableCache','localStorag
 	}
 	
 	if (angular.isUndefined($scope.standings) || $scope.standings == null || $scope.standings == 0) {
-		Standing.query().$promise.then(
+		
+		// Gets user competition pref from the local storage
+		var selectedCompetition = $stateParams.competitionId;
+		if (angular.isUndefined(selectedCompetition) || selectedCompetition == 0) {
+			selectedCompetition = localStorageService.get("PREFERENCES_COMPETITION");
+			if (selectedCompetition == null) selectedCompetition = 0;
+		}
+		
+		Standing.standings.query({competitionId: selectedCompetition.id}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {

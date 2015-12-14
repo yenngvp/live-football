@@ -103,7 +103,6 @@ public interface FootballunService {
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	List<Standing> findShortList() throws DataAccessException;
 	
-	
 	/**
 	 * Standing Live services
 	 */

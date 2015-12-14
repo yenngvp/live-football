@@ -1,7 +1,7 @@
-var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'context',
-                       'locale', 'localeSupported', 'localeEvents','localStorageService',
-                       function($scope, $rootScope, $state, $sessionStorage, context,
-                               locale, localeSupported, localeEvents, localStorageService) {
+var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$location', 'context',
+                       'locale', 'localeSupported', 'localeEvents','localStorageService','Standing','Preferences',
+                       function($scope, $rootScope, $state, $sessionStorage,$location, context,
+                               locale, localeSupported, localeEvents, localStorageService, Standing, Preferences) {
     
 	$scope.$storage = $sessionStorage;
 	
@@ -71,6 +71,27 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
 			event.preventDefault();
 			$state.go('dashboard');
 		}
+		
+		// Gets server preferences
+		var key = "_APP_PREFERENCES_";
+		$scope.appPrefs = localStorageService.get(key);
+		if ($scope.appPrefs == null) {
+			Preferences.pref.query().$promise.then(
+					//success
+					function( value ) {
+						localStorageService.set(key, value);
+						$scope.appPrefs = value;
+						console.log("Just getting prefs: "+ value);
+					},
+					//error
+					function( error ) {
+						// TODO: Handle request returns error
+						console.log("Network error: " + error);
+					}
+			);
+			
+		}
+		
 	});
 	
 	
@@ -118,11 +139,42 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage', 'contex
      * Saves user preferences to local storage 
      */
     // From a click event
-    $rootScope.savePreferencesWhenClickedWith = function(competition) {
-    	if (competition > 0) {
-    		localStorageService.set("PREFERENCES_COMPETITION", competition);
-    		console.log("selected competition: " + localStorageService.get("PREFERENCES_COMPETITION"));
+    $rootScope.saveSelectedCompetition = function(name) {
+    	if (!angular.isUndefined($scope.appPrefs)) {
+    		var competition = findCompetitionByName(name);
+    		if (competition != null) {
+	    		localStorageService.set("PREFERENCES_COMPETITION", competition);
+	    		$scope.selectedCompetition = competition;
+	    		$location.search({competition: competition.id});
+	    		console.log("selected competition: " + localStorageService.get("PREFERENCES_COMPETITION").name);
+    		}
     	}
     };
+    
+    var findCompetitionByName = function(name) {
+    	if (!angular.isUndefined($scope.appPrefs)) {
+    		var competitions = $scope.appPrefs[0];
+    		console.log(competitions);
+    		
+    		for (var index in competitions) {
+    			console.log(competitions[index]);
+    			if (competitions[index].name == name) {
+    				return competitions[index];
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
+    $scope.selectedCompetition = localStorageService.get("PREFERENCES_COMPETITION");
+    
+    /*
+     * Standings service
+     */
+    $scope.standingsShortlist = Standing.standingsShortlist.query();
+    
+    $scope.reload = function() {
+    	$state.reload();
+    }
 }];
 

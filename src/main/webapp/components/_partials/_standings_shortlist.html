@@ -1,0 +1,25 @@
+ 
+ <div class="row">
+    <div ng-repeat="standing in standingsShortlist" class="standings-shortlist">
+	  	<div class="table">
+		  	<div class="table-row">
+			  	<div class="table-cell">#</div>
+			  	<div class="table-cell">Team</div>
+			  	<div class="table-cell">Point</div>
+			  	<div class="table-cell">P</div>
+		 	</div>
+		  	<div class="table-row" ng-repeat="p in standing" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" >
+			  	<div class="table-cell">{{p.currentPosition}}</div>
+			  	<div class="table-cell">{{p.squad.name}}</div>
+			  	<div class="table-cell">{{p.point}}</div>
+			  	<div class="table-cell">{{p.played}}</div>
+		  	</div>
+		</div>
+		<div style="text-align: center">
+			<a data-ui-sref="standings({competitionId: standing[0].competition.id})" class="btn btn-primary" role="button">
+				<i class="glyphicon glyphicon-chevron-down"></i>
+			</a>
+		</div>
+    </div>
+</div>
+

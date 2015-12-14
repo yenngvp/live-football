@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.footballun.model.Standing;
@@ -26,15 +28,13 @@ public class StandingRestController {
 		this.footballunService = footballunService;
 		this.dataImporter = dataImporter;
 	}
-
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public List<List<Standing>> showStandings() {
-		
-		//dataImporter.importExcel();
-		
-		return groupStandingByCompetition(footballunService.findShortList());
-	}
 	
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public List<List<Standing>> showStandings(@RequestParam(value = "competition", required = false) Integer competitionId) {
+		
+		return groupStandingByCompetition(competitionId == null ? footballunService.findShortList() 
+																: footballunService.findStandingByCompetition(competitionId));
+	}
 	
 	private List<List<Standing>> groupStandingByCompetition(List<Standing> standings) {
 
