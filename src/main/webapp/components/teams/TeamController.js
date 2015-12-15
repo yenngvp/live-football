@@ -1,5 +1,5 @@
-var TeamController = ['$scope','$state','Team','localStorageService', 'enableCache',
-                      function($scope,$state,Team,localStorageService,enableCache) {
+var TeamController = ['$scope','$state','Team','localStorageService', 'enableCache','$stateParams',
+                      function($scope,$state,Team,localStorageService,enableCache,$stateParams) {
 
 	// Gets localStorage cached
 	var key = 'teamsCache'; 
@@ -10,7 +10,7 @@ var TeamController = ['$scope','$state','Team','localStorageService', 'enableCac
 	}
 	
 	if (angular.isUndefined($scope.teams) || $scope.teams == null || $scope.teams.length == 0) {
-		Team.teams.query().$promise.then(
+		Team.teams.query({competition: $stateParams.competition}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {

@@ -18,18 +18,18 @@ var MatchDay = ['$resource','context', function($resource, context) {
 		  featured: $resource(context + '/api/matchdays', {}, {
 	    	  query: {method: 'GET', params: {}, isArray: true}
 	      }),
-	      matchdays: $resource(context + '/api/matchdays/:day/competition/:id', {}, {
-	    	  query: { method: 'GET', params: {day: '@day', id: '@id'}, isArray: true}
+	      matchdays: $resource(context + '/api/matchdays/:day?competition=:competition', {}, {
+	    	  query: { method: 'GET', params: {day: '@day', competition: '@competition'}, isArray: true}
 	      }),
 	      
 	      /*
 	       * Results services
 	       */
-	      results: $resource(context + '/api/results', {}, {
-	    	  query: { method: 'GET', params: {}, isArray: true}
+	      results: $resource(context + '/api/results?competition=:competition', {}, {
+	    	  query: { method: 'GET', params: {competition: '@competition'}, isArray: true}
 	      }),
-	      resultsByDay: $resource(context + '/api/results-day/competition/:id/matchday/:day', {}, {
-	    	  query: { method: 'GET', params: {id: '@id', day: '@day'}, isArray: true}
+	      resultsByDay: $resource(context + '/api/results/matchday/:matchday?competition=:competition', {}, {
+	    	  query: { method: 'GET', params: {matchday: '@matchday', competition: '@competition'}, isArray: true}
 	      }),
 	      
 	      // Matchup Register service
@@ -50,8 +50,8 @@ var MatchDay = ['$resource','context', function($resource, context) {
 var Team = ['$resource','context', function($resource, context) {
 
 	return {
-		teams: $resource(context + '/api/teams', {}, {
-	        query: {method: 'GET', params: {}, isArray: true}
+		teams: $resource(context + '/api/teams?competition=:competition', {}, {
+	        query: {method: 'GET', params: {competition: '@competition'}, isArray: true}
 	     }),
 		teamMembers: $resource(context + '/api/teams/:id/members', {}, {
 	        query: { method: 'GET', params: {id: '@id'}, isArray: true }
@@ -65,8 +65,8 @@ var Standing = ['$resource','context', function($resource, context) {
 			query: {method: 'GET', params: {}, isArray: true}
 		}),
       
-		standings: $resource(context + '/api/standings?competition=:competitionId', {}, {}, {
-			query: {method: 'GET', params: {competitionId: "@competitionId"}, isArray: true}
+		standings: $resource(context + '/api/standings?competition=:competition', {}, {}, {
+			query: {method: 'GET', params: {competition: '@competition'}, isArray: true}
 		}),
       
 	};

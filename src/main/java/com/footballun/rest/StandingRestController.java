@@ -32,8 +32,8 @@ public class StandingRestController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<List<Standing>> showStandings(@RequestParam(value = "competition", required = false) Integer competitionId) {
 		
-		return groupStandingByCompetition(competitionId == null ? footballunService.findShortList() 
-																: footballunService.findStandingByCompetition(competitionId));
+		return groupStandingByCompetition((competitionId == null || competitionId == 0) ? footballunService.findShortList() 
+																						: footballunService.findStandingByCompetition(competitionId));
 	}
 	
 	private List<List<Standing>> groupStandingByCompetition(List<Standing> standings) {

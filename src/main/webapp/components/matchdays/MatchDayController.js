@@ -31,8 +31,7 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 			compId = $stateParams.id;
 		}
 		
-		console.log(matchday + compId);
-		MatchDay.matchdays.query({day: matchday, id: compId}).$promise.then(
+		MatchDay.matchdays.query({day: matchday, competition: $stateParams.competition}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {

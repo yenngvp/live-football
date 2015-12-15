@@ -15,23 +15,28 @@
     <div id="nav-menu" class="navbar-collapse navbar-left collapse">
       <ul class="nav navbar-nav navbar-menu">
         <li data-ng-class="$state.is('dashboard') ? 'active' : ''"><a href="#" data-ng-click="goHome()">{{ 'common.dashboard' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays({day:0, id:0})">{{ 'common.matchdays' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('results') ? 'active' : ''"><a data-ui-sref="results">{{ 'common.result' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays({day:0, competition: selectedCompetition.id})">{{ 'common.matchdays' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('results') ? 'active' : ''"><a data-ui-sref="results({competition: selectedCompetition.id})" >{{ 'common.result' | i18n | uppercase }}</a></li>
         <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings({competition: selectedCompetition.id})">{{ 'common.standings' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('teams') ? 'active' : ''"><a data-ui-sref="teams">{{ 'common.teams' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('teams') ? 'active' : ''"><a data-ui-sref="teams({competition: selectedCompetition.id})">{{ 'common.teams' | i18n | uppercase }}</a></li>
         <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.stats' | i18n| uppercase }}</a></li> -->
-        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.leagues' | i18n | uppercase }}</a>
+        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="">{{ 'common.leagues' | i18n | uppercase }}</a>
         </li>
-        <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
-        <li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
-        <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
-        <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
-        <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
-        
         <!-- <li data-ng-class="$state.is('brackets') ? 'active' : ''"><a data-ui-sref="brackets">Brackets</a></li> -->
         <!-- <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">{{ 'common.championLeague' | i18n | uppercase }}</a></li> -->
        </ul>
-    </div><!-- /.navbar-collapse -->
+        
+    </div>
+     <div id="nav-menu-2" class="navbar-collapse navbar-left collapse">
+     	<ul class="nav navbar-nav navbar-menu">
+	        <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
+	        <li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
+	        <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
+	        <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
+	        <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
+        </ul>
+     </div>
+    <!-- /.navbar-collapse -->
 
 	<!-- User profile section
     <ul class="nav navbar-profile">

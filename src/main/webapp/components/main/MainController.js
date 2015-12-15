@@ -81,7 +81,9 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
 					function( value ) {
 						localStorageService.set(key, value);
 						$scope.appPrefs = value;
-						console.log("Just getting prefs: "+ value);
+						// default one competition
+						localStorageService.set("PREFERENCES_COMPETITION", value[0][0]);
+						console.log("Just getting prefs: "+ value + ", default competition: " + value[0][0]);
 					},
 					//error
 					function( error ) {
@@ -168,13 +170,21 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     
     $scope.selectedCompetition = localStorageService.get("PREFERENCES_COMPETITION");
     
+    $scope.checkSelectedCompetition = function() {
+    	console.log("checkSelectedCompetition");
+    	if (!angular.isUndefined($scope.selectedCompetition) && $scope.selectedCompetition != null) {
+    		$location.search({competition: $scope.selectedCompetition.id});
+    		console.log("checkSelectedCompetition: "+$scope.selectedCompetition.id);
+    	}
+    };
+    
     /*
      * Standings service
      */
     $scope.standingsShortlist = Standing.standingsShortlist.query();
     
-    $scope.reload = function() {
-    	$state.reload();
-    }
+//    $scope.reload = function() {
+//    	$state.reload();
+//    }
 }];
 

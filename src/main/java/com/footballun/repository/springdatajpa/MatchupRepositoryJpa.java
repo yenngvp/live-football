@@ -27,7 +27,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.competition_id=?0 ORDER BY m.start_at ASC", nativeQuery = true)
+	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.competition_id=?1 ORDER BY m.start_at ASC", nativeQuery = true)
 	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
 	@Override

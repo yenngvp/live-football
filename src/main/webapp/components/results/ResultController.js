@@ -15,44 +15,21 @@ var ResultController = ['$scope', '$stateParams', 'MatchDay','enableCache','loca
 	
 	if (angular.isUndefined($scope.results) || $scope.results == null || $scope.results == 0) {
 				
-		var competition = null;//localStorageService.get("PREFERENCES_COMPETITION");
-		if (competition != null) {
-			
-			MatchDay.resultsByDay.query({id: $stateParams.id, day: $stateParams.day}).$promise.then(
-					//success
-					function( value ) {
-						if (enableCache) {
-							localStorageService.set(key, value);
-						}
+		MatchDay.results.query({competition: $stateParams.competition}).$promise.then(
+				//success
+				function( value ) {
+					if (enableCache) {
+						localStorageService.set(key, value);
+					}
 
-						$scope.results = value;
-						
-						console.log(value);
-					},
-					//error
-					function( error ) {
-						// TODO: Handle request returns error
-						console.log("Failed with: " + error);
-					}
+					$scope.results = value;
+				},
+				//error
+				function( error ) {
+					// TODO: Handle request returns error
+					console.log("Failed with: " + error);
+				}
 			);
-		} else {
-		
-			MatchDay.results.query().$promise.then(
-					//success
-					function( value ) {
-						if (enableCache) {
-							localStorageService.set(key, value);
-						}
-	
-						$scope.results = value;
-					},
-					//error
-					function( error ) {
-						// TODO: Handle request returns error
-						console.log("Failed with: " + error);
-					}
-			);
-		}
 	}	
 }];
 
@@ -70,7 +47,7 @@ var ResultByDayController = ['$scope', '$stateParams', 'MatchDay','enableCache',
 	
 	if (angular.isUndefined($scope.results) || $scope.results == null || $scope.results == 0) {
 				
-		MatchDay.resultsByDay.query({id: $stateParams.id, day: $stateParams.day}).$promise.then(
+		MatchDay.resultsByDay.query({matchday: $stateParams.matchday, competition: $stateParams.competition}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {

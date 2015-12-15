@@ -48,25 +48,25 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "matchdays",
-		url: "/matchdays/:day/competition/:id",
+		url: "/matchdays/:day?competition=:competitionId",
 		templateUrl: "components/matchdays/matchdays.html",
 		controller: "MatchDayController",
 		data: { requireLogin : false }
 	}).state({
 		name: "results",
-		url: "/results",
+		url: "/results?competition=:competitionId",
 		templateUrl: "components/results/results.html",
 		controller: "ResultController",
 		data: { requireLogin : false }
 	}).state({
 		name: "resultsByDay",
-		url: "/results-day/competition/:id/matchday/:day",
+		url: "/results/matchday/:matchday?competition=:competitionId",
 		templateUrl: "components/results/results.html",
 		controller: "ResultByDayController",
 		data: { requireLogin : false }
 	}).state({
 		name: "teams",
-		url: "/teams",
+		url: "/teams?competition=:competitionId",
 		templateUrl: "components/teams/teams.html",
 		controller: "TeamController",
 		data: { requireLogin : false }

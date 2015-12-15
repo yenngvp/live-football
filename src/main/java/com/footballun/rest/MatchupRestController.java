@@ -1,6 +1,5 @@
 package com.footballun.rest;
 
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.footballun.model.Competition;
 import com.footballun.model.Matchup;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
@@ -40,63 +39,42 @@ public class MatchupRestController {
 	 * @return List of matchups for each of the competitions
 	 */
 	@RequestMapping(value = "/matchdays", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatches() {
+	public List<List<Matchup>> showMatches(@RequestParam(value = "competition", required = false) Integer competitionId) {
 		
-		List<Matchup> matchups = footballunService.findMatchupFeaturedByMatchday();
-		
-		return groupMatchupByCompetition(matchups);
+		if (competitionId == null) {
+			return groupMatchupByCompetition(footballunService.findMatchupFeaturedByMatchday());
+		} else {
+			return getMatchesByMatchdayAndCompetition(0, competitionId);
+		}
 	}
 	
-	/**
-	 * Gets matchups will be taking place in next matchday for a competition.
-	 * 
-	 * @param id competition id
-	 * @return List of matchups for a competition in next matchday
-	 */
-	@RequestMapping(value = "/matchdays/competition/{competitionId}", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatchesByCompetition(@PathVariable("competitionId") int competitionId) {
-		
-		return getMatchesByMatchdayAndCompetition(0, competitionId);
-	}
 
-	@RequestMapping(value = "/matchdays/{matchday}/competition/{competitionId}", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatchesByDayAndCompetition(
-			@PathVariable("matchday") int matchday, @PathVariable("competitionId") int competitionId) {
-		
+	@RequestMapping(value = "/matchdays/{matchday}", method = RequestMethod.GET)
+	public List<List<Matchup>> showMatches(@PathVariable("matchday") int matchday,
+										   @RequestParam(value = "competition", required = false) Integer competitionId) {
+		if (competitionId == null) competitionId = 0;
 		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
 	@RequestMapping(value = "/results", method = RequestMethod.GET)
-	public List<List<Matchup>> showResults() {
+	public List<List<Matchup>> showResults(@RequestParam(value = "competition", required = false) Integer competitionId) {
 		
 		Collection<String> statuses = new ArrayList<>();
 		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		
-//		// TODO: Remove hard-coded yearFrom and yearTo when query all year's competitions list
-//		List<Competition> competitions = footballunService.findAllCompetition(2015,	2016, "LEAGUE");
-//		
-//		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
-//		for (Competition competition : competitions) {
-//			groupedMatchupsByCompetition.add(footballunService.findMatchupLatestResults(competition.getId(), statuses));
-//		}
-		
-		List<Matchup> matchups = footballunService.findMatchupLatestResults(statuses);
-		return groupMatchupByCompetition(matchups);
-	}
-	
-	@RequestMapping(value = "/results/competition/{competitionId}", method = RequestMethod.GET)
-	public List<List<Matchup>> showResults(@PathVariable("competitionId") int competitionId) {
-		
-		Collection<String> statuses = new ArrayList<>();
-		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
-		
-		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, statuses);
+		List<Matchup> matchups;
+		if (competitionId == null || competitionId == 0) {
+			matchups = footballunService.findMatchupLatestResults(statuses);
+		} else {
+			matchups = footballunService.findMatchupLatestResults(competitionId, statuses);
+		}
 		
 		return groupMatchupByCompetition(matchups);
 	}
 	
-	@RequestMapping(value = "/results-day/competition/{competitionId}/matchday/{matchday}", method = RequestMethod.GET)
-	public List<List<Matchup>> showResults(@PathVariable("competitionId") int competitionId, @PathVariable("matchday") int matchday) {
+	@RequestMapping(value = "/results/matchday/{matchday}", method = RequestMethod.GET)
+	public List<List<Matchup>> showResults(@PathVariable("matchday") int matchday,
+										   @RequestParam(value = "competition", required = false) Integer competitionId) {
 		
 		Collection<String> statuses = new ArrayList<>();
 		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
