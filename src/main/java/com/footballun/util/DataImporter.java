@@ -279,16 +279,16 @@ public class DataImporter {
 //				return;
 //			}
 			
-			if (!importMatchdays(workbook)) {
-				logger.error("Importing leagues calenddar failed. Should stop further processing!");
-				return;
-			}
-			
-			
-//			if (!importPlayers(workbook)) {
-//				logger.error("Importing leagues player failed. Should stop further processing!");
+//			if (!importMatchdays(workbook)) {
+//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
 //				return;
 //			}
+			
+			
+			if (!importPlayers(workbook)) {
+				logger.error("Importing leagues player failed. Should stop further processing!");
+				return;
+			}
 //
 //			calculateStandings();
 //			

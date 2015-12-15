@@ -27,6 +27,7 @@ public class StandingRestController {
 	public StandingRestController(FootballunService footballunService, DataImporter dataImporter) {
 		this.footballunService = footballunService;
 		this.dataImporter = dataImporter;
+//		dataImporter.importExcel();
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)

@@ -16,7 +16,8 @@ var app = angular.module('footballun', ['ui.router',
                                     	'ngLocalize',
                                     	'ngLocalize.InstalledLanguages',
                                     	'ngLocalize.Events',
-                                    	'ngLocale'
+                                    	'ngLocale',
+                                    	'ngMaterial'
                                     	]);
 
 
