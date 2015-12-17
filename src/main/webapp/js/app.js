@@ -106,12 +106,6 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		templateUrl: "components/matchdays/matchup_detail.html",
 		controller: "MatchupDetailController",
 		data: {requireLogin : false}
-	}).state({
-		name: "material",
-		url: "/material",
-		templateUrl: "components/material/material.html",
-		controller: "MaterialController",
-		data: {requireLogin : false}
 	})
 	;
 
@@ -139,7 +133,6 @@ app.controller('ResultController', ResultController);
 app.controller('ResultByDayController', ResultByDayController);
 app.controller('MatchdayPagedController', MatchdayPagedController);
 
-app.controller('MaterialController', MaterialController);
 
 app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
                                        function($scope, MatchDay, enableCache, localStorageService,locale) {
