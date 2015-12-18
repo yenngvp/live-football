@@ -23,11 +23,15 @@ var ResultController = ['$scope', '$stateParams', 'MatchDay','enableCache','loca
 					}
 
 					$scope.results = value;
+					
+					$scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {
 					// TODO: Handle request returns error
 					console.log("Failed with: " + error);
+					
+					$scope.hideSpinner = true;
 				}
 			);
 	}	
@@ -56,12 +60,14 @@ var ResultByDayController = ['$scope', '$stateParams', 'MatchDay','enableCache',
 
 					$scope.results = value;
 					
-					console.log(value);
+					$scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {
 					// TODO: Handle request returns error
 					console.log("Failed with: " + error);
+
+					$scope.hideSpinner = true;
 				}
 		);
 	}	

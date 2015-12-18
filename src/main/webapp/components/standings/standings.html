@@ -1,91 +1,98 @@
-
-<section id="standings" class="sections sections-body">
- 
-<div class="container section sections-body">
-	<div class="row">
+<div class="row">
 		<div class="col-md-12">
 			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
 		</div>
-	</div>
+</div>
+<section id="standings" class="sections sections-body">
+ 
+<div class="container section sections-body">
+	
+<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%; ">
+  <p><i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></p>
+</div>          
  
  <div class="row">
 	<div class="col-md-10">
+		<div class="row" ng-repeat="standing in standings">
+	        <div class="col-xs-12">
+	            <div class="box box-info">
+	            	<div class="box-header with-border">
+	             		<h3 class="box-title">{{ 'common.standings' | i18n }} {{standing[0].squad.competition.name}}</h3>
+	           	  	</div><!-- /.box-header -->
 	
-	<div class="row">
-			<!-- Page header -->
-			<div class="page-header">
-				<h3>
-					<span>{{ 'common.standings' | i18n }}</span>
-				</h3>
-			</div>
-			<!-- /Page header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table id="table-standings" class="table table-hover" style=" margin-right: 10px">
+	                <tr>
+	                  <th>#</th>
+	                  <th>Logo</th>
+	                  <th>{{ 'common.team' | i18n }}</th>
+	                  <th>{{ 'common.point' | i18n }}</th>
+	                  <th>{{ 'common.played' | i18n }}</th>
+	                  <th>{{ 'common.won' | i18n }}</th>
+	                  <th>{{ 'common.drawn' | i18n }}</th>
+	                  <th>{{ 'common.lost' | i18n }}</th>
+	                  <th>{{ 'common.goalScored' | i18n }}</th>
+	                  <th>{{ 'common.goalAgainst' | i18n }}</th>
+	                  <th>{{ 'common.goalDiff' | i18n }}</th>
+	                </tr>
+	                <tr ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.team.id)">
+	                	<td>{{p.currentPosition}}</td>
+	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/150x150/{{p.squad.logo}}" class="img-circle img-responsive" style="width:30px;height:30px;"></td>
+	                	<td>{{p.squad.team.name}}</td>
+	                	<td><b>{{p.point}}</b></td>
+	                	<td>{{p.played}}</td>
+	                	<td>{{p.won}}</td>
+	                	<td>{{p.drawn}}</td>
+	                	<td>{{p.lost}}</td>
+	                	<td>{{p.goalScored}}</td>
+	                	<td>{{p.goalAgainst}}</td>
+	                	<td>{{p.goalScored-p.goalAgainst}}</td>
+	                </tr>
+	              </table>
+	             
+	              
+	            </div><!-- /.box-body -->
+	            </div><!-- /.box-info -->
+	            
+	            <!-- LINE CHART -->
+	          <div class="box box-info">
+	          	
+	            <div class="box-header with-border">
+	              <h3 class="box-title">{{ 'common.standingChange' | i18n }}</h3>
+	              <div class="box-tools pull-right">
+	                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+	              </div>
+	            </div>
+	            <div class="box-body">
+	            	<div class="progress progress-sm active">
+	              		<div class="progress-bar progress-bar-success progress-bar-striped"
+	                		role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+	                	 	style="width: 60%">
+	                      <span class="sr-only">60% Complete</span>
+	              	</div>
+	             </div>
+	              <div class="chart">
+		            Select teams:
+					<select name="multipleselect" id="standingsChartSelect"
+				    	  	ng-options="p.squad.name for p in standing"
+				      		ng-model="selectedStandings"
+				      		ng-change="update()">
+				    </select>
 
-			<!-- Timeline -->
-			<div class="timeline">
-
-				<!-- Line component -->
-				<div class="line text-muted"></div>
-
-
-				<!-- Panel -->
-				<div class="panel panel-primary" ng-repeat="standing in standings">
-
-					<!-- Icon -->
-					<div class="panel-heading thumbnail icon">
-						<i class="glyphicon glyphicon-list"></i>
-					</div>
-					<!-- /Icon -->
-
-
-					<!-- Heading -->
-					<div class="panel-heading" >
-						<h2 class="panel-title">{{ 'common.standings' | i18n }} {{standing[0].squad.competition.name}}</h2>
-					</div>
-					<!-- /Heading -->
-
-					<!-- Body -->
-					<div class="panel-body">
-						<div class="table">
-							<div class="table-row">
-								<div class="table-cell">#</div>
-								<div class="table-cell">-</div>
-								<div class="table-cell">Team</div>
-								<div class="table-cell">Point</div>
-								<div class="table-cell">P</div>
-								<div class="table-cell">W</div>
-								<div class="table-cell">D</div>
-								<div class="table-cell">L</div>
-							</div>
-							<div class="table-row" ng-repeat="p in standing"
-								ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'">
-								<div class="table-cell">{{p.currentPosition}}</div>
-								<div class="table-cell">{{(p.previousPosition * 1) -
-									(p.curentPosition * 1)}}</div>
-								<div class="table-cell">{{p.squad.team.name}}</div>
-								<div class="table-cell">{{p.point}}</div>
-								<div class="table-cell">{{p.played}}</div>
-								<div class="table-cell">{{p.won}}</div>
-								<div class="table-cell">{{p.drawn}}</div>
-								<div class="table-cell">{{p.lost}}</div>
-							</div>
-						</div>
-					</div>
-					<!-- /Body -->
-					
-					<!-- Footer -->
-					<!-- 
-		            <div class="panel-footer">
-		                <small>Footer is also supported!</small>
-		            </div>
-          			<!-- /Footer -->
-
-				</div>
-				<!-- /Panel -->
-			</div>
-			<!-- /Timeline -->
-	</div>
-	
+	               	<canvas id="micro-line" class="chart chart-line" chart-data="standingsChartForTeams"
+					  chart-labels="labels" chart-legend="true" chart-series="series"
+					  chart-options="chartOptions" chart-click="onClick" >
+					</canvas> 
+	              </div>
+	            </div><!-- /.box-body -->
+	          </div><!-- /.box -->
+	            
+	          </div><!-- /.box -->
+	        </div>
+		          
 	</div> <!-- !col-md-10 -->
+	
 	
 	<div class="col-md-2">
 		<div class="row">
@@ -95,6 +102,8 @@
 			<ng-include src="'components/_partials/_standings_shortlist.html'"></ng-include>
 		</div>
 	</div> <!-- col-md-2 -->
-
+</div>
 </div> <!-- End container -->
+
 </section>
+    

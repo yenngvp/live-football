@@ -1,10 +1,16 @@
 <section sections sections-body>
+
+  	<!-- Spinner -->
+  	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%; ">
+	  <p><i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></p>
+	</div>          
+	 
 	<!-- Club Brief Info -->
 	<header class="sections sections-narrow sections-light">
 	  <div class="container">
 	    <div class="media media-welcome">
 	      <div class="media-left">
-	        <img data-ng-src="images/teams/{{teamMembers[0].squad.competition.name}}/500x500/{{teamMembers[0].squad.logo}}" class="img-circle img-responsive" width="500" height="500">
+	        <img data-ng-src="images/teams/{{teamMembers[0].squad.competition.name}}/150x150/{{teamMembers[0].squad.logo}}" class="img-circle img-responsive" width="500" height="500">
 	        <h1>{{teamMembers[0].squad.fullName}}</h1>
 	      </div>
 	  	</div>

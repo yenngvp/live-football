@@ -43,6 +43,9 @@ public class Standing extends StandingBase {
 	@Column(name = "entered_live")
 	private boolean enteredLive;
 
+	@Column(name = "matchday")
+	private int matchday;
+	
 	
 	/**
 	 * Getters/Setters
@@ -55,5 +58,13 @@ public class Standing extends StandingBase {
 
 	public void setEnteredLive(boolean enteredLive) {
 		this.enteredLive = enteredLive;
+	}
+
+	public int getMatchday() {
+		return matchday;
+	}
+
+	public void setMatchday(int matchday) {
+		this.matchday = matchday;
 	}
 }

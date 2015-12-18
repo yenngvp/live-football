@@ -69,6 +69,8 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 					} else {
 						$scope.soonestCountdown = 0;
 					}
+					
+					$scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {
@@ -125,11 +127,14 @@ var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay',
 				$scope.formation1 = getPitchLaidout($scope.matchup.firstDetail, $scope.firstRegisters);
 				$scope.formation2 = getPitchLaidout($scope.matchup.secondDetail, $scope.secondRegisters);
 			
+				$scope.hideSpinner = true;
 			},
 			//error
 			function( error ) {
 				// TODO: Handle request returns error
 				console.log("Failed with: " + error);
+				
+				$scope.hideSpinner = true;
 			}
 	);
 

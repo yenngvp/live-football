@@ -195,6 +195,9 @@ li.ng-enter-active {
 	vertical-align: middle !important; 
 }
 
+#table-standings tr {
+    cursor: pointer;
+}
 
 .table-row-odd {background-color: #D9CDBF;}
 .table-row-even {background-color: #F2EFDF;}

@@ -18,16 +18,19 @@ var TeamController = ['$scope','$state','Team','localStorageService', 'enableCac
 					}
 					
 					$scope.teams = value;
+					
+					$scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {
 					// TODO: Handle request returns error
 					console.log("Failed with: " + error);
+					$scope.hideSpinner = true;
 				}
 				);
 	}
 
-
+	
 }];
 
 
@@ -51,11 +54,14 @@ var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactor
     				}
     				
     				$scope.teamMembers = value;
+    				
+    				$scope.hideSpinner = true;
     			},
     			//error
     			function( error ) {
     				// TODO: Handle request returns error
     				console.log("Failed with: " + error);
+    				$scope.hideSpinner = true;
     			}
     	);
     } 	
