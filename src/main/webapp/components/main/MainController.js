@@ -181,7 +181,7 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     /*
      * Standings service
      */
-    $scope.standingsShortlist = Standing.standingsShortlist.query();
+   // $scope.standingsShortlist = Standing.standingsShortlist.query();
     
 //    $scope.reload = function() {
 //    	$state.reload();

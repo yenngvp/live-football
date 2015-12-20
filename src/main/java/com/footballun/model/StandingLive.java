@@ -4,10 +4,7 @@
  */
 package com.footballun.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -29,7 +26,10 @@ public class StandingLive extends StandingBase {
 	@JoinColumn(nullable = false)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Standing standing;
-	
+
+
+    @Column(name = "matchday")
+    private int matchday;
 
 	public Standing getStanding() {
 		return standing;
@@ -39,4 +39,11 @@ public class StandingLive extends StandingBase {
 		this.standing = standing;
 	}
 
+    public int getMatchday() {
+        return matchday;
+    }
+
+    public void setMatchday(int matchday) {
+        this.matchday = matchday;
+    }
 }

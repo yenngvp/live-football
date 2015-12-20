@@ -68,7 +68,14 @@ var Standing = ['$resource','context', function($resource, context) {
 		standings: $resource(context + '/api/standings?competition=:competition', {}, {}, {
 			query: {method: 'GET', params: {competition: '@competition'}, isArray: true}
 		}),
-      
+
+        standingsAllBySquad: $resource(context + '/api/standings/all/team/:squadId', {}, {}, {
+            query: {method: 'GET', params: {squadId: '@squadId'}, isArray: true}
+        }),
+
+        standingBySquad: $resource(context + '/api/standings/team/:squadId', {}, {}, {
+            get: {method: 'GET', params: {squadId: '@squadId'}, isArray: false}
+        }),
 	};
 		
 }];

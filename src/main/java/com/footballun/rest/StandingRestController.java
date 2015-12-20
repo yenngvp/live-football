@@ -68,4 +68,14 @@ public class StandingRestController {
 				
 		return groupedStandingsByCompetition;
 	}
+
+    @RequestMapping(value = "/all/team/{squadId}", method = RequestMethod.GET)
+    public List<Standing> showStandingsBySquad(@PathVariable("squadId") Integer squadId) {
+        return  footballunService.findAllStandingsBySquad(squadId);
+    }
+
+    @RequestMapping(value = "/team/{squadId}", method = RequestMethod.GET)
+    public Standing showLatestStandingBySquad(@PathVariable("squadId") Integer squadId) {
+        return footballunService.findStandingBySquad(squadId);
+    }
 }

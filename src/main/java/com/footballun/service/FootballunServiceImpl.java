@@ -281,7 +281,25 @@ public class FootballunServiceImpl implements FootballunService {
 	public Standing findStandingBySquad(Squad squad) throws DataAccessException {
 		return standingRepository.findBySquad(squad);
 	}
-	
+
+    @Override
+    @Transactional(readOnly = true)
+    public Standing findStandingBySquad(Integer squadId) throws DataAccessException {
+        return standingRepository.findBySquad(squadId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Standing> findAllStandingsBySquad(Squad squad) throws DataAccessException {
+        return standingRepository.findAllBySquad(squad);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Standing> findAllStandingsBySquad(Integer squadId) throws DataAccessException {
+        return standingRepository.findAllBySquad(squadId);
+    }
+
 	@Override
 	@Transactional(readOnly = false)
 	public void saveStanding(Standing standing) throws DataAccessException {

@@ -97,12 +97,15 @@ public interface FootballunService {
 	 */
 	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
 	Standing findStandingBySquad(Squad squad) throws DataAccessException;
+    Standing findStandingBySquad(Integer squadId) throws DataAccessException;
+    List<Standing> findAllStandingsBySquad(Squad squad) throws DataAccessException;
+    List<Standing> findAllStandingsBySquad(Integer squadId) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
 	List<Standing> refreshStanding(int competitionId, List<Standing> standings) throws DataAccessException;
 	Standing createStandingForSquad(Squad squad);
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	List<Standing> findShortList() throws DataAccessException;
-	
+
 	/**
 	 * Standing Live services
 	 */

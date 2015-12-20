@@ -36,7 +36,9 @@
     "defender": "Hậu vệ",
     "midfielder": "Tiền vệ",
     "forward": "Tiền đạo",
+    "outonloan": "Cho mượn",
     "substitute": "Dự bị",
+    "player": "Cầu thủ",
     "injury": "Chấn thương",
     "lineupNoAvailable": "Chưa có đội hình ra sân (Đội hình chính thức chỉ được các đội/CLB thông báo trước trận đấu 2 giờ)",
     "noMatchToday": "Không có trận đấu nào hôm nay",
@@ -58,5 +60,8 @@
 	"goalAgainst": "Thủng lưới",
 	"goalDiff": "Hệ số",
 	"standingChange": "Xếp hạng qua các vòng",
-    "selectTeam": "Chọn đội: "
+    "selectTeam": "Chọn đội: ",
+    "currentSeason": "Mùa giải",
+    "currentPosition": "Xếp hạng",
+    "achievement": "Thành tích"
 }	

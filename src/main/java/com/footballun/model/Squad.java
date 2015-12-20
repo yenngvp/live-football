@@ -22,8 +22,8 @@ import javax.persistence.Table;
 public class Squad extends NamedEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	/**
+
+    /**
 	 * Field in relationships
 	 */
 	

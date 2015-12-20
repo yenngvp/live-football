@@ -1,68 +1,93 @@
 var TeamController = ['$scope','$state','Team','localStorageService', 'enableCache','$stateParams',
                       function($scope,$state,Team,localStorageService,enableCache,$stateParams) {
 
-	// Gets localStorage cached
-	var key = 'teamsCache'; 
-	if (enableCache) {
-		$scope.teams = localStorageService.get(key);
-	} else {
-		$scope.teams = null;
-	}
-	
-	if (angular.isUndefined($scope.teams) || $scope.teams == null || $scope.teams.length == 0) {
-		Team.teams.query({competition: $stateParams.competition}).$promise.then(
-				//success
-				function( value ) {
-					if (enableCache) {
-						localStorageService.set(key, value);
-					}
-					
-					$scope.teams = value;
-					
-					$scope.hideSpinner = true;
-				},
-				//error
-				function( error ) {
-					// TODO: Handle request returns error
-					console.log("Failed with: " + error);
-					$scope.hideSpinner = true;
-				}
-				);
-	}
+    // Gets localStorage cached
+    var key = 'teamsCache';
+    if (enableCache) {
+        $scope.teams = localStorageService.get(key);
+    } else {
+        $scope.teams = null;
+    }
 
-	
+    if (angular.isUndefined($scope.teams) || $scope.teams == null || $scope.teams.length == 0) {
+        Team.teams.query({competition: $stateParams.competition}).$promise.then(
+                //success
+                function( value ) {
+                    if (enableCache) {
+                        localStorageService.set(key, value);
+                    }
+
+                    $scope.teams = value;
+                    var competition = $scope.teams[0].competition;
+                    if (competition) {
+                        $scope.competitionName = competition.name + " (" + competition.yearFrom.toString() + "/" + competition.yearTo.toString() + ")";
+                    }
+
+                    $scope.hideSpinner = true;
+                },
+                //error
+                function( error ) {
+                    // TODO: Handle request returns error
+                    console.log("Failed with: " + error);
+                    $scope.hideSpinner = true;
+                }
+                );
+    }
+
+
 }];
 
 
-var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactory','Team','localStorageService','enableCache',
-                             function($scope,$rootScope,$stateParams,$cacheFactory,Team,localStorageService,enableCache) {
-	
+var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactory','Team','localStorageService','enableCache','Standing',
+                             function($scope,$rootScope,$stateParams,$cacheFactory,Team,localStorageService,enableCache, Standing) {
+
     // Gets localStorage cached
-	var key = 'teamMembersCache_' + $stateParams.id;
-	if (enableCache) {
-		$scope.teamMembers = localStorageService.get(key);
-	} else {
-		$scope.teamMembers = null;
-	}
-	
-    if (angular.isUndefined($scope.teamMembers) || $scope.teamMembers == null || $scope.teamMembers.length == 0) {
-    	Team.teamMembers.query({id: $stateParams.id}).$promise.then(
-    			//success
-    			function( value ) {
-    				if (enableCache) {
-    					localStorageService.set(key, value);
-    				}
-    				
-    				$scope.teamMembers = value;
-    				
-    				$scope.hideSpinner = true;
-    			},
-    			//error
-    			function( error ) {
-    				// TODO: Handle request returns error
-    				console.log("Failed with: " + error);
-    				$scope.hideSpinner = true;
-    			}
-    	);
-    } 	
+    var key = 'teamMembersCache_' + $stateParams.id;
+    if (enableCache) {
+        $scope.teamMembers = localStorageService.get(key);
+    } else {
+        $scope.teamMembers = null;
+    }
+
+     Standing.standingBySquad.get({squadId: $stateParams.id}).$promise.then(
+        //success
+        function (value) {
+            $scope.currentStanding = value;
+
+            $scope.labels = ["Thắng","Hoà","Thua"];
+            $scope.chartData = [value.won, value.drawn, value.lost];
+            $scope.chartColors = ["#FFBC12", "#52E8FF", "#3F2F7F"];
+        },
+         //error
+         function (error) {
+             // TODO: Handle request returns error
+             console.log("Failed with: " + error);
+             $scope.hideSpinner = true;
+        }
+      );
+
+     if (angular.isUndefined($scope.teamMembers) || $scope.teamMembers == null || $scope.teamMembers.length == 0) {
+        Team.teamMembers.query({id: $stateParams.id}).$promise.then(
+            //success
+            function (value) {
+                if (enableCache) {
+                    localStorageService.set(key, value);
+                }
+
+                $scope.teamMembers = value;
+                var competition = $scope.teamMembers[0].squad.competition;
+                if (competition) {
+                    $scope.season = competition.yearFrom.toString() + "/" + competition.yearTo.toString();
+                }
+
+                $scope.hideSpinner = true;
+            },
+            //error
+            function (error) {
+                // TODO: Handle request returns error
+                console.log("Failed with: " + error);
+                $scope.hideSpinner = true;
+            }
+        );
+    }
 }];

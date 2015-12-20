@@ -4,11 +4,7 @@
  */
 package com.footballun.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,9 +20,10 @@ public class Standing extends StandingBase {
 	/**
 	 * Fields in relationship
 	 */
-	
+
+    @Transient
 	@OneToOne(mappedBy = "standing", cascade = CascadeType.ALL)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+	//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private StandingLive standingLive;
 
 	public StandingLive getStandingLive() {

@@ -10,74 +10,112 @@
 	  <div class="container">
 	    <div class="media media-welcome">
 	      <div class="media-left">
-	        <img data-ng-src="images/teams/{{teamMembers[0].squad.competition.name}}/150x150/{{teamMembers[0].squad.logo}}" class="img-circle img-responsive" width="500" height="500">
-	        <h1>{{teamMembers[0].squad.fullName}}</h1>
+              <div class="row">
+                  <div class="col-md-6">
+                      <img data-ng-src="images/teams/{{teamMembers[0].squad.competition.name}}/150x150/{{teamMembers[0].squad.logo}}" class="img-responsive" height="150px">
+                      <h1>{{teamMembers[0].squad.fullName}}</h1>
+                  </div>
+                  <div class="col-md-6">
+                      <ul>
+                          <li>{{ 'common.currentSeason' | i18n }}: {{season}}</li>
+                          <li>{{ 'common.currentPosition' | i18n }}: {{currentStanding.currentPosition}}</li>
+                          <li>{{ 'common.achievement' | i18n }}:</li>
+
+                      </ul>
+                      <div class="chart-container-pie">
+                          <canvas id="pie" class="chart chart-pie"
+                                  chart-data="chartData" chart-labels="labels" chart-legend="true" chart-colours="chartColors">
+                          </canvas>
+                      </div>
+                  </div>
+              </div>
+
 	      </div>
 	  	</div>
 	  </div>
 	</header>
 	
 	<!-- Players -->
-	<section id="playersInfo" class="sections sections-no-padding sections-light">
-	<div class="container">
-	  <div class="table">
-	  	<div class="table-row">
-		  	<h1>Manager</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.heroRole.name=='Manager'">
-		    	<div class="col-md-1 col-xs-1">{{member.shirtNumber}}</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.name}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-	    </div>
-	    <div class="table-row">
-		  	<h1>Goalkeepers</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.position.name=='Goalkeeper' && member.heroStatus.name!=='Out on loan'">
-		    	<div class="col-md-1 col-xs-1">{{member.shirtNumber}}</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.firstName + ' ' + member.hero.lastName}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-	    </div>
-	    <div class="table-row">
-		    <h1>Defenders</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.position.name=='Defender' && member.heroStatus.name!=='Out on loan'">
-		    	<div class="col-md-1 col-xs-1">{{member.shirtNumber}}</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.firstName + ' ' + member.hero.lastName}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-	    </div>
-	    <div class="table-row">
-	    <h1>Midfielders</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.position.name=='Midfielder' && member.heroStatus.name!=='Out on loan'">
-		    	<div class="col-md-1 col-xs-1">{{member.shirtNumber}}</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.firstName + ' ' + member.hero.lastName}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-	    </div>
-	    <div class="table-row">
-		    <h1>Forwards</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.position.name=='Forward' && member.heroStatus.name!=='Out on loan'">
-		    	<div class="col-md-1 col-xs-1">{{member.shirtNumber}}</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.firstName + ' ' + member.hero.lastName}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-	    </div>
-	    <div class="table-row">
-		    <h1>Out on loan</h1>
-		    <div class="row row-hero" ng-repeat="member in teamMembers track by $index" ng-if="member.heroStatus.name==='Out on loan'">
-		    	<div class="col-md-1 col-xs-1" ng-if="member.shirtNumber">{{member.shirtNumber}}</div>
-		    	<div class="col-md-1 col-xs-1" ng-if="!member.shirtNumber">-</div>
-		    	<div class="col-md-4 col-xs-5">{{member.hero.firstName + ' ' + member.hero.lastName}}</div>
-		    	<!-- <div class="col-md-4 col-xs-6"><img alt="{{member.hero.firstName + ' ' + member.hero.lastName}}" src="images/heros/default-hero.png"></div>  -->
-		    	<div class="col-md-3 col-xs-0">{{member.hero.status.name}}</div>
-		    </div>
-		</div>
-	  </div>
-	  </div>
+    <div id="playersInfo" class="sections sections-no-padding sections-light">
+    <div class="container">
+    <div class="box box-info">
+
+        <span class="box-body table-responsive no-padding">
+            <!-- Managers -->
+            <table id="table-manager" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.manager' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.position.name=='Manager'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}} JOE MOURINHO</td>
+                </tr>
+            </table>
+
+            <!-- Goalkeeper -->
+            <table id="table-player-gk" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.goalkeeper' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.position.name=='Goalkeeper' && member.heroStatus.name!=='Out on loan'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}}</td>
+                </tr>
+            </table>
+
+            <!-- Defender -->
+            <table id="table-player-df" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.defender' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.position.name=='Defender' && member.heroStatus.name!=='Out on loan'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}}</td>
+                </tr>
+            </table>
+
+            <!-- Midfielder -->
+            <table id="table-player-mf" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.midfielder' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.position.name=='Midfielder' && member.heroStatus.name!=='Out on loan'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}}</td>
+                </tr>
+            </table>
+
+            <!-- Forward -->
+            <table id="table-player-fw" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.forward' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.position.name=='Forward' && member.heroStatus.name!=='Out on loan'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}}</td>
+                </tr>
+            </table>
+
+            <!-- Out on loan -->
+            <table id="table-player-ol" class="table table-hover table-player">
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'common.outonloan' | i18n }}</th>
+                </tr>
+                <tr ng-repeat="member in teamMembers" ng-if="member.heroStatus.name==='Out on loan'">
+                    <td>{{member.shirtNumber}}</td>
+                    <td>{{member.hero.name}}</td>
+                </tr>
+            </table>
+        </div><!-- /.box-body -->
+    </div><!-- /.box-info -->
+    </div>
+
 	</section>
 </section>
 
