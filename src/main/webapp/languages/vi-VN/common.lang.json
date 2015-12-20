@@ -57,5 +57,6 @@
 	"goalScored": "Bàn thắng",
 	"goalAgainst": "Thủng lưới",
 	"goalDiff": "Hệ số",
-	"standingChange": "Xếp hạng qua các vòng"
+	"standingChange": "Xếp hạng qua các vòng",
+    "selectTeam": "Chọn đội: "
 }	

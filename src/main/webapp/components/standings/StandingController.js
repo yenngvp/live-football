@@ -1,5 +1,5 @@
-var StandingController = ['$scope','$http','Standing','enableCache','localStorageService','$stateParams',"$state",
-                          function ($scope, $http, Standing, enableCache, localStorageService, $stateParams, $state) {
+var StandingController = ['$scope','$http','Standing','enableCache','localStorageService','$stateParams',"$state","locale",
+                          function ($scope, $http, Standing, enableCache, localStorageService, $stateParams, $state, locale) {
 	
 	if (enableCache) {
 		// Gets localStorage cached
@@ -9,7 +9,7 @@ var StandingController = ['$scope','$http','Standing','enableCache','localStorag
 		$scope.standings = undefined;
 	}
 		
-	if (angular.isUndefined($scope.standings) || $scope.standings == null || $scope.standings == 0) {
+	if (angular.isUndefined($scope.standings) || $scope.standings == null) {
 			
 		Standing.standings.query({competition: $stateParams.competition}).$promise.then(
 				//success
@@ -27,55 +27,61 @@ var StandingController = ['$scope','$http','Standing','enableCache','localStorag
 							}
 						}
 						$scope.standings.push(arr);
-					 }
-					
+                    }
 
-					// Display some top 4 charts
+                    $scope.data = {
+                        multipleSelect: []
+                    };
+                    $scope.data.multipleSelect = [];
+
+					// Displays top 4 standings chart
 					var s = $scope.standings[0];
-					$scope.standingsForChart = [];
 					for (var i = 0; i < 4 && i < s.length; i++) {
-						$scope.standingsForChart.push(s[i]);
+                        $scope.data.multipleSelect.push(s[i]);
 					}
-					console.log($scope.standingsForChart);
-					
+
 					// Chart options
 					 $scope.chartOptions = {"datasetFill" : false};
 					 $scope.labels = [];
-					 var totalMatchdays = $scope.standingsForChart[0].squad.competition.totalMatchdays;
-					 var currentMatchday = $scope.standingsForChart[0].squad.competition.nextMatchday - 1;
-					 for (var i = 1; i <= totalMatchdays; i++) {
-						 $scope.labels.push(i);
-					 }
-					 
-					 $scope.series = [];
-					 $scope.selectedStandings = {};
-					 $scope.standingsChartForTeams = [];
+					 var totalMatchdays = $scope.data.multipleSelect[0].squad.competition.totalMatchdays;
+					 var currentMatchday = 15;//$scope.data.multipleSelect[0].squad.competition.nextMatchday;
+                     if (currentMatchday < 0) currentMatchday = 10; // testing
 
-					for (var i = 0; i < $scope.standingsForChart.length; i++) {
-						 $scope.series.push($scope.standingsForChart[i].squad.name);
-						 
-						 var arrPos = [];
-						 for (var i = 0; i < currentMatchday; i++) {
-							 $scope.selectedStandings = standingsForChart[i];
-							 arrPos.push($scope.standingsForChart[i].currentPosition);
-						 }
-						 $scope.standingsChartForTeams.push(arrPos);
+                    var matchweek = locale.getString('common.matchweek');
+
+                    for (var i = 1; i <= totalMatchdays; i++) {
+
+                         $scope.labels.push( matchweek + ' ' + i );
 					 }
-					 
+
+                    var updateChartData = function () {
+                        $scope.series = [];
+                        $scope.chartData = [];
+
+                        for (var i = 0; i < $scope.data.multipleSelect.length; i++) {
+                            $scope.series.push($scope.data.multipleSelect[i].squad.name);
+
+                            var arrPos = [];
+                            for (var j = 0; j < currentMatchday; j++) {
+                                arrPos.push($scope.data.multipleSelect[i].currentPosition);
+                            }
+                            $scope.chartData.push(arrPos);
+                        }
+                    };
+
+                    updateChartData();
+
 					 $scope.update = function() {
-						console.log($scope.selectedStandings.squad.name);
-						
-//						$scope.series = [];
-//						for (var i = 0; i < $scope.standingsChartForTeams.length; i++) {
-//							$scope.series.push(standing[$scope.standingsChartForTeams[i]].squad.name);
-//						}
+
+                         updateChartData();
 					 };
 					 
 //					  $scope.onClick = function (points, evt) {
 //					    console.log(points, evt);
 //					  };
 
-					$scope.hideSpinner = true;
+
+                    $scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {
