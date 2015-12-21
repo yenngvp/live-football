@@ -75,11 +75,14 @@ var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactor
                 }
 
                 $scope.teamMembers = value;
-                var competition = $scope.teamMembers[0].squad.competition;
-                if (competition) {
-                    $scope.season = competition.yearFrom.toString() + "/" + competition.yearTo.toString();
+                
+                if (value.length > 0) {
+                	var competition = $scope.teamMembers[0].squad.competition;
+                	if (competition) {
+                		$scope.season = competition.yearFrom.toString() + "/" + competition.yearTo.toString();
+                	}
                 }
-
+                
                 $scope.hideSpinner = true;
             },
             //error

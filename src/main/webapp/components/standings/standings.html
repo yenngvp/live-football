@@ -35,7 +35,7 @@
 	                  <th>{{ 'common.goalAgainst' | i18n }}</th>
 	                  <th>{{ 'common.goalDiff' | i18n }}</th>
 	                </tr>
-	                <tr ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.team.id)">
+	                <tr ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
 	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/150x150/{{p.squad.logo}}" class="img-circle img-responsive" style="width:30px;height:30px;"></td>
 	                	<td>{{p.squad.team.name}}</td>

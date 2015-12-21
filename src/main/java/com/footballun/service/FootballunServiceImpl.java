@@ -527,7 +527,7 @@ public class FootballunServiceImpl implements FootballunService {
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.LIVE));
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		
-		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameIn(competitionId, gettingStatuses);
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchday(competitionId, gettingStatuses);
 		
 		for (Matchup matchup : matchups) {
 			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
