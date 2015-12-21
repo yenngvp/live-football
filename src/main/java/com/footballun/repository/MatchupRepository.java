@@ -18,7 +18,7 @@ public interface MatchupRepository {
 	
 	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
-	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchday(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	
 	Matchup findById(Integer id) throws DataAccessException;
 	

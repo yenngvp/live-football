@@ -31,7 +31,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchday(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	
 	@Override
 	Matchup findById(Integer id) throws DataAccessException;

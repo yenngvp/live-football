@@ -35,7 +35,7 @@
 	                  <th>{{ 'common.goalAgainst' | i18n }}</th>
 	                  <th>{{ 'common.goalDiff' | i18n }}</th>
 	                </tr>
-	                <tr ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
+	                <tr title="Click để xem thông tin đội bóng" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
 	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/150x150/{{p.squad.logo}}" class="img-circle img-responsive" style="width:30px;height:30px;"></td>
 	                	<td>{{p.squad.team.name}}</td>
@@ -58,7 +58,7 @@
 	          <div class="box box-info">
 	          	
 	            <div class="box-header with-border">
-	              <h3> class="box-title">{{ 'common.standingChange' | i18n }}</h3>
+	              <h3 class="box-title">{{ 'common.standingChange' | i18n }}</h3>
 	            </div>
 	            <div class="box-body">
 	            	<!--<div class="progress progress-sm active">-->
@@ -69,13 +69,13 @@
 	              	<!--</div>-->
 	             </div>
 	              <div class="chart">
-                          <h4 class="box-title">{{ 'common.selectTeam' | i18n }}</h4>
+                          <h4 class="box-title">{{ 'common.selectTeam' | i18n }}
                           <select name="multipleselect" id="standingsChartSelect"
                                   ng-options="p.squad.name for p in standing track by p.id"
                                   ng-model="data.multipleSelect"
                                   ng-change="update()"
                                   multiple>
-                          </select>
+                          </select></h4>
 
                           <canvas id="line" class="chart chart-line" chart-data="chartData"
                                   chart-labels="labels" chart-legend="true" chart-series="series"

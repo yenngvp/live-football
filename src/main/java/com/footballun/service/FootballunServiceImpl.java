@@ -27,7 +27,6 @@ import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
-import com.footballun.model.NamedEntity;
 import com.footballun.model.Position;
 import com.footballun.model.Setting;
 import com.footballun.model.Squad;
@@ -36,7 +35,6 @@ import com.footballun.model.Standing;
 import com.footballun.model.StandingBase;
 import com.footballun.model.StandingLive;
 import com.footballun.model.Team;
-import com.footballun.repository.AbstractFootballunRepository;
 import com.footballun.repository.CompetitionRepository;
 import com.footballun.repository.CountryRepository;
 import com.footballun.repository.EventRepository;
@@ -527,7 +525,7 @@ public class FootballunServiceImpl implements FootballunService {
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.LIVE));
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		
-		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchday(competitionId, gettingStatuses);
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(competitionId, gettingStatuses);
 		
 		for (Matchup matchup : matchups) {
 			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
