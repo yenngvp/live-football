@@ -49,6 +49,8 @@ public interface FootballunService {
 	List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException;
 	List<Matchup> findAllMatchupMatchday() throws DataAccessException;
 	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
+	Matchup findMatchupByTodayAndCompetition(Integer competitionId) throws DataAccessException;
+	
 	// Matchup results
 	List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException;
 	List<Matchup> findMatchupLatestResults(Integer competitionId, Collection<String> statuses) throws DataAccessException;
@@ -138,6 +140,7 @@ public interface FootballunService {
 	Competition findCompetitionByName(String name) throws DataAccessException;
 	Competition save(Competition competition) throws DataAccessException;
 	List<Competition> findAllCompetition(Integer yearFrom, Integer yearTo, String type) throws DataAccessException;
+	List<Competition> findAllCompetition(LocalDate currentDate, String type) throws DataAccessException;
 	
 	/**
 	 * Team services

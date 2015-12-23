@@ -1,5 +1,6 @@
 package com.footballun.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -13,4 +14,5 @@ public interface CompetitionRepository {
 	Competition save(Competition competition) throws DataAccessException;
 	
 	List<Competition> findByYearFromAndYearToAndType(Integer yearFrom, Integer yearTo, String type) throws DataAccessException;
+	List<Competition> findByStartAtLessThanEqualAndEndAtGreaterThanEqualAndType(LocalDate now, LocalDate now1, String type) throws DataAccessException;
 }

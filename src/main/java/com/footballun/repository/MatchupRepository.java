@@ -18,7 +18,7 @@ public interface MatchupRepository {
 	
 	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
-	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchday(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	
 	Matchup findById(Integer id) throws DataAccessException;
 	
@@ -29,6 +29,16 @@ public interface MatchupRepository {
 	List<Matchup> findAllByMatchday() throws DataAccessException;
 	
 	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
+	
+	/**
+	 * Gets a matchup today for a competition that has greatest matchday
+	 * 
+	 * @param today
+	 * @param competitionId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	Matchup findOneByTodayAndCompetitionId(Integer competitionId) throws DataAccessException;
 	
 	/*
 	 * Matchup results

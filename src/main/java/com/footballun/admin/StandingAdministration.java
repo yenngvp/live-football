@@ -38,7 +38,6 @@ public class StandingAdministration extends AdministrationConfiguration<Standing
 
 	public FieldSetConfigurationUnit listView(final FieldSetConfigurationUnitBuilder fragmentBuilder) {
 		return fragmentBuilder
-				.field( "standingLive" ).caption( "Live Now" )
 				.field( "currentPosition" ).caption( "#" )
 				.field( "previousPosition" ).caption( "#prev" )
 				.field( "squad" ).caption( "Squad" )

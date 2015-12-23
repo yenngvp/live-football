@@ -27,11 +27,11 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.competition_id=?1 ORDER BY m.start_at ASC", nativeQuery = true)
+	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id  WHERE m.competition_id=9 AND m.start_at >= CURDATE() AND (m.matchday=c.current_matchday OR m.matchday=c.current_matchday+1) ORDER BY m.matchday ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
 	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
 	
 	@Override
-	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchday(Integer competitionId, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	
 	@Override
 	Matchup findById(Integer id) throws DataAccessException;
@@ -40,16 +40,20 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.start_at >= CURDATE() AND featured=1 ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
+	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id  WHERE m.competition_id=9 AND featured=1 AND m.start_at >= CURDATE() AND (m.matchday=c.current_matchday OR m.matchday=c.current_matchday+1) ORDER BY competition_id, m.matchday ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
 	List<Matchup> findByFeaturedMatchday() throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.start_at >= CURDATE() ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
+	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.current_matchday + 1 WHERE m.start_at >= CURDATE() ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
 	List<Matchup> findAllByMatchday() throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.next_matchday WHERE m.start_at >= CURDATE() AND matchday=?0 ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
+	@Query(value = "SELECT m.* FROM matchup m INNER JOIN competition c ON m.competition_id=c.id AND m.matchday=c.current_matchday + 1 WHERE m.start_at >= CURDATE() AND matchday=?0 ORDER BY m.competition_id ASC, m.start_at ASC, m.kickoff ASC", nativeQuery = true)
 	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
+	
+	@Override
+	@Query(value = "SELECT m.*, MAX(m.matchday) FROM matchup m WHERE m.competition_id = ?1 AND m.start_at = CURDATE()", nativeQuery = true)
+	Matchup findOneByTodayAndCompetitionId(Integer competitionId) throws DataAccessException;
 	
 	/*
 	 * Matchup results

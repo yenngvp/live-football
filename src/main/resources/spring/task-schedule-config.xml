@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+
+<!-- 
+- Matchday monitor task
+- To monitor which is current matchday
+- Task will be run every day at midnight (GMT) time to update current_matchday column on competition table
+ -->
+<bean id="matchdayMonitor" class="com.footballun.schedule.task.MatchdayMonitorTask"/>
+
+<!-- Cron expression: second, minute, hour, day of month, month, day(s) of week -->
+
+<!-- Tasks scheduler -->
+<task:scheduled-tasks scheduler="myScheduler">
+    <!--<task:scheduled ref="beanA" method="methodA" fixed-delay="5000" initial-delay="1000"/> -->
+    <!--<task:scheduled ref="beanB" method="methodB" fixed-rate="5000"/> -->
+    
+    <!-- Run every day at midnight (GMT) time -->
+    <task:scheduled ref="matchdayMonitor" method="findAndUpdateCurrentMatchday" cron="50 19 12 * * *"/>
+</task:scheduled-tasks>
+
+<task:scheduler id="myScheduler" pool-size="10"/>
+
+
+
+	<!-- The quartz scheduler configuration -->
+    <!-- <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/> -->
+    
+	<!--
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:executor id="myExecutor" pool-size="5"/>
+	<task:scheduler id="myScheduler" pool-size="10"/>
+	
+	<task:scheduled-tasks scheduler="myScheduler">
+        <task:scheduled ref="livescoreTask" method="testMethod" fixed-delay="1000" />
+    </task:scheduled-tasks>
+   
+	<bean id="livescoreTask" class="com.footballun.schedule.LivescoreSchedule"/>
+	<bean id="liveGameJobScheduler" class="com.footballun.schedule.MatchupScheduler"/>
+    -->
+    
+ 
+
+</beans>

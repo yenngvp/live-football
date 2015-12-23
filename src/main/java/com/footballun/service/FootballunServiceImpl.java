@@ -217,6 +217,12 @@ public class FootballunServiceImpl implements FootballunService {
 		return matchupRepository.findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(competitionId, matchday, statuses);
 	}
 	
+	@Override
+	public Matchup findMatchupByTodayAndCompetition(Integer competitionId) throws DataAccessException {
+		return matchupRepository.findOneByTodayAndCompetitionId(competitionId);
+	}
+	
+	
 	/**
 	 * Matchup Detail services
 	 */
@@ -273,7 +279,7 @@ public class FootballunServiceImpl implements FootballunService {
 	@Transactional(readOnly = true)
 	public List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException {
 		
-		return standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		return standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId, Boolean.TRUE);
 	}
 
 	@Override
@@ -386,7 +392,7 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		// Gets all current squads standing
 		if (standings == null) {
-			standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+			standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId, Boolean.TRUE);
 		}
 		sortAndSaveStandings(competitionId, standings);
 		
@@ -527,7 +533,7 @@ public class FootballunServiceImpl implements FootballunService {
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.LIVE));
 		gettingStatuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
 		
-		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchday(competitionId, gettingStatuses);
+		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(competitionId, gettingStatuses);
 		
 		for (Matchup matchup : matchups) {
 			if (matchup.getStatus().getCode() == MatchupStatusCode.LIVE) {
@@ -537,7 +543,7 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 		
 		// Reset all standings
-		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		List<Standing> standings = standingRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId, Boolean.TRUE);
 		if (standings == null || standings.size() == 0) {
 			createStandingForCompetition(competitionId);
 		} else {
@@ -565,6 +571,10 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 	}
 	
+	public void recalculateStandingsHistoryForCompetition(int competitionId) {
+		
+	}
+	
 	@Override
 	public List<Standing> findShortList() throws DataAccessException {
 		return standingRepository.findShortList();
@@ -575,7 +585,7 @@ public class FootballunServiceImpl implements FootballunService {
 	 */
 	@Override
 	public List<StandingLive> findStandingLiveByCompetition(Integer competitionId) throws DataAccessException {
-		return standingLiveRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId);
+		return standingLiveRepository.findBySquad_CompetitionIdOrderByCurrentPositionAsc(competitionId, Boolean.TRUE);
 	}
 	
 	@Override
@@ -656,6 +666,11 @@ public class FootballunServiceImpl implements FootballunService {
 	@Override
 	public List<Competition> findAllCompetition(Integer yearFrom, Integer yearTo, String type) throws DataAccessException {
 		return competitionRepository.findByYearFromAndYearToAndType(yearFrom, yearTo, type);
+	}
+	
+	@Override
+	public List<Competition> findAllCompetition(LocalDate currentDate, String type) throws DataAccessException {
+		return competitionRepository.findByStartAtLessThanEqualAndEndAtGreaterThanEqualAndType(currentDate, currentDate, type);
 	}
 	
 	@Override

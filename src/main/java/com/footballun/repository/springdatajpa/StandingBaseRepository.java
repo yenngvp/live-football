@@ -13,8 +13,11 @@ import com.footballun.model.StandingBase;
 @NoRepositoryBean	
 public interface StandingBaseRepository<T extends StandingBase> extends CrudRepository<T, Integer> {
 
-	@Query("select s from #{#entityName} as s where s.squad.competition.id = ?1 order by currentPosition asc")
-	List<T> findBySquad_CompetitionIdOrderByCurrentPositionAsc(Integer id) throws DataAccessException;
+	@Query("select s from #{#entityName} as s where s.squad.competition.id = ?1 and s.allowUpdate = ?2 order by currentPosition asc")
+	List<T> findBySquad_CompetitionIdOrderByCurrentPositionAsc(Integer id, Boolean allowUpdate) throws DataAccessException;
+	
+	@Query("select s from #{#entityName} as s where s.squad.competition.id = ?1 order by matchday asc, currentPosition asc")
+	List<T> findBySquad_CompetitionIdOrderByMatchdayAscCurrentPositionAsc(Integer id) throws DataAccessException;
 	
 	@Query("select s, MAX(s.matchday) from #{#entityName} as s where s.squad = ?1")
 	T findBySquad(Squad squad) throws DataAccessException;

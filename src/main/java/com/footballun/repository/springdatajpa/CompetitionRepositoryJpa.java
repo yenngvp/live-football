@@ -1,5 +1,6 @@
 package com.footballun.repository.springdatajpa;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -21,4 +22,7 @@ public interface CompetitionRepositoryJpa extends CompetitionRepository, CrudRep
 	
 	@Override
 	List<Competition> findByYearFromAndYearToAndType(Integer yearFrom, Integer yearTo, String type) throws DataAccessException;
+	
+	@Override
+	List<Competition> findByStartAtLessThanEqualAndEndAtGreaterThanEqualAndType(LocalDate now, LocalDate now1, String type) throws DataAccessException;
 }
