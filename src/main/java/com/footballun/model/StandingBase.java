@@ -65,6 +65,9 @@ public abstract class StandingBase extends BaseEntity {
 	
 	@Column(name = "goals_against")
 	private int goalsAgainst;
+
+	@Column(name = "allow_update")
+	private boolean allowUpdate;
 	
 	/**
 	 * Getters/Setters
@@ -174,6 +177,14 @@ public abstract class StandingBase extends BaseEntity {
 		currentPosition = 0;
 	}
 	
+	public boolean isAllowUpdate() {
+		return allowUpdate;
+	}
+
+	public void setAllowUpdate(boolean allowUpdate) {
+		this.allowUpdate = allowUpdate;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Standing [%d, %s]", currentPosition, squad.toString());

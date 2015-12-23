@@ -6,11 +6,21 @@
  */
 package com.footballun.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.footballun.util.JsonDateDeserializer;
+import com.footballun.util.JsonDateSerializer;
+import com.footballun.util.LocalDatePersistenceConverter;
 
 @Entity
 @Table(name = "competition")
@@ -34,6 +44,21 @@ public class Competition extends NamedEntity {
 	
 	@Column(name = "total_matchdays")
 	private int totalMatchdays;
+	
+	@Column(name = "current_matchday")
+	private int currentMatchday;
+	
+	@Column(name = "start_at")
+	@Convert(converter = LocalDatePersistenceConverter.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDate startAt;
+	
+	@Column(name = "end_at")
+	@Convert(converter = LocalDatePersistenceConverter.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+	private LocalDate endAt;
 	
 	public String getType() {
 		return type;
@@ -71,8 +96,32 @@ public class Competition extends NamedEntity {
 		return totalMatchdays;
 	}
 
+	public int getCurrentMatchday() {
+		return currentMatchday;
+	}
+
+	public void setCurrentMatchday(int currentMatchday) {
+		this.currentMatchday = currentMatchday;
+	}
+
 	public void setTotalMatchdays(int totalMatchdays) {
 		this.totalMatchdays = totalMatchdays;
+	}
+
+	public LocalDate getStartAt() {
+		return startAt;
+	}
+
+	public void setStartAt(LocalDate startAt) {
+		this.startAt = startAt;
+	}
+
+	public LocalDate getEndAt() {
+		return endAt;
+	}
+
+	public void setEndAt(LocalDate endAt) {
+		this.endAt = endAt;
 	}
 	
 }

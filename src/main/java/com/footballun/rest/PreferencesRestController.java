@@ -4,6 +4,7 @@
  */
 package com.footballun.rest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PreferencesRestController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<List<? extends Object>> getPrefs() {
 		
-		List<Competition> competitions = footballunService.findAllCompetition(2015, 2016, "LEAGUE");
+		List<Competition> competitions = footballunService.findAllCompetition(LocalDate.now(), "LEAGUE");
 		
 		List<List<? extends Object>> prefs = new ArrayList<>();
 		prefs.add((List<? extends Object>) competitions);

@@ -30,6 +30,16 @@ public interface MatchupRepository {
 	
 	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
 	
+	/**
+	 * Gets a matchup today for a competition that has greatest matchday
+	 * 
+	 * @param today
+	 * @param competitionId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	Matchup findOneByTodayAndCompetitionId(Integer competitionId) throws DataAccessException;
+	
 	/*
 	 * Matchup results
 	 */
