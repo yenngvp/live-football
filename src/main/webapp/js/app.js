@@ -17,7 +17,8 @@ var app = angular.module('footballun', ['ui.router',
                                     	'ngLocalize.InstalledLanguages',
                                     	'ngLocalize.Events',
                                     	'ngLocale',
-                                    	'chart.js'
+                                    	'chart.js',
+                                    	'angulike'
                                     	]);
 
 
@@ -276,3 +277,12 @@ app.filter('startFrom', function() {
 app.run(function(useMockData, MockService) {
 	MockService.mock(useMockData);
 });
+
+app.run([
+      '$rootScope','useMockData','MockService',
+      function ($rootScope, useMockData, MockService) {
+          $rootScope.facebookAppId = '[FacebookAppId]';
+          
+          MockService.mock(useMockData);
+      }
+  ]);
