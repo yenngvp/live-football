@@ -27,10 +27,6 @@ public class StandingLive extends StandingBase {
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 	private Standing standing;
 
-
-    @Column(name = "matchday")
-    private int matchday;
-
 	public Standing getStanding() {
 		return standing;
 	}
@@ -39,11 +35,4 @@ public class StandingLive extends StandingBase {
 		this.standing = standing;
 	}
 
-    public int getMatchday() {
-        return matchday;
-    }
-
-    public void setMatchday(int matchday) {
-        this.matchday = matchday;
-    }
 }

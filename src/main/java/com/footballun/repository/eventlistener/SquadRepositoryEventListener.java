@@ -24,9 +24,6 @@ public class SquadRepositoryEventListener extends
 	@Override
     public void onAfterCreate(Squad squad) {
 
-		if (squad != null) {
-			footballunService.createStandingForSquad(squad);
-		}
 	}
 	
 	@Override

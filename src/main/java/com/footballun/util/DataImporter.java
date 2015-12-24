@@ -14,6 +14,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -195,6 +197,9 @@ public class DataImporter {
 	private static int playersCounter = 0;
 	private static int createdPlayersCounter = 0;
 	
+	private static final DateTimeFormatter MATCH_DATE_FORMATER = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
+	private static final DateTimeFormatter MATCH_KICKOFF_FORMATER = DateTimeFormatter.ofPattern("hh:mm");
+	
 	private FormulaEvaluator evaluator;
 	
 	@Autowired
@@ -267,7 +272,7 @@ public class DataImporter {
 			workbook = new XSSFWorkbook (file);
 		 
 			evaluator =  workbook.getCreationHelper().createFormulaEvaluator();
-//	    
+	    
 //			if (!importTeamsData(workbook)) {
 //				logger.error("Importing teams data failed. Should stop further processing!");
 //				return;
@@ -278,20 +283,20 @@ public class DataImporter {
 //				logger.error("Importing leagues calenddar failed. Should stop further processing!");
 //				return;
 //			}
-			
+//			
 //			if (!importMatchdays(workbook)) {
 //				logger.error("Importing leagues calenddar failed. Should stop further processing!");
 //				return;
 //			}
-			
-			
-			if (!importPlayers(workbook)) {
-				logger.error("Importing leagues player failed. Should stop further processing!");
-				return;
-			}
-//
-//			calculateStandings();
 //			
+//			
+//			if (!importPlayers(workbook)) {
+//				logger.error("Importing leagues player failed. Should stop further processing!");
+//				return;
+//			}
+
+			calculateStandings();
+			
 			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 			
 		} catch (FileNotFoundException e) {
@@ -466,14 +471,17 @@ public class DataImporter {
 								// Extracts cell values
 								String fixture = trimString(String.valueOf(cellValues.get(COL_NAME_FIXTURE)));
 								String fulltimeOrKickoff = trimString(String.valueOf(cellValues.get(COL_NAME_KICKOFF)));
+								if ("Dortmund 4-1 VfB Stuttgart".equals(fixture)) {
+									fulltime = true;
+								}
 								if ("Full time".equals(fulltimeOrKickoff)) {
 									fulltime = true;
 								} else {
 									fulltime = false;
 									Date time = (Date) cellValues.get(COL_NAME_KICKOFF);
-									kickoff = time.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+									kickoff = LocalTime.of(time.getHours(), time.getMinutes());
 								}
-								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff.toString()));
+								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff == null ? "" : kickoff.toString()));
 								
 								// Parses fixture
 								parseAndSaveSchedule(1, matchCal, kickoff, fixture, fulltime);							
@@ -552,7 +560,7 @@ public class DataImporter {
 			Matchup matchup = new Matchup();
 			matchup.setCompetition(currentCompetition);
 			matchup.setMatchday(week);
-			matchup.setName(String.format("%s V %s", team1, team2));
+			matchup.setName(String.format("%s vs %s", team1, team2));
 			
 			matchup.setStartAt(matchCal);
 			matchup.setEndAt(matchup.getStartAt());
@@ -678,48 +686,32 @@ public class DataImporter {
 		
 		// Parses player fullname to get first and last name separately
 		String[] namesAndRole = parsePlayerName(player);
-		String firstName = namesAndRole[0], lastName = namesAndRole[1], role;
-		if (namesAndRole[2].length() > 0) {
-			role = namesAndRole[2];
+		String firstName = namesAndRole[0], lastName = namesAndRole[1], fullname = namesAndRole[2], role;
+		if (namesAndRole[3].length() > 0) {
+			role = namesAndRole[3];
 		} else {
 			role = HERO_ROLE_PLAYER;
 		}
 		
 		// Creates new hero
-		Hero hero = createHero(firstName, lastName, player);
+		Hero hero = createHero(firstName, lastName, fullname);
 		createSquadMember(squad, hero, position, number, role, isOutOnLoan ? HERO_STATUS_OUTONLOAN : HERO_STATUS_ACTIVE);
 	}
 	
 	private String[] parsePlayerName(String player) {
-		String firstName = "", lastName = "", role = "";
+		String firstName = "", lastName = "", fullname =  "", role = "";
 	
 		if (player != null) {
 			
-			String name, caption;
+			String caption;
 			int indexCaption = player.indexOf("("); // Find index of and open parenthesis known as 'a caption'
 			if (indexCaption >= 0) {
-				name = player.substring(0, indexCaption);
+				fullname = player.substring(0, indexCaption);
 				caption = player.substring(indexCaption);
 			} else {
-				name = player;
+				fullname = player;
 				caption = "";
 			}
-			name = name.trim();
-			// Parses name
-			int firstSpaceIndex = name.indexOf(" ");
-			if (firstSpaceIndex > 0) {
-				firstName = name.substring(0, firstSpaceIndex).trim();
-				lastName = name.substring(firstSpaceIndex).trim();
-			} else {
-				// Player's name has single word 
-				firstName = name;
-				lastName = name;
-			}
-			
-			if (firstName == null || lastName == null) {
-				logger.error("Unexpected that name is NULL for input string: " + player);
-			}
-			
 			// Parses caption to find player role, ie: captain, vice-captain, third-captain
 			if (caption.length() > 0) {
 				if (caption.contains("vice-captain") 
@@ -739,9 +731,27 @@ public class DataImporter {
 					logger.warn("Ignore caption: " + caption);
 				}
 			}
+			
+			fullname = trimString(fullname);
+			// Parses name
+			int firstSpaceIndex = fullname.indexOf(" ");
+			if (firstSpaceIndex > 0) {
+				firstName = fullname.substring(0, firstSpaceIndex).trim();
+				lastName = fullname.substring(firstSpaceIndex).trim();
+			} else {
+				// Player's name has single word 
+				firstName = fullname;
+				lastName = fullname;
+			}
+			
+			if (firstName == null || lastName == null) {
+				logger.error("Unexpected that name is NULL for input string: " + player);
+			}
+			
+			
 		}
 		
-		return new String[]{firstName, lastName, role};
+		return new String[]{firstName, lastName, fullname, role};
 	}
 	
 	private Hero createHero(String firstName, String lastName, String fullName) {
@@ -1008,7 +1018,7 @@ public class DataImporter {
 			/*
 			 * Creates standing for the squad
 			 */
-			footballunService.createStandingForSquad(squad);
+			footballunService.createAllStandingsForSquad(squad);
 			logger.info("Created standing for squad: " + team.getName());
 		} else {
 			squad = footballunService.findSquadByName(shortName, competition.getId());
@@ -1051,9 +1061,7 @@ public class DataImporter {
 
 		LocalDate date = null;
 		try {
-			DateTimeFormatter formatter =
-					DateTimeFormatter.ofPattern("EEEE d MMMMM yyyy");
-			date = LocalDate.parse(parsed, formatter);
+			date = LocalDate.parse(parsed, MATCH_DATE_FORMATER);
 			logger.info("Parsed date " + date.toString());
 		}
 		catch (DateTimeParseException exc) {
