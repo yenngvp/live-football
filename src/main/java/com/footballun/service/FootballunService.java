@@ -97,22 +97,23 @@ public interface FootballunService {
 	/**
 	 * Standing services
 	 */
-	List<Standing> findStandingByCompetition(Integer competitionId) throws DataAccessException;
-	Standing findStandingBySquad(Squad squad) throws DataAccessException;
-    Standing findStandingBySquad(Integer squadId) throws DataAccessException;
+	List<Standing> findCurrentStandingsByCompetition(Integer competitionId) throws DataAccessException;
+	Standing findStandingBySquadAndMatchday(Squad squad, int matchday) throws DataAccessException;
+    Standing findCurrentStandingBySquad(Integer squadId) throws DataAccessException;
     List<Standing> findAllStandingsBySquad(Squad squad) throws DataAccessException;
     List<Standing> findAllStandingsBySquad(Integer squadId) throws DataAccessException;
 	void saveStanding(Standing standing) throws DataAccessException;
-	List<Standing> refreshStanding(int competitionId, List<Standing> standings) throws DataAccessException;
-	Standing createStandingForSquad(Squad squad);
+	List<Standing> refreshStanding(int competitionId, List<Standing> standings, int matchday) throws DataAccessException;
+	Standing createStandingForSquad(Squad squad, int matchday);
+	void createAllStandingsForSquad(Squad squad);
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	List<Standing> findShortList() throws DataAccessException;
 
 	/**
 	 * Standing Live services
 	 */
-	List<StandingLive> findStandingLiveByCompetition(Integer competitionId) throws DataAccessException;
-	StandingLive findStandingLiveBySquad(Squad squad) throws DataAccessException;
+	List<StandingLive> findStandingLiveByCompetition(Integer competitionId, int matchday) throws DataAccessException;
+	StandingLive findStandingLiveBySquad(Squad squad, int matchday) throws DataAccessException;
 	void saveStandingLive(StandingLive standing) throws DataAccessException;
 	
 	/**

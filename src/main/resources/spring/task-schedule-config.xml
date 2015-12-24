@@ -14,6 +14,8 @@
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
 
+<!-- Cron expression: second, minute, hour, day of month, month, day(s) of week -->
+
 <!-- 
 - Matchday monitor task
 - To monitor which is current matchday
@@ -21,7 +23,8 @@
  -->
 <bean id="matchdayMonitor" class="com.footballun.schedule.task.MatchdayMonitorTask"/>
 
-<!-- Cron expression: second, minute, hour, day of month, month, day(s) of week -->
+<!-- Data importing tool -->
+<bean id="dataImporter" class="com.footballun.util.DataImporter"/>
 
 <!-- Tasks scheduler -->
 <task:scheduled-tasks scheduler="myScheduler">
@@ -30,6 +33,12 @@
     
     <!-- Run every day at midnight (GMT) time -->
     <task:scheduled ref="matchdayMonitor" method="findAndUpdateCurrentMatchday" cron="50 19 12 * * *"/>
+    
+    <!--
+    <task:scheduled ref="dataImporter"
+    				method="importExcel" 
+    				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
+                    initial-delay="2000"/> -->
 </task:scheduled-tasks>
 
 <task:scheduler id="myScheduler" pool-size="10"/>

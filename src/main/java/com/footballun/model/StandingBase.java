@@ -7,6 +7,7 @@ package com.footballun.model;
 import com.footballun.util.LocalDateTimePersistenceConverter;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 /**
@@ -69,6 +70,9 @@ public abstract class StandingBase extends BaseEntity {
 	@Column(name = "allow_update")
 	private boolean allowUpdate;
 	
+    @Column(name = "matchday")
+    private int matchday;
+    
 	/**
 	 * Getters/Setters
 	 */
@@ -185,6 +189,15 @@ public abstract class StandingBase extends BaseEntity {
 		this.allowUpdate = allowUpdate;
 	}
 
+
+    public int getMatchday() {
+        return matchday;
+    }
+
+    public void setMatchday(int matchday) {
+        this.matchday = matchday;
+    }
+    
 	@Override
 	public String toString() {
 		return String.format("Standing [%d, %s]", currentPosition, squad.toString());
