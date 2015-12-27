@@ -563,8 +563,8 @@ public class FootballunServiceImpl implements FootballunService {
 			
 			accumulateStandingForMatchup(matchup, true);
 		}
-		
-		int maxMatchday = matchups.get(matchups.size() - 1).getMatchday();
+
+		int latestMatchday = matchups.get(matchups.size() - 1).getMatchday();
 		
 		// Gets all squads
 		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
@@ -573,7 +573,7 @@ public class FootballunServiceImpl implements FootballunService {
 			Standing prev = null;
 			standings = standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squad.getId());
 			for (Standing standing : standings) {
-				if (standing.getMatchday() > maxMatchday) {
+				if (standing.getMatchday() > latestMatchday) {
 					break;
 				}
 				if (prev != null) {
@@ -585,6 +585,11 @@ public class FootballunServiceImpl implements FootballunService {
 					standing.setPoint(prev.getPoint() + standing.getPoint());					
 					standing.setGoalsScored(prev.getGoalsScored() + standing.getGoalsScored());
 					standing.setGoalsAgainst(prev.getGoalsAgainst() + standing.getGoalsAgainst());
+                    if (standing.getMatchday() < latestMatchday) {
+                        standing.setAllowUpdate(false);
+                    } else {
+                        standing.setAllowUpdate(true);
+                    }
 
 					standing = standingRepository.save(standing);
 				}
@@ -600,7 +605,7 @@ public class FootballunServiceImpl implements FootballunService {
 		// Sorts positions for each of the matchdays
 		standings = standingRepository.findBySquad_CompetitionIdOrderByMatchdayAscCurrentPositionAsc(competitionId);
 		for (Standing standing : standings) {
-			if (standing.getMatchday() > maxMatchday) {
+			if (standing.getMatchday() > latestMatchday) {
 				break;
 			}
 			currentMatchday = standing.getMatchday();

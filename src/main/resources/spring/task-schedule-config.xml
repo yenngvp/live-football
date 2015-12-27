@@ -34,11 +34,12 @@
     <!-- Run every day at midnight (GMT) time -->
     <task:scheduled ref="matchdayMonitor" method="findAndUpdateCurrentMatchday" cron="50 19 12 * * *"/>
     
-    <!--
+
     <task:scheduled ref="dataImporter"
     				method="importExcel" 
     				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
-                    initial-delay="2000"/> -->
+                    initial-delay="#{ T(java.lang.Long).MAX_VALUE }"/>
+
 </task:scheduled-tasks>
 
 <task:scheduler id="myScheduler" pool-size="10"/>

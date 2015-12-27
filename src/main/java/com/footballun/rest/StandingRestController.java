@@ -21,19 +21,15 @@ public class StandingRestController {
 
 	private final FootballunService footballunService;
 
-	private final DataImporter dataImporter;
-	
 	@Autowired
-	public StandingRestController(FootballunService footballunService, DataImporter dataImporter) {
+	public StandingRestController(FootballunService footballunService) {
 		this.footballunService = footballunService;
-		this.dataImporter = dataImporter;
-//		dataImporter.importExcel();
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<List<Standing>> showStandings(@RequestParam(value = "competition", required = false) Integer competitionId) {
-		
-		return groupStandingByCompetition((competitionId == null || competitionId == 0) ? footballunService.findShortList() 
+
+		return groupStandingByCompetition((competitionId == null || competitionId == 0) ? footballunService.findShortList()
 																						: footballunService.findCurrentStandingsByCompetition(competitionId));
 	}
 	

@@ -58,8 +58,8 @@ import com.footballun.service.FootballunService;
 @Component
 public class DataImporter {
 
-	private static final String DATA_PATH = "D:\\workspace\\footballun\\assets\\files\\data\\";
-	private static final String FILE_NAME = "Competition Schedules.xlsx";
+	private final String DATA_PATH;
+	private static final String FILE_NAME = "Competition_Schedules.xlsx";
 	
 	
 	private final Logger logger = LoggerFactory.getLogger(DataImporter.class);
@@ -205,7 +205,10 @@ public class DataImporter {
 	@Autowired
 	public DataImporter(FootballunService footballunService) {
 		this.footballunService = footballunService;
-		
+
+        DATA_PATH = getClass().getResource("/db/data/" + FILE_NAME).getPath();
+        logger.info("DATA_PATH: " + DATA_PATH);
+
 		/*
 		 *  Populates columns mapping
 		 */
@@ -266,7 +269,7 @@ public class DataImporter {
 		XSSFWorkbook  workbook = null;
 		try {
 
-			file = new FileInputStream(new File(DATA_PATH + FILE_NAME));
+			file = new FileInputStream(new File(DATA_PATH));
 		     
 		    //Get the workbook instance for XLS file 
 			workbook = new XSSFWorkbook (file);
@@ -294,11 +297,12 @@ public class DataImporter {
 //				logger.error("Importing leagues player failed. Should stop further processing!");
 //				return;
 //			}
+//          logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 
-			calculateStandings();
-			
-			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
-			
+//			calculateStandings();
+
+            logger.info("Finished importing excel data");
+
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
@@ -316,7 +320,7 @@ public class DataImporter {
 		    
 			if (workbook != null) {
 				try {
-					workbook.close();
+                    workbook.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

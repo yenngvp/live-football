@@ -24,7 +24,7 @@
 	              <table id="table-standings" class="table table-hover" style=" margin-right: 10px">
 	                <tr>
 	                  <th>#</th>
-	                  <th>Logo</th>
+	                  <th></th>
 	                  <th>{{ 'common.team' | i18n }}</th>
 	                  <th>{{ 'common.point' | i18n }}</th>
 	                  <th>{{ 'common.played' | i18n }}</th>
@@ -44,9 +44,9 @@
 	                	<td>{{p.won}}</td>
 	                	<td>{{p.drawn}}</td>
 	                	<td>{{p.lost}}</td>
-	                	<td>{{p.goalScored}}</td>
-	                	<td>{{p.goalAgainst}}</td>
-	                	<td>{{p.goalScored-p.goalAgainst}}</td>
+	                	<td>{{p.goalsScored}}</td>
+	                	<td>{{p.goalsAgainst}}</td>
+	                	<td>{{p.goalsScored-p.goalsAgainst}}</td>
 	                </tr>
 	              </table>
 	             
@@ -72,9 +72,9 @@
                           <h4 class="box-title">{{ 'common.selectTeam' | i18n }}
                           <select name="multipleselect" id="standingsChartSelect"
                                   ng-options="p.squad.name for p in standing track by p.id"
-                                  ng-model="data.multipleSelect"
+                                  ng-model="data.singleSelect"
                                   ng-change="update()"
-                                  multiple>
+                                  >
                           </select></h4>
 
                           <canvas id="line" class="chart chart-line" chart-data="chartData"

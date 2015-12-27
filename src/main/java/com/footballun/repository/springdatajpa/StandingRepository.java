@@ -25,8 +25,21 @@ public interface StandingRepository  extends StandingBaseRepository<Standing> {
 	
 	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position <= 5 order by squad.competition_id, current_position", nativeQuery = true)
 	List<Standing> findShortList() throws DataAccessException;
-	
-//	@Override
-	@Query(value = "select distinct s.* from standing s inner join squad on s.squad_id=squad.id where squad.competition_id = ?1 order by s.current_position asc", nativeQuery = true)
-	List<Standing> findByCompetition(Integer id) throws DataAccessException;
+
+    @Override
+	@Query(value = "select st.* from standing st inner join squad sq on st.squad_id=sq.id where sq.competition_id = ?1 and allow_update order by st.current_position asc",
+    nativeQuery = true)
+    List<Standing> findBySquad_CompetitionIdWithMaxMatchdayOrderByCurrentPositionAsc(Integer id) throws DataAccessException;
+
+//    @Override
+//    @Query(value = "select * from standing as st inner join squad sq on st.squad_id=sq.id inner join competition c on sq.competition_id=c.id" +
+//                    " where st.matchday <= c.current_matchday and st.squad_id = ?1 order by st.matchday asc",
+//            nativeQuery = true)
+//    List<Standing> findAllBySquadOrderByMatchdayAscCurrentPositionAsc(Integer squadId) throws DataAccessException;
+
+    @Override
+    @Query(value = "select st.* from standing as st inner join squad sq on st.squad_id=sq.id inner join competition c on sq.competition_id=c.id" +
+            " where st.squad_id=?1 and st.matchday=c.current_matchday",
+    nativeQuery = true)
+    Standing findBySquadWithLatestMatchdayOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
 }
