@@ -24,7 +24,7 @@ var app = angular.module('footballun', ['ui.router',
 
 /** Start of Configurable constants **/
 app.constant('useMockData', false);
-app.constant('context', '/footballun');
+app.constant('context', '/');
 app.constant('enableCache', false);
 
 

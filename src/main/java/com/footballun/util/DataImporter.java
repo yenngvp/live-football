@@ -299,7 +299,7 @@ public class DataImporter {
 //			}
 //          logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 
-//			calculateStandings();
+			calculateStandings();
 
             logger.info("Finished importing excel data");
 
