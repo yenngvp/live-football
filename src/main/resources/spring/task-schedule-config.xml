@@ -38,7 +38,7 @@
     <task:scheduled ref="dataImporter"
     				method="importExcel" 
     				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
-                    initial-delay="2000"/>
+                    initial-delay="#{ T(java.lang.Long).MAX_VALUE }"/>
 
 </task:scheduled-tasks>
 
