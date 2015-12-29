@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.6.27, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.25, for osx10.5 (x86_64)
 --
 -- Host: localhost    Database: footballun
 -- ------------------------------------------------------
--- Server version	5.6.27
+-- Server version	5.6.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES UTF8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -269,7 +269,7 @@ DROP TABLE IF EXISTS `matchup`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matchup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `start_at` date DEFAULT NULL,
   `end_at` date DEFAULT NULL,
   `kickoff` time DEFAULT NULL,
@@ -286,6 +286,7 @@ CREATE TABLE `matchup` (
   KEY `fk_matchup_stadium1_idx` (`stadium_id`),
   KEY `fk_matchup_competition1_idx` (`competition_id`),
   KEY `fk_matchup_matchup_status1_idx` (`status`),
+  KEY `idx_name` (`name`),
   CONSTRAINT `fk_matchup_competition1` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_matchup_status1` FOREIGN KEY (`status`) REFERENCES `matchup_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_matchup_stadium1` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -407,6 +408,34 @@ LOCK TABLES `matchup_register` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `matchup_squad`
+--
+
+DROP TABLE IF EXISTS `matchup_squad`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `matchup_squad` (
+  `squad_id` int(11) NOT NULL,
+  `matchup_id` int(11) NOT NULL,
+  PRIMARY KEY (`squad_id`,`matchup_id`),
+  KEY `fk_matchup_squad_squad1_idx` (`squad_id`),
+  KEY `fk_matchup_squad_matchup1_idx` (`matchup_id`),
+  CONSTRAINT `fk_matchup_squad_matchup1` FOREIGN KEY (`matchup_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_matchup_squad_squad1` FOREIGN KEY (`squad_id`) REFERENCES `squad` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `matchup_squad`
+--
+
+LOCK TABLES `matchup_squad` WRITE;
+/*!40000 ALTER TABLE `matchup_squad` DISABLE KEYS */;
+INSERT INTO `matchup_squad` VALUES (21,6),(21,17),(21,31),(21,35),(22,11),(22,20),(22,28),(22,37),(23,8),(23,15),(23,27),(23,38),(24,11),(24,16),(24,31),(24,34),(25,7),(25,18),(25,24),(25,39),(26,12),(26,13),(26,30),(27,3),(27,15),(27,24),(27,34),(28,9),(28,18),(28,32),(29,10),(29,13),(29,32),(29,33),(30,3),(30,19),(30,25),(30,39),(31,10),(31,16),(31,28),(32,12),(32,22),(32,23),(32,37),(33,5),(33,20),(33,26),(33,38),(34,4),(34,22),(34,26),(34,36),(35,9),(35,14),(35,27),(35,33),(36,7),(36,21),(36,25),(36,35),(37,5),(37,17),(37,30),(38,8),(38,19),(38,29),(39,6),(39,21),(39,29),(39,36),(40,4),(40,14),(40,23);
+/*!40000 ALTER TABLE `matchup_squad` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `matchup_status`
 --
 
@@ -467,15 +496,19 @@ DROP TABLE IF EXISTS `scraped_data_result`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `scraped_data_result` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `competition` text COLLATE utf8_unicode_ci,
-  `team1` text COLLATE utf8_unicode_ci,
-  `team2` text COLLATE utf8_unicode_ci,
-  `result` text COLLATE utf8_unicode_ci,
-  `status` text COLLATE utf8_unicode_ci,
-  `matchday` text COLLATE utf8_unicode_ci,
-  `matchdate` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `competition` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `team1` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `team2` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `result` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `matchday` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `matchdate` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `matchup_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_team1_vs_team2` (`team1`,`team2`),
+  KEY `fk_scraped_matchup1_idx` (`matchup_id`),
+  CONSTRAINT `fk_scraped_matchup1` FOREIGN KEY (`matchup_id`) REFERENCES `matchup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -484,9 +517,69 @@ CREATE TABLE `scraped_data_result` (
 
 LOCK TABLES `scraped_data_result` WRITE;
 /*!40000 ALTER TABLE `scraped_data_result` DISABLE KEYS */;
-INSERT INTO `scraped_data_result` VALUES (59,'EPL','Norwich','Aston Villa','2 - 0','FT','V',NULL),(60,'EPL','West Brom','Newcastle','1 - 0','FT','V',NULL),(61,'EPL','Everton','Stoke City','3 - 4','FT','V',NULL),(62,'EPL','Crystal Palace','Swansea City','0 - 0','FT','V',NULL),(63,'EPL','Watford','Tottenham','1 - 2','FT','V',NULL),(64,'EPL','West Ham Utd','Southampton','2 - 1','FT','V',NULL),(65,'Bundesliga','Schalke 04','Hoffenheim','1 - 0','FT','V',NULL),(66,'SerieA','Bologna','Empoli','2 - 3','FT','V',NULL),(67,'LigaBBVA','Valencia','Getafe','2 - 2','FT','V',NULL),(68,'Ligue1','Nice','Montpellier','1 - 0','FT','V',NULL),(69,'EPL','Man Utd','Chelsea','0 - 0','FT','V',NULL),(70,'EPL','Arsenal','Bournemouth','2 - 0','FT','V',NULL),(71,'EPL','Leicester City','Man City','vs','02:45','V',NULL),(72,'EPL','Sunderland','Liverpool','vs','02:45','V',NULL),(73,'Bundesliga','Ein.Frankfurt','Wer.Bremen','2 - 1','FT','V',NULL),(74,'Bundesliga','Hannover 96','Bayern Munich','0 - 1','FT','V',NULL),(75,'Bundesliga','FC Koln','B.Dortmund','2 - 1','FT','V',NULL),(76,'Bundesliga','Hamburger','Augsburg','0 - 1','FT','V',NULL),(77,'Bundesliga','Ingolstadt','B.Leverkusen','0 - 1','FT','V',NULL),(78,'Bundesliga','Stuttgart','Wolfsburg','3 - 1','FT','V',NULL),(79,'SerieA','Carpi','Juventus','2 - 3','FT','V',NULL),(80,'SerieA','Roma','Genoa','2 - 0','FT','V',NULL),(81,'SerieA','Verona','Sassuolo','1 - 1','FT','V',NULL),(82,'SerieA','Fiorentina','Chievo','2 - 0','FT','V',NULL),(83,'SerieA','Atalanta','Napoli','1 - 3','FT','V',NULL),(84,'SerieA','Sampdoria','Palermo','2 - 0','FT','V',NULL),(85,'LigaBBVA','Espanyol','Las Palmas','1 - 0','FT','V',NULL),(86,'LigaBBVA','Real Betis','Sevilla','0 - 0','FT','V',NULL),(87,'LigaBBVA','Deportivo','Eibar','2 - 0','FT','V',NULL),(88,'LigaBBVA','Real Madrid','Rayo Vallecano','10 - 2','FT','V',NULL),(89,'LigaBBVA','Granada','Celta Vigo','0 - 2','FT','V',NULL),(90,'LigaBBVA','Athletic Bilbao','Levante','2 - 0','FT','V',NULL),(91,'Ligue1','Caen','PSG','0 - 3','FT','V',NULL),(92,'Ligue1','Toulouse','Lille','1 - 1','FT','V',NULL),(93,'Ligue1','Troyes','Monaco','0 - 0','FT','V',NULL),(94,'Ligue1','Guingamp','Rennes','0 - 2','FT','V',NULL),(95,'Ligue1','Lorient','Nantes','0 - 0','FT','V',NULL),(96,'Bundesliga','Hertha Berlin','Mainz','2 - 0','FT','V',NULL),(97,'Bundesliga','M.gladbach','Darmstadt','3 - 2','FT','V',NULL),(98,'SerieA','Frosinone','AC Milan','2 - 4','FT','V',NULL),(99,'SerieA','Torino','Udinese','0 - 1','FT','V',NULL),(100,'SerieA','Inter Milan','Lazio','1 - 2','FT','V',NULL),(101,'LigaBBVA','Real Sociedad','Villarreal','0 - 2','FT','V',NULL),(102,'LigaBBVA','Malaga','Atletico Madrid','1 - 0','FT','V',NULL),(103,'Ligue1','SC Bastia','Stade Reims','2 - 0','FT','V',NULL),(104,'Ligue1','Saint-Etienne','Angers','1 - 0','FT','V',NULL),(105,'Ligue1','Ajaccio GFCO','Lyon','2 - 1','FT','V',NULL),(106,'Ligue1','Bordeaux','Marseille','1 - 1','FT','V',NULL);
+INSERT INTO `scraped_data_result` VALUES (59,'EPL','Norwich','Aston Villa','2 - 0','FT','V',NULL,18855),(60,'EPL','West Brom','Newcastle','1 - 0','FT','V',NULL,18857),(61,'EPL','Everton','Stoke City','3 - 4','FT','V',NULL,18854),(62,'EPL','Crystal Palace','Swansea City','0 - 0','FT','V',NULL,18853),(63,'EPL','Watford','Tottenham','1 - 2','FT','V',NULL,18856),(64,'EPL','West Ham Utd','Southampton','2 - 1','FT','V',NULL,18860),(65,'Bundesliga','Schalke 04','Hoffenheim','1 - 0','FT','V',NULL,19337),(66,'SerieA','Bologna','Empoli','2 - 3','FT','V',NULL,20039),(67,'LigaBBVA','Valencia','Getafe','2 - 2','FT','V',NULL,19649),(68,'Ligue1','Nice','Montpellier','1 - 0','FT','V',NULL,20439),(69,'EPL','Man Utd','Chelsea','0 - 0','FT','V',NULL,18859),(70,'EPL','Arsenal','Bournemouth','2 - 0','FT','V',NULL,18858),(71,'EPL','Leicester City','Man City','vs','02:45','V',NULL,18861),(72,'EPL','Sunderland','Liverpool','vs','02:45','V',NULL,18862),(73,'Bundesliga','Ein.Frankfurt','Wer.Bremen','2 - 1','FT','V',NULL,19339),(74,'Bundesliga','Hannover 96','Bayern Munich','0 - 1','FT','V',NULL,19342),(75,'Bundesliga','FC Koln','B.Dortmund','2 - 1','FT','V',NULL,19338),(76,'Bundesliga','Hamburger','Augsburg','0 - 1','FT','V',NULL,19341),(77,'Bundesliga','Ingolstadt','B.Leverkusen','0 - 1','FT','V',NULL,19340),(78,'Bundesliga','Stuttgart','Wolfsburg','3 - 1','FT','V',NULL,19343),(79,'SerieA','Carpi','Juventus','2 - 3','FT','V',NULL,20040),(80,'SerieA','Roma','Genoa','2 - 0','FT','V',NULL,20043),(81,'SerieA','Verona','Sassuolo','1 - 1','FT','V',NULL,20045),(82,'SerieA','Fiorentina','Chievo','2 - 0','FT','V',NULL,20042),(83,'SerieA','Atalanta','Napoli','1 - 3','FT','V',NULL,20041),(84,'SerieA','Sampdoria','Palermo','2 - 0','FT','V',NULL,20047),(85,'LigaBBVA','Espanyol','Las Palmas','1 - 0','FT','V',NULL,19650),(86,'LigaBBVA','Real Betis','Sevilla','0 - 0','FT','V',NULL,19651),(87,'LigaBBVA','Deportivo','Eibar','2 - 0','FT','V',NULL,19652),(88,'LigaBBVA','Real Madrid','Rayo Vallecano','10 - 2','FT','V',NULL,19653),(89,'LigaBBVA','Granada','Celta Vigo','0 - 2','FT','V',NULL,19655),(90,'LigaBBVA','Athletic Bilbao','Levante','2 - 0','FT','V',NULL,19654),(91,'Ligue1','Caen','PSG','0 - 3','FT','V',NULL,20440),(92,'Ligue1','Toulouse','Lille','1 - 1','FT','V',NULL,20444),(93,'Ligue1','Troyes','Monaco','0 - 0','FT','V',NULL,20445),(94,'Ligue1','Guingamp','Rennes','0 - 2','FT','V',NULL,20442),(95,'Ligue1','Lorient','Nantes','0 - 0','FT','V',NULL,20443),(96,'Bundesliga','Hertha Berlin','Mainz','2 - 0','FT','V',NULL,19344),(97,'Bundesliga','M.gladbach','Darmstadt','3 - 2','FT','V',NULL,19345),(98,'SerieA','Frosinone','AC Milan','2 - 4','FT','V',NULL,20046),(99,'SerieA','Torino','Udinese','0 - 1','FT','V',NULL,20044),(100,'SerieA','Inter Milan','Lazio','1 - 2','FT','Vong 19',NULL,20048),(101,'LigaBBVA','Real Sociedad','Villarreal','0 - 2','FT','V',NULL,19656),(102,'LigaBBVA','Malaga','Atletico Madrid','1 - 0','FT','V',NULL,19657),(103,'Ligue1','SC Bastia','Stade Reims','2 - 0','FT','V',NULL,20441),(104,'Ligue1','Saint-Etienne','Angers','1 - 0','FT','V',NULL,20446),(105,'Ligue1','Ajaccio GFCO','Lyon','2 - 1','FT','Vong 19',NULL,20447),(113,'Ligue1','Bordeaux','Marseille','1 - 1','FT',NULL,NULL,20448);
 /*!40000 ALTER TABLE `scraped_data_result` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `scraped_data_result_insert` 
+    BEFORE INSERT 
+	ON `scraped_data_result` 
+	FOR EACH ROW BEGIN
+		SET @name1 := '';
+        SET @name2 := '';
+        SET @match_id := 0;
+        
+		SELECT `name` INTO @name1 FROM squad WHERE NEW.team1=alias LIMIT 1; 
+		SELECT `name` INTO @name2 FROM squad WHERE NEW.team2=alias LIMIT 1;
+		
+        SELECT id INTO @match_id FROM matchup WHERE name = CONCAT(@name1, ' vs ', @name2) LIMIT 1;
+            
+		SET NEW.matchup_id := @match_id;
+		
+    END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `scraped_data_result_update` 
+    BEFORE UPDATE 
+	ON `scraped_data_result` 
+	FOR EACH ROW BEGIN
+		SET @name1 := '';
+        SET @name2 := '';
+        SET @match_id := 0;
+        
+		SELECT `name` INTO @name1 FROM squad WHERE NEW.team1=alias LIMIT 1; 
+		SELECT `name` INTO @name2 FROM squad WHERE NEW.team2=alias LIMIT 1;
+		
+        SELECT id INTO @match_id FROM matchup WHERE name = CONCAT(@name1, ' vs ', @name2) LIMIT 1;
+        
+		SET NEW.matchup_id := @match_id;
+		
+    END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `setting`
@@ -540,12 +633,13 @@ CREATE TABLE `squad` (
   `shirt_sponsor` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `kit_manufacturer` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `logo` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `alias` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `alias` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team_id_team_idx` (`team_id`),
   KEY `fk_squad_group1_idx` (`group_id`),
   KEY `fk_squad_competition1_idx` (`competition_id`),
   KEY `fk_squad_formation1_idx` (`formation_id`),
+  KEY `idx_alias` (`alias`),
   CONSTRAINT `fk_squad_competition1` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_squad_formation1` FOREIGN KEY (`formation_id`) REFERENCES `formation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_squad_group1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -829,4 +923,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-29 16:12:23
+-- Dump completed on 2015-12-29 23:23:28
