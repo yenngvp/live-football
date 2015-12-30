@@ -52,7 +52,7 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
 	
 	@Override
-	@Query(value = "SELECT m.*, MAX(m.matchday) FROM matchup m WHERE m.competition_id = ?1 AND m.start_at = CURDATE()", nativeQuery = true)
+	@Query(value = "SELECT * FROM matchup WHERE competition_id = ?1 AND start_at = CURDATE() ORDER BY matchday DESC LIMIT 1", nativeQuery = true)
 	Matchup findOneByTodayAndCompetitionId(Integer competitionId) throws DataAccessException;
 	
 	/*
@@ -75,4 +75,8 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	
 	@Override
 	List<Matchup> findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
+	
+	@Query(value= "select * from (SELECT CONCAT(s.name, ' vs ', s2.name) as matchname, d.result, d.status, d.matchday, s.id squad_id FROM scraped_data_result d inner join squad s on d.team1=s.alias inner join squad s2 on d.team2=s2.alias and d.competition='?1') as s inner join matchup m on s.matchname=m.name"
+			, nativeQuery = true)
+	List<Matchup> resultExtServiceUpdate(Integer competitionId);
 }

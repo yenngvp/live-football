@@ -18,6 +18,7 @@ import com.footballun.model.MatchupLive;
 import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
 import com.footballun.model.Position;
+import com.footballun.model.ScrapedDataResult;
 import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
@@ -108,6 +109,7 @@ public interface FootballunService {
 	void createAllStandingsForSquad(Squad squad);
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	List<Standing> findShortList() throws DataAccessException;
+	void accumulateStandingForMatchup(Matchup matchup);
 
 	/**
 	 * Standing Live services
@@ -176,4 +178,11 @@ public interface FootballunService {
 	 * Position services
 	 */
 	Position findPositionByName(String name) throws DataAccessException;
+	
+	/**
+	 * Scraped data services
+	 */
+	List<ScrapedDataResult> findAllScrapedDataResults() throws DataAccessException;
+	List<ScrapedDataResult> findAllScrapedDataResultsJustUpdated() throws DataAccessException;
+	void saveScrapedDataResult(ScrapedDataResult scrapedDataResult) throws DataAccessException;
 }

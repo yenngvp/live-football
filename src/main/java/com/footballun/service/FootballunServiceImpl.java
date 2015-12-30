@@ -6,10 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.velocity.runtime.directive.Foreach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -29,6 +27,7 @@ import com.footballun.model.MatchupRegister;
 import com.footballun.model.MatchupStatus;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
 import com.footballun.model.Position;
+import com.footballun.model.ScrapedDataResult;
 import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
@@ -48,6 +47,7 @@ import com.footballun.repository.MatchupRegisterRepository;
 import com.footballun.repository.MatchupRepository;
 import com.footballun.repository.MatchupStatusRepository;
 import com.footballun.repository.PositionRepository;
+import com.footballun.repository.ScrapedDataResultRepository;
 import com.footballun.repository.SettingRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
@@ -96,6 +96,8 @@ public class FootballunServiceImpl implements FootballunService {
 	private HeroStatusRepository heroStatusRepository;
 	@Autowired
 	private PositionRepository positionRepository;
+	@Autowired
+	private ScrapedDataResultRepository scrapedDataResultRepository;
 	
 	private MatchupStatus statusCountdown;
 	private MatchupStatus statusJustBegin;
@@ -370,7 +372,7 @@ public class FootballunServiceImpl implements FootballunService {
 			return;
 		}
 		
-		accumulateStandingForMatchup(matchup, false);
+		accumulateStandingForMatchup(matchup);
 		refreshStanding(matchup.getCompetition().getId(), null, matchup.getMatchday());
 	}
 	
@@ -456,45 +458,53 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 	}
 	
-	private void accumulateStandingForMatchup(Matchup matchup, boolean isManual) {
+	/**
+	 * Updates standings from matchup getting from the spider process
+	 * 
+	 * @param matchup
+	 */
+	@Override
+	public void accumulateStandingForMatchup(Matchup matchup) {
 		
-		/*
-		 * Accumulate standing table = achievement from previous matches (saved on standingLive) + livescore
-		 */
 		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
 		for (Squad squad : squads) {
 			
+			// Current standing
 			Standing standing = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
-			if (standing == null) {
-				logger.error("Cannot find standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
-			}
-			StandingBase based;
-			if (!isManual) {
-				standing.resetAchievement();
-				based = standing.getStandingLive();
+			// Previous matchday standing
+			Standing prevStanding;
+			if (matchup.getMatchday() == 1) {
+				prevStanding = null;
 			} else {
-				based = standing;
+				prevStanding = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday() - 1);
+			}
+			
+			if (standing == null || !standing.isAllowUpdate()) {
+				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
+				return;
 			}
 			
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
 				// Counts played match
-				standing.setPlayed(based.getPlayed() + 1);
+				standing.setPlayed(prevStanding == null ? 1 : prevStanding.getPlayed() + 1);
 				if (result == MatchupResult.WIN) {
 					// Counts WON match
-					standing.setWon(based.getWon() + 1);
-					standing.setPoint(based.getPoint() + 3); // 3 points for a win game
+					standing.setWon(prevStanding == null ? 1 : prevStanding.getWon() + 1);
+					standing.setPoint(prevStanding == null ? 3 : prevStanding.getPoint() + 3); // 3 points for a win game
 				} else if (result == MatchupResult.DRAW) {
 					// Counts DRAWN match
-					standing.setDrawn(based.getDrawn() + 1);
-					standing.setPoint(based.getPoint() + 1); // 1 point for a draw game
+					standing.setDrawn(prevStanding == null ? 1 : prevStanding.getDrawn() + 1);
+					standing.setPoint(prevStanding == null ? 1 : prevStanding.getPoint() + 1); // 1 point for a draw game
 				} else {
 					// Counts LOST match
-					standing.setLost(based.getLost() + 1);
+					standing.setLost(prevStanding == null ? 1 : prevStanding.getLost() + 1);
 				}
-				
-				standing.setGoalsScored(based.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
-				standing.setGoalsAgainst(based.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
+			
+				standing.setGoalsScored(prevStanding == null ? matchup.getGoalsScoredBySquad(squad)
+															 : prevStanding.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
+				standing.setGoalsAgainst(prevStanding == null ? matchup.getGoalsAgainstBySquad(squad) 
+															  : prevStanding.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
 			}
 			
 			standingRepository.save(standing);
@@ -561,7 +571,7 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		for (Matchup matchup : matchups) {
 			
-			accumulateStandingForMatchup(matchup, true);
+			accumulateStandingForMatchup(matchup);
 		}
 
 		int latestMatchday = matchups.get(matchups.size() - 1).getMatchday();
@@ -861,4 +871,22 @@ public class FootballunServiceImpl implements FootballunService {
 		return positionRepository.findOneByPosition(name);
 	}
 	
+	/**
+	 * Scraped data services
+	 */
+	@Override
+	public List<ScrapedDataResult> findAllScrapedDataResults() throws DataAccessException {
+		return scrapedDataResultRepository.findAll();
+	}
+	
+	@Override
+	public List<ScrapedDataResult> findAllScrapedDataResultsJustUpdated() throws DataAccessException {
+		return scrapedDataResultRepository.findByJustUpdateTrue();
+	}
+	
+	
+	@Override
+	public void saveScrapedDataResult(ScrapedDataResult scrapedDataResult) throws DataAccessException {
+		scrapedDataResultRepository.save(scrapedDataResult);
+	}
 }
