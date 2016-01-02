@@ -14,7 +14,7 @@ import com.footballun.repository.MatchupRepository;
 public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<Matchup, Integer> {
 
 	@Override
-	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAsc(Integer matchday, Integer competitionId) throws DataAccessException;
+	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAscKickoffAsc(Integer matchday, Integer competitionId) throws DataAccessException;
 	
 	@SuppressWarnings("unchecked")
 	@Override

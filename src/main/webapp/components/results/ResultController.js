@@ -82,11 +82,11 @@ var MatchdayPagedController = ["$scope", "MatchDay", function($scope, MatchDay) 
 		for (var i = 1; i <= max; i++) {
 			$scope.data.push(i);
 		}
-        console.log(max);
+        $scope.pageSize = max;
 	};
 
     $scope.currentPage = 0;
-    $scope.pageSize = 10;
+
 
     $scope.numberOfPages = function() {
         return Math.ceil($scope.data.length/$scope.pageSize);                

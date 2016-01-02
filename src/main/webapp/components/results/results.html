@@ -44,7 +44,7 @@
 
 					<!-- Heading -->
 					<div class="panel-heading">
-						<h2 class="panel-title">{{result[0].competition.name}} {{ 'common.matchweek' | i18n }} {{result[0].matchday}}</h2>
+						<h2 class="panel-title">{{result[0].competition.nameVn}} {{ 'common.matchweek' | i18n }} {{result[0].matchday}}</h2>
 						<div ng-controller="MatchdayPagedController" ng-init="init(result[0].competition.totalMatchdays)">
 						    <ul class="list-inline" style="width: 100%">
 						        <li ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">

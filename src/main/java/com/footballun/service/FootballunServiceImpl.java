@@ -150,7 +150,7 @@ public class FootballunServiceImpl implements FootballunService {
 	@Transactional(readOnly = true)
 	public List<Matchup> findMatchupByMatchdayAndCompetition(Integer matchday, Integer competitionId) throws DataAccessException {
 		
-		return  matchupRepository.findByMatchdayAndCompetitionIdOrderByStartAtAsc(matchday, competitionId);
+		return  matchupRepository.findByMatchdayAndCompetitionIdOrderByStartAtAscKickoffAsc(matchday, competitionId);
 	}
 	
 	@Override

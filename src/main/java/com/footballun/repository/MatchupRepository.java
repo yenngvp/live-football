@@ -9,8 +9,8 @@ import org.springframework.dao.DataAccessException;
 import com.footballun.model.Matchup;
 
 public interface MatchupRepository {
-	
-	List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAsc(Integer matchday, Integer competitionId) throws DataAccessException;
+
+    List<Matchup> findByMatchdayAndCompetitionIdOrderByStartAtAscKickoffAsc(Integer matchday, Integer competitionId) throws DataAccessException;
 	
 	List<Matchup> findByFeaturedOrderByStartAtAsc(Boolean featured) throws DataAccessException;
 	

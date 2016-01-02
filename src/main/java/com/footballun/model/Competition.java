@@ -47,7 +47,10 @@ public class Competition extends NamedEntity {
 	
 	@Column(name = "current_matchday")
 	private int currentMatchday;
-	
+
+    @Column(name = "name_vn")
+    private String nameVn;
+
 	@Column(name = "start_at")
 	@Convert(converter = LocalDatePersistenceConverter.class)
     @JsonDeserialize(using = JsonDateDeserializer.class)
@@ -123,5 +126,14 @@ public class Competition extends NamedEntity {
 	public void setEndAt(LocalDate endAt) {
 		this.endAt = endAt;
 	}
-	
+
+
+    public String getNameVn() {
+        return nameVn;
+    }
+
+    public void setNameVn(String nameVn) {
+        this.nameVn = nameVn;
+    }
+
 }

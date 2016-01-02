@@ -35,8 +35,10 @@
     <!--<task:scheduled ref="beanB" method="methodB" fixed-rate="5000"/> -->
     
     <!-- Run every day at midnight (GMT) time cron="5 0 0 * * *" -->
-    
-    <task:scheduled ref="matchdayMonitor" method="findAndUpdateCurrentMatchday" fixed-rate="6000000"/>
+    <task:scheduled ref="matchdayMonitor"
+                    method="findAndUpdateCurrentMatchday"
+                    fixed-rate="#{ T(java.lang.Long).MAX_VALUE }"
+                    initial-delay="2000"/>
     
 
     <task:scheduled ref="dataImporter"
