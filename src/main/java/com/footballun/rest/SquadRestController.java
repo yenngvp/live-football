@@ -14,7 +14,7 @@ import com.footballun.model.Squad;
 import com.footballun.service.FootballunService;
 
 @RestController
-@RequestMapping("/api/teams")
+@RequestMapping("/api/thong-tin-doi-bong")
 public class SquadRestController {
 
 	// Current competition by default
@@ -28,7 +28,7 @@ public class SquadRestController {
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public List<Squad> showTeams(@RequestParam(value = "competition", required = false) Integer competitionId) {
+	public List<Squad> showTeams(@RequestParam(value = "giai_dau", required = false) Integer competitionId) {
 		if (competitionId == null) competitionId = 9;
 		List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competitionId, DEFAULT_GENERATION);
 		return squads;

@@ -42,7 +42,6 @@ public interface FootballunService {
 	 */
 	List<Matchup> findMatchupByMatchdayAndCompetition(Integer matchday, Integer competitionId) throws DataAccessException;
 	List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException;
-	List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException;
 	List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException;
 	void saveMatchup(Matchup matchup) throws DataAccessException;
 	Matchup findMatchupById(Integer id) throws DataAccessException;

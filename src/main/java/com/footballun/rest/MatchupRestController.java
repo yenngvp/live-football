@@ -38,6 +38,7 @@ public class MatchupRestController {
 	 * 
 	 * @return List of matchups for each of the competitions
 	 */
+	/*
 	@RequestMapping(value = "/matchdays", method = RequestMethod.GET)
 	public List<List<Matchup>> showMatches(@RequestParam(value = "competition", required = false) Integer competitionId) {
 		
@@ -46,18 +47,23 @@ public class MatchupRestController {
 		} else {
 			return getMatchesByMatchdayAndCompetition(0, competitionId);
 		}
-	}
-	
+	}*/
 
-	@RequestMapping(value = "/matchdays/{matchday}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/dang-xem-nhat", method = RequestMethod.GET)
+	public List<List<Matchup>> showFeaturedMatchups() {
+		return groupMatchupByCompetition(footballunService.findMatchupFeaturedByMatchday());
+	}
+
+
+	@RequestMapping(value = "/lich-thi-dau/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showMatches(@PathVariable("matchday") int matchday,
-										   @RequestParam(value = "competition", required = false) Integer competitionId) {
-		if (competitionId == null) competitionId = 0;
+										   @RequestParam(value = "giai_dau", required = false) Integer competitionId) {
 		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
-	@RequestMapping(value = "/results", method = RequestMethod.GET)
-	public List<List<Matchup>> showResults(@RequestParam(value = "competition", required = false) Integer competitionId) {
+	@RequestMapping(value = "/ket-qua-tran-dau", method = RequestMethod.GET)
+	public List<List<Matchup>> showResults(@RequestParam(value = "giai_dau", required = false) Integer competitionId) {
 		
 		Collection<String> statuses = new ArrayList<>();
 		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
@@ -72,9 +78,9 @@ public class MatchupRestController {
 		return groupMatchupByCompetition(matchups);
 	}
 	
-	@RequestMapping(value = "/results/matchday/{matchday}", method = RequestMethod.GET)
+	@RequestMapping(value = "/ket-qua-tran-dau/vong-dau/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showResults(@PathVariable("matchday") int matchday,
-										   @RequestParam(value = "competition", required = false) Integer competitionId) {
+										   @RequestParam(value = "giai_dau", required = false) Integer competitionId) {
 		
 		Collection<String> statuses = new ArrayList<>();
 		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
@@ -147,12 +153,7 @@ public class MatchupRestController {
 				
 		return groupedMatchupsByCompetition;
 	}
-	
-	@RequestMapping(value = "/featured-matchups", method = RequestMethod.GET)
-	public List<Matchup> showFeaturedMatchups() {
-		// Understood default competition if it isn't specified
-		return footballunService.findMatchupByFeatured(Boolean.TRUE);
-	}
+
 	
 	/**
 	 * Get matchup register

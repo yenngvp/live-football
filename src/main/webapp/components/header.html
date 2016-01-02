@@ -15,10 +15,10 @@
     <div id="nav-menu" class="navbar-collapse navbar-left collapse">
       <ul class="nav navbar-nav navbar-menu">
         <li data-ng-class="$state.is('dashboard') ? 'active' : ''"><a href="#" data-ng-click="goHome()">{{ 'common.dashboard' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays({day:0, competition: selectedCompetition.id})">{{ 'common.matchdays' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('results') ? 'active' : ''"><a data-ui-sref="results({competition: selectedCompetition.id})" >{{ 'common.result' | i18n | uppercase }}</a></li>
-        <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings({competition: selectedCompetition.id})">{{ 'common.standings' | i18n | uppercase }}</a></li>
-        <li data-ng-class="($state.is('teams') || $state.is('teamDetails')) ? 'active' : ''"><a data-ui-sref="teams({competition: selectedCompetition.id})">{{ 'common.teams' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('matchdays') ? 'active' : ''"><a data-ui-sref="matchdays({day:0, giai_dau: selectedCompetition.id})">{{ 'common.matchdays' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('results') ? 'active' : ''"><a data-ui-sref="results({giai_dau: selectedCompetition.id})" >{{ 'common.result' | i18n | uppercase }}</a></li>
+        <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings({giai_dau: selectedCompetition.id})">{{ 'common.standings' | i18n | uppercase }}</a></li>
+        <li data-ng-class="($state.is('teams') || $state.is('teamDetails')) ? 'active' : ''"><a data-ui-sref="teams({giai_dau: selectedCompetition.id})">{{ 'common.teams' | i18n | uppercase }}</a></li>
         <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.stats' | i18n| uppercase }}</a></li> -->
         <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="">{{ 'common.leagues' | i18n | uppercase }}</a>
         </li>

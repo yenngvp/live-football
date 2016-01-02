@@ -32,7 +32,6 @@ import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
-import com.footballun.model.StandingBase;
 import com.footballun.model.StandingLive;
 import com.footballun.model.Team;
 import com.footballun.repository.CompetitionRepository;
@@ -160,12 +159,6 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		return  null;
 	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<Matchup> findMatchupByFeatured(Boolean featured) throws DataAccessException {
-		return  matchupRepository.findByFeaturedOrderByStartAtAsc(featured);
-	}
 	
 	@Override
 	public void saveMatchup(Matchup matchup) throws DataAccessException {
@@ -190,7 +183,7 @@ public class FootballunServiceImpl implements FootballunService {
 	
 	@Override
 	public List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException {
-		return matchupRepository.findByFeaturedMatchday();
+		return matchupRepository.findByFeaturedTrueOrderByCompetitionIdAscStartAtAscKickoffAsc();
 	}
 	
 	@Override
@@ -292,7 +285,7 @@ public class FootballunServiceImpl implements FootballunService {
     @Override
     @Transactional(readOnly = true)
     public Standing findCurrentStandingBySquad(Integer squadId) throws DataAccessException {
-        return standingRepository.findBySquadWithLatestMatchdayOrderByCurrentPositionAsc(squadId);
+        return standingRepository.findBySquadIdAndAllowUpdateTrueOrderByCurrentPositionAsc(squadId);
     }
 
     @Override

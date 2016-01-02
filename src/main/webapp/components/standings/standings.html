@@ -49,13 +49,11 @@
 	                	<td>{{p.goalsScored-p.goalsAgainst}}</td>
 	                </tr>
 	              </table>
-	             
-	              
 	            </div><!-- /.box-body -->
 	            </div><!-- /.box-info -->
 	            
 	            <!-- LINE CHART -->
-	          <div class="box box-info">
+	          <div class="box box-info" data-ng-if="drawChart">
 	          	
 	            <div class="box-header with-border">
 	              <h3 class="box-title">{{ 'common.standingChange' | i18n }}</h3>

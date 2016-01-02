@@ -21,7 +21,7 @@ import com.footballun.service.FootballunService;
  *
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/thong-tin-doi-bong")
 public class SquadMemberRestController {
 	
 	private final FootballunService footballunService;
@@ -31,7 +31,7 @@ public class SquadMemberRestController {
 		this.footballunService = footballunService;
 	}
 	
-	@RequestMapping(value = "/teams/{id}/members", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/danh-sach-cau-thu-va-ban-huan-luyen", method = RequestMethod.GET)
 	public List<SquadMember> showSquadMembers(@PathVariable int id) {
 		return footballunService.findSquadMembersBySquad(id);
 	}

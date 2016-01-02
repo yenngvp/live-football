@@ -147,7 +147,7 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     		if (competition != null) {
 	    		localStorageService.set("PREFERENCES_COMPETITION", competition);
 	    		$scope.selectedCompetition = competition;
-	    		$location.search({competition: competition.id});
+	    		$location.search({giai_dau: competition.id});
 	    		console.log("selected competition: " + localStorageService.get("PREFERENCES_COMPETITION").name);
     		}
     	}
@@ -156,10 +156,8 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     var findCompetitionByName = function(name) {
     	if (!angular.isUndefined($scope.appPrefs)) {
     		var competitions = $scope.appPrefs[0];
-    		console.log(competitions);
-    		
+
     		for (var index in competitions) {
-    			console.log(competitions[index]);
     			if (competitions[index].name == name) {
     				return competitions[index];
     			}
@@ -169,15 +167,7 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     }
     
     $scope.selectedCompetition = localStorageService.get("PREFERENCES_COMPETITION");
-    
-    $scope.checkSelectedCompetition = function() {
-    	console.log("checkSelectedCompetition");
-    	if (!angular.isUndefined($scope.selectedCompetition) && $scope.selectedCompetition != null) {
-    		$location.search({competition: $scope.selectedCompetition.id});
-    		console.log("checkSelectedCompetition: "+$scope.selectedCompetition.id);
-    	}
-    };
-    
+
     /*
      * Standings service
      */

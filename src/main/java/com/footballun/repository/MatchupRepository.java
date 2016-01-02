@@ -24,7 +24,7 @@ public interface MatchupRepository {
 	
 	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	
-	List<Matchup> findByFeaturedMatchday() throws DataAccessException;
+	List<Matchup> findByFeaturedTrueOrderByCompetitionIdAscStartAtAscKickoffAsc() throws DataAccessException;
 	
 	List<Matchup> findAllByMatchday() throws DataAccessException;
 	

@@ -8,7 +8,7 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 		}, 1000);
 	});*/
 
-	
+	console.log($stateParams);
 	// Gets localStorage cached
 	var key = 'matchdaysCache'; 
 	if (enableCache) {
@@ -17,21 +17,17 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 	} else {
 		$scope.matchdays = undefined;
 	}
+
 	if (angular.isUndefined($scope.matchdays) || $scope.matchdays == null || $scope.matchdays == 0) {
-		var matchday;
+		var day;
 		if (angular.isUndefined($stateParams.day)) {
-			matchday = 0;
+			day = 0;
 		} else {
-			matchday = $stateParams.day;
+			day = $stateParams.day;
 		}
-		var compId;
-		if (angular.isUndefined($stateParams.id)) {
-			compId = 0;
-		} else {
-			compId = $stateParams.id;
-		}
+		var compId = localStorageService.get("PREFERENCES_COMPETITION").id;
 		
-		MatchDay.matchdays.query({day: matchday, competition: $stateParams.competition}).$promise.then(
+		MatchDay.matchdays.query({day: day, giai_dau_id: compId}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {
@@ -76,6 +72,8 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 				function( error ) {
 					// TODO: Handle request returns error
 					console.log("Failed with: " + error);
+                    $scope.hideSpinner = true;
+                    $scope.notFoundMessage = 'Trang trong';
 				}
 				);
 	}
@@ -132,7 +130,7 @@ var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay',
 			//error
 			function( error ) {
 				// TODO: Handle request returns error
-				console.log("Failed with: " + error);
+				console.log("Failed with: " + error.toString());
 				
 				$scope.hideSpinner = true;
 			}
@@ -208,5 +206,3 @@ var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay',
 	};
     
 }];
-
-

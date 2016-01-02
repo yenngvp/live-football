@@ -8,9 +8,9 @@ var TeamController = ['$scope','$state','Team','localStorageService', 'enableCac
     } else {
         $scope.teams = null;
     }
-
+    var compId = localStorageService.get('PREFERENCES_COMPETITION').id;
     if (angular.isUndefined($scope.teams) || $scope.teams == null || $scope.teams.length == 0) {
-        Team.teams.query({competition: $stateParams.competition}).$promise.then(
+        Team.teams.query({giai_dau_id: compId}).$promise.then(
                 //success
                 function( value ) {
                     if (enableCache) {

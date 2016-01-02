@@ -16,7 +16,7 @@ import com.footballun.util.DataImporter;
 
 
 @RestController
-@RequestMapping("/api/standings")
+@RequestMapping("/api/bang-xep-hang")
 public class StandingRestController {
 
 	private final FootballunService footballunService;
@@ -27,7 +27,7 @@ public class StandingRestController {
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public List<List<Standing>> showStandings(@RequestParam(value = "competition", required = false) Integer competitionId) {
+	public List<List<Standing>> showStandings(@RequestParam(value = "giai_dau", required = false) Integer competitionId) {
 
 		return groupStandingByCompetition((competitionId == null || competitionId == 0) ? footballunService.findShortList()
 																						: footballunService.findCurrentStandingsByCompetition(competitionId));

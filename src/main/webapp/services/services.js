@@ -15,21 +15,21 @@ var MatchDay = ['$resource','context', function($resource, context) {
 		  /*
 		   * matchups schedules service
 		   */
-		  featured: $resource(context + '/api/matchdays', {}, {
+		  featured: $resource(context + '/api/dang-xem-nhat', {}, {
 	    	  query: {method: 'GET', params: {}, isArray: true}
 	      }),
-	      matchdays: $resource(context + '/api/matchdays/:day?competition=:competition', {}, {
-	    	  query: { method: 'GET', params: {day: '@day', competition: '@competition'}, isArray: true}
+	      matchdays: $resource(context + '/api/lich-thi-dau/:day?giai_dau=:giai_dau_id', {}, {
+	    	  query: { method: 'GET', params: {day: '@day', giai_dau_id: '@giai_dau'}, isArray: true}
 	      }),
 	      
 	      /*
 	       * Results services
 	       */
-	      results: $resource(context + '/api/results?competition=:competition', {}, {
-	    	  query: { method: 'GET', params: {competition: '@competition'}, isArray: true}
+	      results: $resource(context + '/api/ket-qua-tran-dau?giai_dau=:giai_dau_id', {}, {
+	    	  query: { method: 'GET', params: {giai_dau_id: '@giai_dau'}, isArray: true}
 	      }),
-	      resultsByDay: $resource(context + '/api/results/matchday/:matchday?competition=:competition', {}, {
-	    	  query: { method: 'GET', params: {matchday: '@matchday', competition: '@competition'}, isArray: true}
+	      resultsByDay: $resource(context + '/api/ket-qua-tran-dau/vong-dau/:matchday?giai_dau=:giai_dau_id', {}, {
+	    	  query: { method: 'GET', params: {matchday: '@matchday', giai_dau_id: '@giai_dau'}, isArray: true}
 	      }),
 	      
 	      // Matchup Register service
@@ -50,10 +50,10 @@ var MatchDay = ['$resource','context', function($resource, context) {
 var Team = ['$resource','context', function($resource, context) {
 
 	return {
-		teams: $resource(context + '/api/teams?competition=:competition', {}, {
-	        query: {method: 'GET', params: {competition: '@competition'}, isArray: true}
+		teams: $resource(context + '/api/thong-tin-doi-bong?giai_dau=:giai_dau_id', {}, {
+	        query: {method: 'GET', params: {giai_dau_id: '@giai_dau'}, isArray: true}
 	     }),
-		teamMembers: $resource(context + '/api/teams/:id/members', {}, {
+		teamMembers: $resource(context + '/api/thong-tin-doi-bong/:id/danh-sach-cau-thu-va-ban-huan-luyen', {}, {
 	        query: { method: 'GET', params: {id: '@id'}, isArray: true }
 	    })
 	};
@@ -61,19 +61,19 @@ var Team = ['$resource','context', function($resource, context) {
 
 var Standing = ['$resource','context', function($resource, context) {
 	return {
-		standingsShortlist: $resource(context + '/api/standings', {}, {
+		standingsShortlist: $resource(context + '/api/bang-xep-hang?giai_dau:=giai_dau_id', {}, {
 			query: {method: 'GET', params: {}, isArray: true}
 		}),
       
-		standings: $resource(context + '/api/standings?competition=:competition', {}, {}, {
-			query: {method: 'GET', params: {competition: '@competition'}, isArray: true}
+		standings: $resource(context + '/api/bang-xep-hang?giai_dau=:giai_dau_id', {}, {}, {
+			query: {method: 'GET', params: {giai_dau_id: '@giai_dau'}, isArray: true}
 		}),
 
-        standingsAllBySquad: $resource(context + '/api/standings/all/team/:squadId', {}, {}, {
+        standingsAllBySquad: $resource(context + '/api/bang-xep-hang/all/team/:squadId', {}, {}, {
             query: {method: 'GET', params: {squadId: '@squadId'}, isArray: true}
         }),
 
-        standingBySquad: $resource(context + '/api/standings/team/:squadId', {}, {}, {
+        standingBySquad: $resource(context + '/api/bang-xep-hang/team/:squadId', {}, {}, {
             get: {method: 'GET', params: {squadId: '@squadId'}, isArray: false}
         }),
 	};

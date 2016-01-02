@@ -50,25 +50,25 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "matchdays",
-		url: "/matchdays/:day?competition=:competitionId",
+		url: "/lich-thi-dau/:day?giai_dau=:giai_dau_id",
 		templateUrl: "components/matchdays/matchdays.html",
 		controller: "MatchDayController",
 		data: { requireLogin : false }
 	}).state({
 		name: "results",
-		url: "/results?competition=:competitionId",
+		url: "/ket-qua-tran-dau?giai_dau=:giai_dau_id",
 		templateUrl: "components/results/results.html",
 		controller: "ResultController",
 		data: { requireLogin : false }
 	}).state({
 		name: "resultsByDay",
-		url: "/results/matchday/:matchday?competition=:competitionId",
+		url: "/ket-qua-tran-dau/vong-dau/:matchday?giai_dau=:giai_dau_id",
 		templateUrl: "components/results/results.html",
 		controller: "ResultByDayController",
 		data: { requireLogin : false }
 	}).state({
 		name: "teams",
-		url: "/teams?competition=:competitionId",
+		url: "/thong-tin-doi-bong?giai_dau=:giai_dau_id",
 		templateUrl: "components/teams/teams.html",
 		controller: "TeamController",
 		data: { requireLogin : false }
@@ -79,7 +79,7 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "standings",
-		url: "/standings?competition=:competitionId",
+		url: "/bang-xep-hang?giai_dau=:giai_dau_id",
 		templateUrl: "components/standings/standings.html",
 		controller: "StandingController",
 		data: { requireLogin : false }
@@ -91,7 +91,7 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: { requireLogin : false }
 	}).state({
 		name: "teamDetails",
-		url: "/teams/:id/members",
+		url: "/thong-tin-doi-bong/:id/danh-sach-cau-thu-va-ban-huan-luyen",
 		templateUrl: "components/teams/team_details.html",
 		controller: "TeamDetailsController",
 		data: {requireLogin : false}

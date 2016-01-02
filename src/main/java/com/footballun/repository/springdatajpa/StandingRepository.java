@@ -23,7 +23,7 @@ public interface StandingRepository  extends StandingBaseRepository<Standing> {
 	@Override
 	Standing save(Standing standing) throws DataAccessException;
 	
-	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position <= 5 order by squad.competition_id, current_position", nativeQuery = true)
+	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position <= 5 and allow_update order by squad.competition_id, current_position", nativeQuery = true)
 	List<Standing> findShortList() throws DataAccessException;
 
     @Override
@@ -38,8 +38,5 @@ public interface StandingRepository  extends StandingBaseRepository<Standing> {
 //    List<Standing> findAllBySquadOrderByMatchdayAscCurrentPositionAsc(Integer squadId) throws DataAccessException;
 
     @Override
-    @Query(value = "select st.* from standing as st inner join squad sq on st.squad_id=sq.id inner join competition c on sq.competition_id=c.id" +
-            " where st.squad_id=?1 and st.matchday=c.current_matchday",
-    nativeQuery = true)
-    Standing findBySquadWithLatestMatchdayOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
+    Standing findBySquadIdAndAllowUpdateTrueOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
 }

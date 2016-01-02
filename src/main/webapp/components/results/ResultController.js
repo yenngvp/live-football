@@ -12,10 +12,11 @@ var ResultController = ['$scope', '$stateParams', 'MatchDay','enableCache','loca
 	} else {
 		$scope.results = undefined;
 	}
-	
+    var compId = localStorageService.get('PREFERENCES_COMPETITION').id;
+
 	if (angular.isUndefined($scope.results) || $scope.results == null || $scope.results == 0) {
 				
-		MatchDay.results.query({competition: $stateParams.competition}).$promise.then(
+		MatchDay.results.query({giai_dau_id: compId}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {
@@ -48,10 +49,10 @@ var ResultByDayController = ['$scope', '$stateParams', 'MatchDay','enableCache',
 	} else {
 		$scope.results = undefined;
 	}
-	
+    var compId = localStorageService.get('PREFERENCES_COMPETITION').id;
 	if (angular.isUndefined($scope.results) || $scope.results == null || $scope.results == 0) {
 				
-		MatchDay.resultsByDay.query({matchday: $stateParams.matchday, competition: $stateParams.competition}).$promise.then(
+		MatchDay.resultsByDay.query({matchday: $stateParams.matchday, giai_dau_id: compId}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {
@@ -81,6 +82,7 @@ var MatchdayPagedController = ["$scope", "MatchDay", function($scope, MatchDay) 
 		for (var i = 1; i <= max; i++) {
 			$scope.data.push(i);
 		}
+        console.log(max);
 	};
 
     $scope.currentPage = 0;

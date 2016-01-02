@@ -8,10 +8,10 @@ var StandingController = ['$scope','$http','Standing','enableCache','localStorag
 	} else {
 		$scope.standings = undefined;
 	}
-
+     var compId = localStorageService.get('PREFERENCES_COMPETITION').id;
 	if (angular.isUndefined($scope.standings) || $scope.standings == null) {
 
-		Standing.standings.query({competition: $stateParams.competition}).$promise.then(
+		Standing.standings.query({giai_dau_id: compId}).$promise.then(
 				//success
 				function( value ) {
 					if (enableCache) {
@@ -29,88 +29,93 @@ var StandingController = ['$scope','$http','Standing','enableCache','localStorag
 						$scope.standings.push(arr);
 					}
 
-					var allowMultiSelect = false;
-					$scope.data = {
-						multipleSelect: [],
-						singleSelect: {}
-					};
-					$scope.data.multipleSelect = [];
+					$scope.drawChart = compId != null && compId > 0;
 
-					// Displays top 1 standing chart
-					var s = $scope.standings[0];
-					for (var i = 0; i < 1 && i < s.length; i++) {
-						if (allowMultiSelect) {
-							$scope.data.multipleSelect.push(s[i]);
-						} else {
-							$scope.data.singleSelect =  s[i];
+					if ($scope.drawChart) {
+						var allowMultiSelect = false;
+						$scope.data = {
+							multipleSelect: [],
+							singleSelect: {}
+						};
+						$scope.data.multipleSelect = [];
+
+						// Displays top 1 standing chart
+						var s = $scope.standings[0];
+						for (var i = 0; i < 1 && i < s.length; i++) {
+							if (allowMultiSelect) {
+								$scope.data.multipleSelect.push(s[i]);
+							} else {
+								$scope.data.singleSelect = s[i];
+							}
+
 						}
 
-					}
+						var totalMatchdays;
+						if (allowMultiSelect) {
+							totalMatchdays = $scope.data.multipleSelect[0].squad.competition.totalMatchdays;
+						} else {
+							totalMatchdays = $scope.data.singleSelect.squad.competition.totalMatchdays;
+						}
 
-                    var totalMatchdays;
-                    if (allowMultiSelect) {
-                        totalMatchdays = $scope.data.multipleSelect[0].squad.competition.totalMatchdays;
-                    } else {
-                        totalMatchdays = $scope.data.singleSelect.squad.competition.totalMatchdays;
-                    }
+						// Chart options
+						$scope.chartOptions = {
+							"datasetFill": false,
+                            /*
+							"scaleOverride": true,
+							"scaleSteps": 1,
+							"scaleStepWidth": 19,
+							"scaleStartValue": 1,
+							"scaleFontSize": 9 */
+						};
+						$scope.labels = [];
 
-                    // Chart options
-					 $scope.chartOptions = {
-                         "datasetFill" : false,
-                         "scaleOverride": true,
-                         "scaleSteps": 1,
-                         "scaleStepWidth": 19,
-                         "scaleStartValue":1,
-                         "scaleFontSize": 9
-                     };
-					 $scope.labels = [];
+						var matchweek = locale.getString('common.matchweek');
 
-					var matchweek = locale.getString('common.matchweek');
+						for (var i = 1; i <= totalMatchdays; i++) {
 
-					for (var i = 1; i <= totalMatchdays; i++) {
+							$scope.labels.push(i);
+						}
 
-						 $scope.labels.push( i );
-					 }
+						var updateChartData = function () {
 
-					var updateChartData = function () {
+							queryStandingHist($scope.data.singleSelect.squad.id).$promise.then(
+								//success
+								function (value) {
+									if (value.length > 0) {
+										$scope.series = [];
+										$scope.series.push($scope.data.singleSelect.squad.name);
 
-                        queryStandingHist($scope.data.singleSelect.squad.id).$promise.then(
-                            //success
-                            function( value ) {
-                                if (value.length > 0) {
-                                    $scope.series = [];
-                                    $scope.series.push($scope.data.singleSelect.squad.name);
+										var currentMatchday = value.length;
+										$scope.chartData = [];
+										var arrPos = [];
+										for (var j = 0; j < currentMatchday; j++) {
+											arrPos.push(value[j].currentPosition);
+										}
+										$scope.chartData.push(arrPos);
 
-                                    var currentMatchday = value.length;
-                                    $scope.chartData = [];
-                                    var arrPos = [];
-                                    for (var j = 0; j < currentMatchday; j++) {
-                                        arrPos.push(value[j].currentPosition);
-                                    }
-                                    $scope.chartData.push(arrPos);
+									}
+								},
+								function (error) {
 
-                                }
-                            },
-                            function( error ) {
+								}
+							);
+						};
 
-                            }
-                        );
-					};
+						updateChartData();
 
+						$scope.update = function () {
 
-                    $scope.hideSpinner = true;
-
-					updateChartData();
-
-					 $scope.update = function() {
-
-						 updateChartData();
-					 };
+							updateChartData();
+						};
 
 //					  $scope.onClick = function (points, evt) {
 //					    console.log(points, evt);
 //					  };
-				},
+					}
+
+                    $scope.hideSpinner = true;
+
+                },
 				//error
 				function( error ) {
 					// TODO: Handle request returns error

@@ -22,7 +22,7 @@ public interface StandingBaseRepository<T extends StandingBase> extends CrudRepo
 	List<T> findBySquad_CompetitionIdWithMaxMatchdayOrderByCurrentPositionAsc(Integer id) throws DataAccessException;
 
     @Query("select s, MAX(s.played) from #{#entityName} as s where s.squad.id = ?1")
-    T findBySquadWithLatestMatchdayOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
+    T findBySquadIdAndAllowUpdateTrueOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
 
 	@Query("select s from #{#entityName} as s where s.squad.id = ?1 and s.matchday = ?2")
 	T findBySquadAndMatchdayOrderByCurrentPositionAsc(Integer squadId, Integer matchday) throws DataAccessException;
