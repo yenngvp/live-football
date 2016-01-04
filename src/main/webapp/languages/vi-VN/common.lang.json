@@ -64,5 +64,9 @@
     "currentSeason": "Mùa giải",
     "currentPosition": "Xếp hạng",
     "achievement": "Thành tích",
-    "allMatchdays": "Tất cả các vòng đấu"
+    "allMatchdays": "Tất cả các vòng đấu",
+    "day": "ngày",
+    "hour": "giờ",
+    "minute": "phút",
+    "second": "giây"
 }	

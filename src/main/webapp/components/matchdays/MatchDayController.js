@@ -39,34 +39,44 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 					$scope.todayCounter = 0;
 					$scope.thisWeekCounter = 0;
 					$scope.nextWeekCounter = 0;
-					
-					for (var i = 0; i < $scope.matchdays.length; i++) {
-						
-						var matchups = $scope.matchdays[i];
 
-						for (var index in matchups) {
-							if (matchups[index].isToday) {
-								$scope.todayCounter++;
-							}
-							else if (matchups[index].isThisWeek) {
-								$scope.thisWeekCounter++;
-							}
-							else if (matchups[index].isNextWeek) {
-								$scope.nextWeekCounter++;
-							}
-						}
-					}
+                    $scope.soonestMatch = null;
+                    var secondsNow = Date.now() / 1000;
+
+					for (var i = 0; i < $scope.matchdays.length; i++) {
+
+                        var matchups = $scope.matchdays[i];
+
+                        for (var index in matchups) {
+                            if (matchups[index].isToday) {
+                                $scope.todayCounter++;
+                            }
+                            else if (matchups[index].isThisWeek) {
+                                $scope.thisWeekCounter++;
+                            }
+                            else if (matchups[index].isNextWeek) {
+                                $scope.nextWeekCounter++;
+                            }
+
+                            // Won't include past matches
+                            if (matchups[index].countdown > secondsNow
+                                && ($scope.soonestMatch == null
+                                || $scope.soonestMatch.countdown > matchups[index].countdown)) {
+
+                                $scope.soonestMatch = matchups[index];
+                            }
+                        }
+                    }
 					
 					// Countdown for the soonest match
-					var soonestMatch = $scope.matchdays[0][0];
-					if (!angular.isUndefined(soonestMatch)) {
-						var startDate = new Date(soonestMatch.startAt);
-						$scope.soonestCountdown = startDate.getTime();
-					} else {
-						$scope.soonestCountdown = 0;
-					}
-					
-					$scope.hideSpinner = true;
+                    if ($scope.soonestMatch != null) {
+                        $scope.soonestCountdown = $scope.soonestMatch.countdown * 1000;
+                    } else {
+                        $scope.soonestCountdown = 0;
+                    }
+
+
+                    $scope.hideSpinner = true;
 				},
 				//error
 				function( error ) {

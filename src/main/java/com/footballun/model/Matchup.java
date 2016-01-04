@@ -1,11 +1,7 @@
 package com.footballun.model;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -364,10 +360,9 @@ public class Matchup extends NamedEntity implements Serializable {
 	}
 
     public long getCountdown() {
-        if (getStatus().getCode() == MatchupStatusCode.ENTER_COUNTDOWN) {
+        if (getStartAt() != null && getKickoff() != null) {
             LocalDateTime matchBegin = LocalDateTime.of(getStartAt(), getKickoff());
-            Duration duration = Duration.between(LocalDateTime.now(), matchBegin);
-            return  duration.getSeconds();
+            return  matchBegin.toEpochSecond(ZoneOffset.of("+07:00"));
         }
         return 0;
     }

@@ -71,32 +71,34 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
 			event.preventDefault();
 			$state.go('dashboard');
 		}
-		
-		// Gets server preferences
-		var key = "_APP_PREFERENCES_";
-		$scope.appPrefs = localStorageService.get(key);
-		if ($scope.appPrefs == null) {
-			Preferences.pref.query().$promise.then(
-					//success
-					function( value ) {
-						localStorageService.set(key, value);
-						$scope.appPrefs = value;
-						// default one competition
-						localStorageService.set("PREFERENCES_COMPETITION", value[0][0]);
-						console.log("Just getting prefs: "+ value + ", default competition: " + value[0][0]);
-					},
-					//error
-					function( error ) {
-						// TODO: Handle request returns error
-						console.log("Network error: " + error);
-					}
-			);
-			
-		}
-		
+
 	});
-	
-	
+
+   var init = function() {
+
+       // Gets server preferences
+       var key = "_APP_PREFERENCES_";
+       $scope.appPrefs = localStorageService.get(key);
+       if ($scope.appPrefs == null) {
+           Preferences.pref.query().$promise.then(
+               //success
+               function (value) {
+                   localStorageService.set(key, value);
+                   $scope.appPrefs = value;
+                   // default one competition
+                   localStorageService.set("PREFERENCES_COMPETITION", value[0][0]);
+                   console.log("Just getting prefs: " + value + ", default competition: " + value[0][0]);
+               },
+               //error
+               function (error) {
+                   // TODO: Handle request returns error
+                   console.log("Network error: " + error);
+               }
+           );
+
+       }
+   };
+
 	/*
 	 * Localization supported
 	 */
@@ -171,12 +173,17 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     /*
      * Standings service
      */
-   // $scope.standingsShortlist = Standing.standingsShortlist.query();
+    $scope.standingsShortlist = Standing.standingsShortlist.query();
     
     $scope.myModel = {
             Url: 'http://jasonwatmore.com/post/2014/08/01/AngularJS-directives-for-social-sharing-buttons-Facebook-Like-GooglePlus-Twitter-and-Pinterest.aspx',
             Name: "AngularJS directives for social sharing buttons - Facebook, Google+, Twitter and Pinterest | Jason Watmore's Blog", 
             ImageUrl: 'http://www.jasonwatmore.com/pics/jason.jpg'
     };
+
+   /*
+    * Initialises data for the main controller on page load
+    */
+   init();
 }];
 

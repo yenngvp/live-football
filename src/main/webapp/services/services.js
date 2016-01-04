@@ -61,7 +61,7 @@ var Team = ['$resource','context', function($resource, context) {
 
 var Standing = ['$resource','context', function($resource, context) {
 	return {
-		standingsShortlist: $resource(context + '/api/bang-xep-hang?giai_dau:=giai_dau_id', {}, {
+		standingsShortlist: $resource(context + '/api/bang-xep-hang', {}, {
 			query: {method: 'GET', params: {}, isArray: true}
 		}),
       

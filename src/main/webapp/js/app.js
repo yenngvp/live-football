@@ -160,7 +160,10 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 						$scope.todayCounter = 0;
 						$scope.thisWeekCounter = 0;
 						$scope.nextWeekCounter = 0;
-						
+
+                        $scope.soonestMatch = null;
+                        var secondsNow = Date.now() / 1000;
+
 						for (var i = 0; i < $scope.matchdays.length; i++) {
 							
 							var matchups = $scope.matchdays[i];
@@ -175,18 +178,23 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
 								else if (matchups[index].isNextWeek) {
 									$scope.nextWeekCounter++;
 								}
-							}
+
+                                // Won't include past matches
+                                if (matchups[index].countdown > secondsNow
+                                    && ($scope.soonestMatch == null
+                                        || $scope.soonestMatch.countdown > matchups[index].countdown)) {
+
+                                        $scope.soonestMatch = matchups[index];
+                                }
+                            }
 						}
-						
-						// Countdown for the soonest match
-						var soonestMatch = $scope.matchdays[0][0];
-						if (!angular.isUndefined(soonestMatch)) {
-							var startDate = new Date(soonestMatch.startAt);
-							$scope.soonestCountdown = startDate.getTime();
-						} else {
-							$scope.soonestCountdown = 0;
-						}
-			
+
+                        if ($scope.soonestMatch != null) {
+                            $scope.soonestCountdown = $scope.soonestMatch.countdown * 1000;
+                        } else {
+                            $scope.soonestCountdown = 0;
+                        }
+
 					},
 					
 					//error

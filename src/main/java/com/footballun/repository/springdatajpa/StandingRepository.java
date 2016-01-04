@@ -23,7 +23,7 @@ public interface StandingRepository  extends StandingBaseRepository<Standing> {
 	@Override
 	Standing save(Standing standing) throws DataAccessException;
 	
-	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position <= 5 and allow_update order by squad.competition_id, current_position", nativeQuery = true)
+	@Query(value = "select s.* from standing s inner join  squad on s.squad_id=squad.id where current_position < 5 and allow_update order by squad.competition_id, current_position", nativeQuery = true)
 	List<Standing> findShortList() throws DataAccessException;
 
     @Override
