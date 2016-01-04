@@ -1,5 +1,5 @@
-<section id="teams" class="sections sections-body">
-  <div class="container">
+
+<div class="container section sections-body">
   	
   	<!-- Spinner -->
   	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%; ">
@@ -26,19 +26,20 @@
 
     <h2 class="sub-header">{{ 'common.teams' | i18n }} - {{competitionName}}</h2>
     <div class="row">
-      <div class="col-md-3 col-sm-6 col-xs-12" data-ng-repeat="team in teams">
-        <div class="thumbnail" style="padding: 20px !important">
-          <a data-ui-sref="teamDetails({id: team.id})">
-              <img class="img-responsive"
-                   width="150px" height="150px"
-                   data-ng-src="images/teams/{{team.competition.name}}/150x150/{{team.logo}}" alt="{{team.name}}">
-              </img></a>
-          <div class="caption">
-            <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{team.name}}</a></h3>
-
-          </div>
-        </div>
-      </div>
-    </div>
+		<div class="col-md-3 col-sm-6 col-xs-12"
+			data-ng-repeat="team in teams">
+			<div class="thumbnail" style="padding: 20px !important">
+				<a data-ui-sref="teamDetails({id: team.id})"> <img
+					class="img-responsive" width="150px" height="150px"
+					data-ng-src="images/teams/{{team.competition.name}}/150x150/{{team.logo}}"
+					alt="{{team.name}}">
+				</a>
+				<div class="caption">
+					<h3 class="caption-heading">
+						<a data-ui-sref="teamDetails({id: team.id})">{{team.name}}</a>
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
   </div>
-</section>

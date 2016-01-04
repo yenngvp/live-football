@@ -1,90 +1,23 @@
-<section id="matchdays" class="sections sections-body">
 
-  	<!-- Spinner -->
-  	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%; ">
-	  <p><i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></p>
-	</div>          
-	  
 <div class="container section sections-body">
-	<div class="row">
-		<div class="col-md-12">
-			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
-		</div>
+	<!-- Spinner -->
+	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%;">
+		<p>
+			<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+		</p>
 	</div>
- 
- <div class="row">
-	<div class="col-md-10">
+
+
+	<div class="row">
+	<div class="col-md-12">
 	
- 	<!-- TODAY -->
+ 	<!-- Countdown -->
  	<div class="row" ng-if="soonestCountdown > 0">
-		<h3>{{ 'common.soonestMatch' | i18n }} {{soonestMatch.name}}
+		<h4>{{ 'common.soonestMatch' | i18n }} 
+			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a>
 			<span class="timer-countdown"><timer end-time="soonestCountdown">
                 {{ddays}} {{'common.day' | i18n}}, {{hhours}} {{'common.hour' | i18n}}, {{mminutes}} {{'common.minute' | i18n}}, {{sseconds}} {{'common.second' | i18n}}</timer></span>
-		</h3>
-	</div>
-	
-	<div class="row" ng-if="thisWeekCounter > 0">
-			<!-- Page header -->
-			<div class="page-header">
-				<h3>{{ 'common.matchdays' | i18n }} {{ 'common.thisWeek' | i18n }}</h3>
-			</div>
-			<!-- /Page header -->
-
-			<!-- Timeline -->
-			<div class="timeline">
-
-				<!-- Line component -->
-				<div class="line text-muted"></div>
-
-
-				<!-- Panel -->
-				<div class="panel panel-primary" ng-repeat="matchday in matchdays">
-
-					<!-- Icon -->
-					<div class="panel-heading thumbnail icon">
-						<i class="glyphicon glyphicon-calendar"></i>
-					</div>
-					<!-- /Icon -->
-
-					<!-- Heading -->
-					<div class="panel-heading">
-						<h2 class="panel-title">{{matchday[0].competition.nameVn}} {{ 'common.matchweek' | i18n }} {{matchday[0].matchday}} - {{matchday[0].startAt | date:dateFormatString}}</h2>
-						<h2 class="panel-title" ng-if="!matchday[0].startAt">{{'common.scheduleTBD' | i18n }}</h2>
-
-					</div>
-					<!-- /Heading -->
-
-					<!-- Body -->
-					<div class="panel-body">
-						<div class="table">
-						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday" ng-if="matchup.isThisWeek">
-						    <div class="table-cell cell-matchup-left0"><h4 class="caption-heading">{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h4></div>
-						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
-						    <div class="table-cell cell-matchup-center" >
-						    	<h4 ng-if="matchup.status.code=='NOT_BEGIN' || matchup.status.code=='ENTER_COUNTDOWN'">vs</h4>
-						    	<h4 ng-if="matchup.status.code=='LIVE'">0:0</h4>
-						    </div>
-						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
-						    <div class="table-cell cell-matchup-right2">
-						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{'common.viewMatchDetail'  | i18n}}</a></h5>
-						    </div>
-						  </div>
-						</div>
-					</div>
-					<!-- /Body -->
-					
-
-					<!-- Footer -->
-					<!-- 
-		            <div class="panel-footer">
-		                <small>Footer is also supported!</small>
-		            </div>
-          			<!-- /Footer -->
-
-				</div>
-				<!-- /Panel -->
-			</div>
-			<!-- /Timeline -->
+		</h4>
 	</div>
 	
 	<div class="row">
@@ -122,12 +55,15 @@
 					<!-- Body -->
 					<div class="panel-body">
 						<div class="table">
-						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday" ng-if="!matchup.isThisWeek">
-						  	<div class="table-cell cell-matchup-left0"><h4 class="caption-heading">{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h4></div>
+						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
+						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >KT</h4></div>
+						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >Phút {{matchup.updateMinute}}</h4></div>
+						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h4></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >
-						    	<h4 ng-if="matchup.status.code=='NOT_BEGIN' || matchup.status.code=='ENTER_COUNTDOWN'">vs</h4>
-						    	<h4 ng-if="matchup.status.code=='LIVE'">0:0</h4>
+						    	<h4 ng-if="matchup.status.code==='FULL_TIME'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h4>
+						    	<h4 ng-if="matchup.status.code==='LIVE'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h4>
+						    	<h4 ng-if="matchup.status.code==='NOT_BEGIN'">vs</h4>
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
 						    <div class="table-cell cell-matchup-right2">
@@ -143,8 +79,10 @@
 		                <small>{{ 'common.allMatchdays' | i18n }}</small>
 		                 <div ng-controller="MatchdayPagedController" ng-init="init(matchdays[0][0].competition.totalMatchdays)">
                             <ul class="list-inline" style="width: 100%">
-                                <li ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
-                                    <a data-ui-sref="matchdays({day: item, giai_dau: matchday[0].competition.id})" ng-click="savePreferencesWhenClickedWith(matchday[0].competition.id)">{{item}}</a>
+                                <li ng-class="item === matchday[0].competition.currentMatchday ? 'active' : ''"
+                                	ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
+                                    <a data-ui-sref="matchdays({day: item, giai_dau: matchday[0].competition.id})"
+                                    	ng-click="savePreferencesWhenClickedWith(matchday[0].competition.id)">{{item}}</a>
                                 </li>
                             </ul>
                              <!--
@@ -167,16 +105,6 @@
 			<!-- /Timeline -->
 	</div>
 	
-	</div> <!-- !col-md-10 -->
+	</div> <!-- !col-md-12 -->
 	
-	<div class="col-md-2">
-		<div class="row">
-			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
-		</div>
-		<div class="row">
-			<ng-include src="'components/dashboard/_standing.html'"></ng-include>
-		</div>
-	</div> <!-- col-md-2 -->
-
 </div> <!-- End container -->
-</section>

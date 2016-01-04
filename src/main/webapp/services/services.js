@@ -33,7 +33,7 @@ var MatchDay = ['$resource','context', function($resource, context) {
 	      }),
 	      
 	      // Matchup Register service
-	      registers: $resource(context + '/api/match-register/:id', {}, {
+	      registers: $resource(context + '/api/thong-tin-tran-dau/:id', {}, {
 	    	  query: { method: 'GET', params: {id: '@id'}, isArray: true}
 		  }),
 		  // Matchup

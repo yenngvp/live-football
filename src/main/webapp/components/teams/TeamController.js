@@ -20,7 +20,7 @@ var TeamController = ['$scope','$state','Team','localStorageService', 'enableCac
                     $scope.teams = value;
                     var competition = $scope.teams[0].competition;
                     if (competition) {
-                        $scope.competitionName = competition.name + " (" + competition.yearFrom.toString() + "/" + competition.yearTo.toString() + ")";
+                        $scope.competitionName = competition.nameVn + " (" + competition.yearFrom.toString() + "/" + competition.yearTo.toString() + ")";
                     }
 
                     $scope.hideSpinner = true;

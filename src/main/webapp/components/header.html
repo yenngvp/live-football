@@ -3,7 +3,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="#" data-ng-click="goHome()">
-        <img alt="Footballun Logo" height="27" width="auto" src="images/logo.png">
+        <img alt="Footballun Logo" height="27" width="auto" ng-src="images/logo.png">
       </a>
       <button class="navbar-toggle navbar-toggle-left collapsed" type="button" data-toggle="collapse" data-target="#nav-menu">
         <span class="sr-only">Toggle navigation</span>
@@ -20,15 +20,14 @@
         <li data-ng-class="$state.is('standings') ? 'active' : ''"><a data-ui-sref="standings({giai_dau: selectedCompetition.id})">{{ 'common.standings' | i18n | uppercase }}</a></li>
         <li data-ng-class="($state.is('teams') || $state.is('teamDetails')) ? 'active' : ''"><a data-ui-sref="teams({giai_dau: selectedCompetition.id})">{{ 'common.teams' | i18n | uppercase }}</a></li>
         <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a data-ui-sref="stats">{{ 'common.stats' | i18n| uppercase }}</a></li> -->
-        <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="">{{ 'common.leagues' | i18n | uppercase }}</a>
-        </li>
+        <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="">{{ 'common.leagues' | i18n | uppercase }}</a></li>-->
         <!-- <li data-ng-class="$state.is('brackets') ? 'active' : ''"><a data-ui-sref="brackets">Brackets</a></li> -->
         <!-- <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">{{ 'common.championLeague' | i18n | uppercase }}</a></li> -->
-      <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
-      <li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
-      <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
-      <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
-      <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
+	    <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
+	    <li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
+	    <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
+	    <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
+	    <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
 
       </ul>
         
@@ -52,7 +51,7 @@
         </ul>
       </li>
     </ul>
-     -->
+     
 		<div class="dropdown pull-right">
 			<button type="button" class="btn btn-default dropdown-toggle"
 				data-toggle="dropdown">
@@ -60,20 +59,13 @@
 					class="caret"></span>
 			</button>
 			<ul class="dropdown-menu navbar-dropdown-menu">
-			<!-- 
 				<li data-ng-repeat="lang in supportedLang"><a href=""
 					ng-click="setLocale(lang)"> <i
 						ng-class="localeData[lang].flagClass"></i> <span>{{localeData[lang].langDisplayText
 							}}</span>
 				</a></li>
-			 -->	
-				<li><a href=""
-					ng-click="setLocale(supportedLang[0])"> <i
-						ng-class="localeData[supportedLang[0]].flagClass"></i> <span>{{localeData[supportedLang[0]].langDisplayText
-							}}</span>
-				</a></li>
 			</ul>
 		</div>
-
+	-->
 	</div><!-- /.container-fluid -->
 </nav>

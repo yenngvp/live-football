@@ -103,7 +103,7 @@ app.config(['stateHelperProvider','$urlRouterProvider','$urlMatcherFactoryProvid
 		data: {requireLogin : false}
 	}).state({
 		name: "matchRegister",
-		url: "/match-register/:id",
+		url: "/thong-tin-tran-dau/:id",
 		templateUrl: "components/matchdays/matchup_detail.html",
 		controller: "MatchupDetailController",
 		data: {requireLogin : false}
@@ -194,13 +194,15 @@ app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'loc
                         } else {
                             $scope.soonestCountdown = 0;
                         }
-
+                        
+                        $scope.hideSpinner = true;
 					},
 					
 					//error
 					function( error ) {
 						// TODO: Handle request returns error
 						console.log("Failed with: " + error);
+						$scope.hideSpinner = true;
 					}
 					);
 		}

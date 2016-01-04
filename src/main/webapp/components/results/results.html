@@ -1,4 +1,3 @@
-<section id="results" class="sections sections-body">
  
 <div class="container section sections-body">
 
@@ -7,14 +6,8 @@
 	  <p><i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></p>
 	</div>          
 	 
-	<div class="row">
-		<div class="col-md-12">
-			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
-		</div>
-	</div>
- 
  <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-12">
 	
 	<div class="row">
 			<!-- Page header -->
@@ -53,10 +46,14 @@
 					<div class="panel-body">
 						<div class="table">
 						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in result" ng-if="!matchup.isToday">
-						  	<div class="table-cell cell-matchup-left0"><h4 class="caption-heading">{{matchup.status.shortName}}</h4></div>
+						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >KT</h4></div>
+						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >Phút {{matchup.updateMinute}}</h4></div>
+						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h4 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h4></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >
-						    	<h4 class="caption-heading">{{matchup.firstDetail.goal}}:{{matchup.secondDetail.goal}}</h4>
+						    	<h4 ng-if="matchup.status.code==='FULL_TIME'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h4>
+						    	<h4 ng-if="matchup.status.code==='LIVE'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h4>
+						    	<h4 ng-if="matchup.status.code==='NOT_BEGIN'">vs</h4>
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
 						    <div class="table-cell cell-matchup-right2">
@@ -95,16 +92,6 @@
 			<!-- /Timeline -->
 	</div>
 	
-	</div> <!-- !col-md-10 -->
-	
-	<div class="col-md-2">
-		<div class="row">
-			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
-		</div>
-		<div class="row">
-			<ng-include src="'components/_partials/_standings_shortlist.html'"></ng-include>
-		</div>
-	</div> <!-- col-md-2 -->
+	</div> <!-- !col-md-12 -->
 
 </div> <!-- End container -->
-</section>

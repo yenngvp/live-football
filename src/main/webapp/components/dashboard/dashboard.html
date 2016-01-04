@@ -1,18 +1,20 @@
 
 <!-- Dash board highlight content -->
 <div class="container section sections-body">
-	<div class="row">
-		<div class="col-md-12">
-			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
-		</div>
+	<!-- Spinner -->
+	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%;">
+		<p>
+			<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+		</p>
 	</div>
- 
+
  <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-12">
 	
  	<!-- TODAY -->
  	<div class="row" ng-if="soonestCountdown > 0">
-		<h3>{{ 'common.soonestMatch' | i18n }} {{soonestMatch.name}}
+		<h3>{{ 'common.soonestMatch' | i18n }} 
+			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a>
 			<span class="timer-countdown"><timer end-time="soonestCountdown">
                 {{ddays}} {{'common.day' | i18n}}, {{hhours}} {{'common.hour' | i18n}}, {{mminutes}} {{'common.minute' | i18n}}, {{sseconds}} {{'common.second' | i18n}}</timer></span>
 		</h3>
@@ -48,7 +50,7 @@
 
 					<!-- Heading -->
 					<div class="panel-heading">
-						<h2 class="panel-title">{{matchday[0].competition.nameVn}} {{ 'common.matchweek' | i18n }} {{matchday[0].matchday}} - {{matchday[0].startAt | date:dateFormatString}}</h2>
+						<h2 class="panel-title">{{matchday[0].competi.nameVn}} {{ 'common.matchweek' | i18n }} {{matchday[0].matchday}} - {{matchday[0].startAt | date:dateFormatString}}</h2>
 					</div>
 					<!-- /Heading -->
 
@@ -85,18 +87,7 @@
 			<!-- /Timeline -->
 	</div>
 	
-	</div> <!-- !col-md-10 -->
-	
-	<div class="col-md-2">
-		<div class="row">
-			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
-		</div>
-		<div class="row">
-			<ng-include src="'components/_partials/_standings_shortlist.html'"></ng-include>
-		</div>
-	</div> <!-- col-md-2 -->
-
-
+	</div> <!-- !col-md-12 -->
 </div> <!-- End container -->
 
 <div class="container">
@@ -110,8 +101,8 @@
 			<!--
                     Use this format for a custom URL
                     <div google-plus="myModel.Url"></div>
-                -->
-           <span tweet="myModel.Name"></span>
+                
+           <span tweet="myModel.Name"></span>-->
                 <!--
                     Use this format for a custom URL
                     <div tweet="myModel.Name" tweet-url="myModel.Url"></div>

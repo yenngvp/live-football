@@ -1,66 +1,71 @@
-<section id="matchdays" class="sections sections-body" ng-controller="MatchupDetailController">
 
-  	<!-- Spinner -->
-  	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%; ">
-	  <p><i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></p>
-	</div>          
-	 
-	 
-  <div class="container">
-  	
-  	<!-- Matchup Details -->
-  	<div class="row">
-		<div style="text-align: center"><h3>{{matchup.stadium.name}}</h3></div>
-		<div style="text-align: center"><h4>{{matchup.startAt | date:dateFormatString}}</h4></div>
-		
-		<div class="table">
-			<div class="table-row">
-				<div class="table-cell">
-					<div class="thumbnail team-card">
-			          <img title="matchup.firstDetail.squad.name"
-			         	   class="img-responsive" width="150px" height="150px"
-                           data-ng-src="images/teams/{{matchup.firstDetail.squad.competition.name}}/500x500/{{matchup.firstDetail.squad.logo}}"
-			         	   alt="{{matchup.firstDetail.squad.team.name}}"></img>
-			          <div class="caption">
-			            <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{matchup.firstDetail.squad.name}}</a></h3>
-			          </div>
-			     	</div>
+<div class="container section sections-body" style="margin-top: 50px;">
+	<!-- Spinner -->
+	<div title="Loading" ng-show="!hideSpinner" style="margin-left: 50%;">
+		<p>
+			<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+		</p>
+	</div>
+
+	<!-- Matchup Details -->
+	<div class="row">
+		<div class="col-md-12" style="text-align: center !important">
+			<h3>{{matchup.stadium.name}}</h3>
+			<h4>{{matchup.startAt | date:dateFormatString}}</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4" style="text-align: right">
+			<div class="thumbnail" style="padding: 20px !important">
+				<a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})"> <img
+					class="img-responsive" width="150px" height="150px"
+					data-ng-src="images/teams/{{matchup.competition.name}}/150x150/{{matchup.firstDetail.squad.logo}}"
+					alt="{{matchup.firstDetail.squad.name}}">
+				</a>
+				<div class="caption">
+					<h3 class="caption-heading">
+						<a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})">{{matchup.firstDetail.squad.name}}</a>
+					</h3>
 				</div>
-				<div class="table-cell" style="text-align: center">
-					<span ng-if="matchup.status.code==='ENTER_COUNTDOWN'">
-						Begin in: <timer  countdown="86400" max-time-unit="'hour'" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
-					</span>
-					<span ng-if="matchup.status.code==='LIVE'" class="livescore">
-						matchup.firstDetail.goal:matchup.secondDetail.goal
-					</span>
-					<span ng-if="matchup.status.code!=='LIVE' && matchup.status.code!=='ENTER_COUNTDOWN'" class="livescore">
-						<h6>{{matchup.firstDetail.goal}} : {{matchup.secondDetail.goal}}</h6><br/><h6 title="{{matchup.status.name}}">{{matchup.status.shortName}}</h6>
-					</span>
-				</div>
-				
-				<div class="table-cell">	
-					<div class="thumbnail team-card">
-			          <img title="matchup.secondDetail.squad.team.name"
-			          	   class="img-responsive" width="150px" height="150px"
-                           data-ng-src="images/teams/{{matchup.secondDetail.squad.competition.name}}/500x500/{{matchup.secondDetail.squad.logo}}"
-			          	   alt="{{matchup.secondDetail.squad.name}}"></img>
-			          <div class="caption">
-			            <h3 class="caption-heading"><a data-ui-sref="teamDetails({id: team.id})">{{matchup.secondDetail.squad.name}}</a></h3>
-			          </div>
-			        </div>
+			</div>
+		</div>
+
+		<div class="col-md-4" style="text-align: center;">
+			<span style="vertical-align: middle">
+				<h4 ng-if="matchup.status.code === 'NOT_BEGIN'">vs</h4>
+				<h4
+					ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0">
+					{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}<br />{{matchup.updateMinute}}
+				</h4>
+				<h4 ng-if="matchup.status.code === 'FULL_TIME'">
+					{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}<br />KT
+				</h4>
+			</span>
+		</div>
+
+		<div class="col-md-4" style="text-align: left">
+			<div class="thumbnail" style="padding: 20px !important">
+				<a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})"> <img
+					class="img-responsive" width="150px" height="150px"
+					data-ng-src="images/teams/{{matchup.competition.name}}/150x150/{{matchup.secondDetail.squad.logo}}"
+					alt="{{matchup.secondDetail.squad.name}}">
+				</a>
+				<div class="caption">
+					<h3 class="caption-heading">
+						<a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})">{{matchup.secondDetail.squad.name}}</a>
+					</h3>
 				</div>
 			</div>
 		</div>
 	</div>
-
-  	
-  	<!-- Line-ups  -->
-  	<div class="row">
-  		<span ng-if="!lineupAvailable">
-  				<h4>{{'common.lineupNoAvailable' | i18n}}</h4>
-  		</span>
+	
+	<!-- Line-ups  -->
+	<div class="row" ng-if="!lineupAvailable">
+		<h4 class="caption">{{'common.lineupNoAvailable' | i18n}}</h4>
+  	</div>
+  	<div class="row" ng-if="lineupAvailable">
   		
-  		<div class="table" ng-if="lineupAvailable">
+  		<div class="table" >
   				<div class="table-cell table-row-header"><h3>{{'common.manager' | i18n}}</h3></div>
 				<div class="table-cell table-row-header"></div>
 				
@@ -153,51 +158,56 @@
 				</div>
 			</div>
     </div>
-    
-    
-    <!-- Pitch layed out -->
-    <!-- Formation 1 -->
-    <div class="row">
-    	<h3>{{'common.teamLineup' | i18n}} {{matchup.firstDetail.squad.team.name}}</h3>
-    	<div class="outsideWrapper">
-		    <div class="insideWrapper">
+
+	<!-- Pitch layed out -->
+	<!-- Formation 1 -->
+	<div class="row">
+		<!-- <h3>{{'common.teamLineup' | i18n}}</h3> -->
+		<div class="outsideWrapper">
+			<div class="insideWrapper">
 				<!-- Pitch background -->
-		        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
-		        <!-- Players' position -->
-		        <ul style="list-style-type: none;">
-		        	<li ng-repeat="p in formation1[1] track by $index">
-		        		<canvas class="positionCoveringCanvas" ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
-		        		</canvas>
-						<span ng-if="formation1[0][$index].squadMember.hero.lastName" style="text-align: center" ng-style="{'position': 'absolute',
+				<img src="images/graphics/pitch.png" class="pitchCoverredImage">
+				<!-- Players' position -->
+				<ul style="list-style-type: none;">
+					<li ng-repeat="p in formation1[1] track by $index">
+						<canvas class="positionCoveringCanvas"
+							ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
+		        		</canvas> <span
+						ng-if="formation1[0][$index].squadMember.hero.lastName"
+						style="text-align: center"
+						ng-style="{'position': 'absolute',
 		        							'left': '{{p[0]}}px',
-		        							'top': '{{p[1] + 60}}px'}"><h6
-								>{{formation1[0][$index].squadMember.hero.lastName}} ({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
-		        	<li>
-		        </ul>
-		    </div>
-		 </div>
-    </div>
-    <!-- Formation 2 -->
-    <div class="row">
-   		<h3>{{'common.teamLineup' | i18n}} {{matchup.secondDetail.squad.team.name}}</h3>
-    	<div class="outsideWrapper">
-		    <div class="insideWrapper">
+		        							'top': '{{p[1] + 60}}px'}"><h6>{{formation1[0][$index].squadMember.hero.lastName}}
+								({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
+					<li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Formation 2 -->
+	<div class="row" ng-if="lineupAvailable">
+		<h3>{{'common.teamLineup' | i18n}}
+			{{matchup.secondDetail.squad.team.name}}</h3>
+		<div class="outsideWrapper">
+			<div class="insideWrapper">
 				<!-- Pitch background -->
-		        <img src="images/graphics/pitch.png" class="pitchCoverredImage">
-		        <!-- Players' position -->
-		        <ul style="list-style-type: none;">
-		        	<li ng-repeat="p in formation1[1] track by $index">
-		        		<canvas class="positionCoveringCanvas" ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
-		        		</canvas>
-						<span ng-if="formation1[0][$index].squadMember.hero.lastName" style="text-align: center" ng-style="{'position': 'absolute',
+				<img src="images/graphics/pitch.png" class="pitchCoverredImage">
+				<!-- Players' position -->
+				<ul style="list-style-type: none;">
+					<li ng-repeat="p in formation1[1] track by $index">
+						<canvas class="positionCoveringCanvas"
+							ng-style="renderFormationCanvas(p[0], p[1], matchup.firstDetail.squad.team.name)">
+		        		</canvas> <span
+						ng-if="formation1[0][$index].squadMember.hero.lastName"
+						style="text-align: center"
+						ng-style="{'position': 'absolute',
 		        							'left': '{{p[0]}}px',
-		        							'top': '{{p[1] + 60}}px'}"><h6
-								>{{formation1[0][$index].squadMember.hero.lastName}} ({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
-		        	<li>
-		        </ul>
-		    </div>
-		 </div>
-    </div>
-    
-  </div>
-</section>
+		        							'top': '{{p[1] + 60}}px'}"><h6>{{formation1[0][$index].squadMember.hero.lastName}}
+								({{formation1[0][$index].squadMember.shirtNumber}})</h6></span>
+					<li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+

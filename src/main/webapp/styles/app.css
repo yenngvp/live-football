@@ -1,4 +1,9 @@
 
+..navbar-default {
+	background-color: #4C3C1C;
+	border-color: #4C3C1C;
+}
+
 .jumbotron {
 	background-color:#4C3405;
 	height:400px;
@@ -197,6 +202,7 @@ li.ng-enter-active {
 
 #table-standings tr {
     cursor: pointer;
+    width: 80%;
 }
 
 .table-row-odd {background-color: #D9CDBF;}

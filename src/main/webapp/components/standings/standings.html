@@ -1,9 +1,3 @@
-<div class="row">
-		<div class="col-md-12">
-			<ng-include src="'components/dashboard/_ads_top.html'"></ng-include>
-		</div>
-</div>
-<section id="standings" class="sections sections-body">
  
 <div class="container section sections-body">
 	
@@ -12,10 +6,10 @@
 </div>          
  
  <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<div class="row" ng-repeat="standing in standings">
 	        <div class="col-xs-12">
-	            <div class="box box-info">
+	            <div class="box box-info" style="margin-top: 20px;">
 	            	<div class="box-header with-border">
 	             		<h3 class="box-title">{{ 'common.standings' | i18n }} {{standing[0].squad.competition.name}}</h3>
 	           	  	</div><!-- /.box-header -->
@@ -86,19 +80,8 @@
 	          </div><!-- /.box -->
 	        </div>
 		          
-	</div> <!-- !col-md-10 -->
-	
-	
-	<div class="col-md-2">
-		<div class="row">
-			<ng-include src="'components/dashboard/_ads_side.html'"></ng-include>
-		</div>
-		<div class="row">
-			<ng-include src="'components/_partials/_standings_shortlist.html'"></ng-include>
-		</div>
-	</div> <!-- col-md-2 -->
-</div>
+	</div> <!-- !col-md-12 -->
+
 </div> <!-- End container -->
 
-</section>
     

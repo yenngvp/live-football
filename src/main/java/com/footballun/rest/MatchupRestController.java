@@ -80,14 +80,16 @@ public class MatchupRestController {
 	
 	@RequestMapping(value = "/ket-qua-tran-dau/vong-dau/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showResults(@PathVariable("matchday") int matchday,
-										   @RequestParam(value = "giai_dau", required = false) Integer competitionId) {
+										   @RequestParam(value = "giai_dau", required = true) Integer competitionId) {
 		
-		Collection<String> statuses = new ArrayList<>();
-		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+//		Collection<String> statuses = new ArrayList<>();
+//		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
+//		
+//		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, matchday, statuses);
+//		
+//		return groupMatchupByCompetition(matchups);
 		
-		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, matchday, statuses);
-		
-		return groupMatchupByCompetition(matchups);
+		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
 	private List<List<Matchup>> getMatchesByMatchdayAndCompetition(Integer matchday, Integer competitionId) {
@@ -160,7 +162,7 @@ public class MatchupRestController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/match-register/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/thong-tin-tran-dau/{id}", method = RequestMethod.GET)
 	public @ResponseBody List<List<MatchupRegister>> getMatchupRegisters(@PathVariable("id") int id) {
 		
 		List<List<MatchupRegister>> result = new ArrayList<List<MatchupRegister>>();
