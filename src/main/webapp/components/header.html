@@ -1,13 +1,13 @@
-<nav class="navbar navbar-default navbar-static-top" data-ng-if="getSession() == null">
+<nav class="navbar navbar-default navbar-static-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="#" data-ng-click="goHome()">
-        <img alt="Footballun Logo" height="27" width="auto" ng-src="images/logo.png">
+        <img title="BongDaToiNay.com Logo" alt="BongDaToiNay.com Logo" height="27" width="auto" ng-src="images/logo.png">
       </a>
       <button class="navbar-toggle navbar-toggle-left collapsed" type="button" data-toggle="collapse" data-target="#nav-menu">
         <span class="sr-only">Toggle navigation</span>
-        <span class="glyphicon glyphicon-triangle-bottom"></span>
+        <span class="glyphicon glyphicon-align-justify"></span>
       </button>
     </div>
 
@@ -23,21 +23,38 @@
         <!--  <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="">{{ 'common.leagues' | i18n | uppercase }}</a></li>-->
         <!-- <li data-ng-class="$state.is('brackets') ? 'active' : ''"><a data-ui-sref="brackets">Brackets</a></li> -->
         <!-- <li data-ng-class="$state.is('stats') ? 'active' : ''"><a href="#">{{ 'common.championLeague' | i18n | uppercase }}</a></li> -->
-	    <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
-	    <li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
+		<li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
+    	<li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
 	    <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
 	    <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
 	    <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
-
-      </ul>
-        
+	    
+		<li class = "dropdown">
+            <a href = "#" class = "dropdown-toggle disabled" aria-expanded="false" aria-haspopup="true" role="button" data-toggle = "dropdown-menu">
+               {{ 'common.leagues' | i18n | uppercase }}
+               <span class = "caret"></span>
+            </a>
+            <ul class = "dropdown-menu">
+                <li data-ng-class="selectedCompetition.name === 'English Premier League' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('English Premier League');">{{ 'common.epl' | i18n | uppercase }}</a></li>
+		    	<li data-ng-class="selectedCompetition.name === 'La Liga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('La Liga');">{{ 'common.laliga' | i18n | uppercase }}</a></li>
+			    <li data-ng-class="selectedCompetition.name === 'Bundesliga' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Bundesliga')">{{ 'common.bundesliga' | i18n | uppercase }}</a></li>
+			    <li data-ng-class="selectedCompetition.name === 'Serie A' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Serie A')">{{ 'common.seria' | i18n | uppercase }}</a></li>
+			    <li data-ng-class="selectedCompetition.name === 'Ligue1' ? 'active' : ''"><a href="" ng-click="saveSelectedCompetition('Ligue1')">{{ 'common.ligue1' | i18n | uppercase }}</a></li>
+            </ul>
+            
+         </li>
+         
+		</ul> 
+		
     </div>
+    
+		       
+    
+    
     <!-- /.navbar-collapse -->
 
-	<!-- User profile section
+	<!-- Leagues -->
     <ul class="nav navbar-profile">
-      <li><button class="nav-action" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
-      <li><button class="nav-action" data-toggle="modal" data-target="#addOwnerModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle img-profile" data-toggle="dropdown" role="button" aria-expanded="false">
           <img class="img-circle img-circle-small" src="images/avatar.jpg" width="30" height="30">
@@ -47,11 +64,11 @@
           <li><a href="#">Settings</a></li>
           <li><a href="#">Help</a></li>
           <li class="divider"></li>
-          <li><a href="#" data-ng-click="logout()">Sign Out</a></li>
         </ul>
       </li>
     </ul>
      
+     <!-- 
 		<div class="dropdown pull-right">
 			<button type="button" class="btn btn-default dropdown-toggle"
 				data-toggle="dropdown">
@@ -66,6 +83,8 @@
 				</a></li>
 			</ul>
 		</div>
-	-->
+ 		-->
+ 		
 	</div><!-- /.container-fluid -->
 </nav>
+<script type="text/javascript">$('li[class="dropdown open"]').removeClass('open');</script>

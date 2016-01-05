@@ -6,7 +6,6 @@ var app = angular.module('footballun', ['ui.router',
                                         'ngResource',
                                         'ngMockE2E',
                                         'ngStorage',
-                                        'angular-progress-arc',
                                         'timer',
                                     	'ngSanitize',
                                     	'angular-timeline',
@@ -14,6 +13,7 @@ var app = angular.module('footballun', ['ui.router',
                                     	'ui.bootstrap',
                                     	'LocalStorageModule',
                                     	'ngLocalize',
+                                    	'ngLocalize.Config',
                                     	'ngLocalize.InstalledLanguages',
                                     	'ngLocalize.Events',
                                     	'ngLocale',
@@ -242,12 +242,25 @@ app.directive('scrollToTarget', function() {
 app.directive('datePicker', DatePickerDirective);
 app.directive('myMatchup', MatchupDirective);
 
+
 app.value('localeSupported', [
                            'vi-VN'
                        ]);
 app.value('localeFallbacks', {
 						   'vi': 'vi-VN'
                        });
+app.value('localeConf', {
+    basePath: 'languages',
+    defaultLocale: 'vi-VN',
+    sharedDictionary: 'common',
+    fileExtension: '.lang.json',
+    persistSelection: true,
+    cookieName: 'COOKIE_LOCALE_LANG',
+    observableAttrs: new RegExp('^data-(?!ng-|i18n)'),
+    delimiter: '::',
+    validTokens: new RegExp('^[\\w\\.-]+\\.[\\w\\s\\.-]+\\w(:.*)?$')
+});
+
 
 /** Custom filters **/
 /** Custom date filter  **/

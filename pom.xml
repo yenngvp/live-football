@@ -7,7 +7,7 @@
 	<artifactId>footballun</artifactId>
 	<version>1.0.0</version>
 
-	<name>footballun</name>
+	<name>BongDaToiNay.com</name>
 	<packaging>war</packaging>
 
 	<properties>
@@ -451,7 +451,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<warName>footballun</warName>
+					<warName>footballun-${version}</warName>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -495,9 +495,10 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<server>tomcat-development-server</server>
-					<port>2016</port>
 					<path>/footballun</path>
+					<url>http://localhost:8080/manager/text</url>
+		        	<username>admin</username>
+		        	<password>admin</password>
 				</configuration>
 			</plugin>
 			<plugin>

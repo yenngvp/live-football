@@ -8,7 +8,8 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/app.css">
-    <link rel="stylesheet" href="plugins/bootstrap-datepicker/bootstrap-datepicker.css">
+    <!--  <link rel="stylesheet" href="plugins/bootstrap-datepicker/bootstrap-datepicker.css"> -->
+    <!-- <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css"> -->
 
     <!-- angular-timeline -->
     <link rel="stylesheet" href="plugins/angular-timeline/angular-timeline.css" />
@@ -43,13 +44,15 @@
     <ng-include src="'components/_partials/_modal_search.html'"></ng-include>
 
     <script src="plugins/jquery/jquery-2.1.0.min.js"></script>
-    <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+   <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 
     <!-- bootstrap javascript -->
     <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/bootstrap-dropdown.js"></script>
+    <!-- 
     <script src="plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
-
+ 	-->
+ 
     <!-- build:js({app,.tmp}) scripts/main.js -->
     <script src="js/lib/angular.js"></script>
     <script src="js/lib/angular-resource.js"></script>
@@ -59,12 +62,10 @@
     <script src="js/lib/angular-cookies.js"></script>
     <script src="js/lib/angular-storage.js"></script>
     <script src="js/lib/angular-mocks.js"></script>
+    
     <script src="js/lib/ui-bootstrap-tpls-0.14.3.min.js"></script>
     
-    <!-- AngularJS Directive For Circular Progress Meters  --> 
-    <script src="plugins/angular-progress-arc/angular-progress-arc.min.js"></script>
     <!-- Angular-Timer  -->
-    <script src="plugins/angular-timer/angular-timer-bower.js"></script> 
     <script src="plugins/angular-timer/angular-timer-all.min.js"></script>
 	<!-- angular-timeline -->
 	<script src="plugins/angular-sanitize/angular-sanitize.js"></script>
@@ -72,11 +73,16 @@
 	<script src="plugins/angular-timeline/angular-timeline.js"></script>
 	<script src="plugins/angular-local-storage/angular-local-storage.min.js"></script>
 	<script src="plugins/angular-localization/angular-localization.min.js"></script>
+	
 	<script src="plugins/angulike/angulike.js"></script>
 	
 	<!-- Chart JS -->
 	<script src="plugins/chartjs/Chart.min.js"></script>
     <script src="plugins/chartjs/angular-chart.min.js"></script>
+	 
+    <!-- i18n -->
+    <script src="js/lib/i18n/angular-locale_vi.js"></script>
+   
 	
 	<!-- Services -->
 	<script src="services/services.js"></script>
@@ -93,12 +99,10 @@
     <!-- Directives -->
     <script src="components/directives/DatePickerDirective.js"></script>
     <script src="components/directives/MatchupDirective.js"></script>
-    
+   
     <!-- Global app -->
     <script src="js/app.js"></script>
     
-    <!-- i18n -->
-    <script src="js/lib/i18n/angular-locale_vi.js"></script>
     
     <!-- endbuild -->
   </body>

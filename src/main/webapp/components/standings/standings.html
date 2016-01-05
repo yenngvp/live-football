@@ -19,15 +19,15 @@
 	                <tr>
 	                  <th>#</th>
 	                  <th></th>
-	                  <th>{{ 'common.team' | i18n }}</th>
-	                  <th>{{ 'common.point' | i18n }}</th>
-	                  <th>{{ 'common.played' | i18n }}</th>
-	                  <th>{{ 'common.won' | i18n }}</th>
-	                  <th>{{ 'common.drawn' | i18n }}</th>
-	                  <th>{{ 'common.lost' | i18n }}</th>
-	                  <th>{{ 'common.goalScored' | i18n }}</th>
-	                  <th>{{ 'common.goalAgainst' | i18n }}</th>
-	                  <th>{{ 'common.goalDiff' | i18n }}</th>
+	                  <th>{{ 'standing.team' | i18n }}</th>
+	                  <th>{{ 'standing.point' | i18n }}</th>
+	                  <th>{{ 'standing.played' | i18n }}</th>
+	                  <th>{{ 'standing.won' | i18n }}</th>
+	                  <th>{{ 'standing.drawn' | i18n }}</th>
+	                  <th>{{ 'standing.lost' | i18n }}</th>
+	                  <th>{{ 'standing.goalScored' | i18n }}</th>
+	                  <th>{{ 'standing.goalAgainst' | i18n }}</th>
+	                  <th>{{ 'standing.goalDiff' | i18n }}</th>
 	                </tr>
 	                <tr title="Click để xem thông tin đội bóng" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
@@ -50,7 +50,7 @@
 	          <div class="box box-info" data-ng-if="drawChart">
 	          	
 	            <div class="box-header with-border">
-	              <h3 class="box-title">{{ 'common.standingChange' | i18n }}</h3>
+	              <h3 class="box-title">{{ 'standing.standingChange' | i18n }}</h3>
 	            </div>
 	            <div class="box-body">
 	            	<!--<div class="progress progress-sm active">-->
@@ -61,7 +61,7 @@
 	              	<!--</div>-->
 	             </div>
 	              <div class="chart">
-                          <h4 class="box-title">{{ 'common.selectTeam' | i18n }}
+                          <h4 class="box-title">{{ 'standing.selectTeam' | i18n }}
                           <select name="multipleselect" id="standingsChartSelect"
                                   ng-options="p.squad.name for p in standing track by p.id"
                                   ng-model="data.singleSelect"

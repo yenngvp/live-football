@@ -70,7 +70,10 @@
 						    </div>
 						  </div>
 						</div>
-						<div style="text-align: center"><a data-ui-sref="matchdays({day: matchday[0].matchday, giai_dau: matchday[0].competition.id})" class="btn btn-primary" role="button">{{ 'common.viewFull' | i18n }}</a></div>
+						<div style="text-align: center">
+							<a data-ui-sref="matchdays({day: matchday[0].matchday, giai_dau: matchday[0].competition.id})"
+						 			class="btn btn-primary" role="button" 
+						 			ng-click="saveSelectedCompetition(matchday[0].competition.name)" >{{ 'common.viewFull' | i18n }}</a></div>
 					</div>
 					<!-- /Body -->
 					
@@ -90,6 +93,7 @@
 	</div> <!-- !col-md-12 -->
 </div> <!-- End container -->
 
+<!-- 
 <div class="container">
 		<div class="row">
 			<span fb-like></span>
@@ -97,7 +101,7 @@
                     Use this format for a custom URL
                     <div fb-like="myModel.Url"></div>
                 -->
-			<span google-plus></span>
+			<!--   <span google-plus></span> -->
 			<!--
                     Use this format for a custom URL
                     <div google-plus="myModel.Url"></div>
@@ -107,4 +111,7 @@
                     Use this format for a custom URL
                     <div tweet="myModel.Name" tweet-url="myModel.Url"></div>
                 -->
+                <!-- 
 		</div>
+</div>
+ -->

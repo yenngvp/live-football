@@ -1,0 +1,13 @@
+{
+ 	"team": "Đội",
+ 	"point": "Điểm",
+	"played": "Trận",
+	"won": "Thắng",
+	"drawn": "Hòa",
+	"lost": "Thua",
+	"goalScored": "Bàn thắng",
+	"goalAgainst": "Thủng lưới",
+	"goalDiff": "Hệ số",
+	"standingChange": "Xếp hạng qua các vòng",
+	"selectTeam": "Chọn đội: "
+}
