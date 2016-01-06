@@ -497,8 +497,8 @@
 				<configuration>
 					<path>/footballun</path>
 					<url>http://localhost:8080/manager/text</url>
-		        	<username>admin</username>
-		        	<password>admin</password>
+		        	<username>footballunking</username>
+		        	<password>theREdTig3#</password>
 				</configuration>
 			</plugin>
 			<plugin>
