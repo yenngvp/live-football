@@ -16,7 +16,7 @@ public interface MatchupRepository {
 	
 	Matchup save(Matchup matchup) throws DataAccessException;
 	
-	List<Matchup> findByCompetitionIdOrderByStartAtAsc(Integer competitionId) throws DataAccessException;
+	List<Matchup> findLatestMatchupCalendar(Integer competitionId) throws DataAccessException;
 	
 	List<Matchup> findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
 	
@@ -25,25 +25,10 @@ public interface MatchupRepository {
 	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	
 	List<Matchup> findByFeaturedTrueOrderByCompetitionIdAscStartAtAscKickoffAsc() throws DataAccessException;
-	
-	List<Matchup> findAllByMatchday() throws DataAccessException;
-	
-	List<Matchup> findByMatchday(Integer matchday) throws DataAccessException;
-	
-	/**
-	 * Gets a matchup today for a competition that has greatest matchday
-	 * 
-	 * @param today
-	 * @param competitionId
-	 * @return
-	 * @throws DataAccessException
-	 */
-	Matchup findOneByTodayAndCompetitionId(Integer competitionId) throws DataAccessException;
+
 	
 	/*
 	 * Matchup results
 	 */
-	List<Matchup> findNearestTenResults() throws DataAccessException;
-	List<Matchup> findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Collection<String> statuses) throws DataAccessException;
-	List<Matchup> findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findMatchupLatestResults(Integer competitionId) throws DataAccessException;
 }

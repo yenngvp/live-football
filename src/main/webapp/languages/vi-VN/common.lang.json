@@ -57,5 +57,6 @@
     "day": "ngày",
     "hour": "giờ",
     "minute": "phút",
-    "second": "giây"
+    "second": "giây",
+    "otherMatchdays": "Các vòng đấu khác" 
 }	

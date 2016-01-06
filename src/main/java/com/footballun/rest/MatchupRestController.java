@@ -30,64 +30,45 @@ public class MatchupRestController {
 	@Autowired
 	private FootballunService footballunService;
 		
-	private final Logger logger = LoggerFactory.getLogger(MatchupRestController.class);
-	
+	// private final Logger logger = LoggerFactory.getLogger(MatchupRestController.class);
+
 	/**
-	 * Gets matchups will be taking place in next matchday.
-	 * The matchups are grouped by competitions and order by date.
+	 * Featured matches off the week
 	 * 
-	 * @return List of matchups for each of the competitions
+	 * @return
 	 */
-	/*
-	@RequestMapping(value = "/matchdays", method = RequestMethod.GET)
-	public List<List<Matchup>> showMatches(@RequestParam(value = "competition", required = false) Integer competitionId) {
-		
-		if (competitionId == null) {
-			return groupMatchupByCompetition(footballunService.findMatchupFeaturedByMatchday());
-		} else {
-			return getMatchesByMatchdayAndCompetition(0, competitionId);
-		}
-	}*/
-
-
 	@RequestMapping(value = "/dang-xem-nhat", method = RequestMethod.GET)
 	public List<List<Matchup>> showFeaturedMatchups() {
 		return groupMatchupByCompetition(footballunService.findMatchupFeaturedByMatchday());
 	}
 
-
+	
+	/**
+	 * Gets Latest matchday
+	 * @param matchday
+	 * @param competitionId
+	 * @return
+	 */
 	@RequestMapping(value = "/lich-thi-dau/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showMatches(@PathVariable("matchday") int matchday,
-										   @RequestParam(value = "giai_dau", required = false) Integer competitionId) {
+										   @RequestParam(value = "giai_dau", required = true) Integer competitionId) {
 		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
 	
+	/**
+	 * Results
+	 * @param competitionId
+	 * @return
+	 */
 	@RequestMapping(value = "/ket-qua-tran-dau", method = RequestMethod.GET)
-	public List<List<Matchup>> showResults(@RequestParam(value = "giai_dau", required = false) Integer competitionId) {
-		
-		Collection<String> statuses = new ArrayList<>();
-		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
-		
-		List<Matchup> matchups;
-		if (competitionId == null || competitionId == 0) {
-			matchups = footballunService.findMatchupLatestResults(statuses);
-		} else {
-			matchups = footballunService.findMatchupLatestResults(competitionId, statuses);
-		}
-		
-		return groupMatchupByCompetition(matchups);
+	public List<List<Matchup>> showResults(@RequestParam(value = "giai_dau", required = true) Integer competitionId) {
+	
+		return groupMatchupByCompetition(footballunService.findMatchupLatestResults(competitionId));
 	}
 	
 	@RequestMapping(value = "/ket-qua-tran-dau/vong-dau/{matchday}", method = RequestMethod.GET)
 	public List<List<Matchup>> showResults(@PathVariable("matchday") int matchday,
 										   @RequestParam(value = "giai_dau", required = true) Integer competitionId) {
-		
-//		Collection<String> statuses = new ArrayList<>();
-//		statuses.add(MatchupStatus.getNameByCode(MatchupStatusCode.FULL_TIME));
-//		
-//		List<Matchup> matchups = footballunService.findMatchupLatestResults(competitionId, matchday, statuses);
-//		
-//		return groupMatchupByCompetition(matchups);
 		
 		return getMatchesByMatchdayAndCompetition(matchday, competitionId);
 	}
@@ -101,9 +82,9 @@ public class MatchupRestController {
 		} else if (matchday > 0 && competitionId == 0) {
 			matchups = footballunService.findMatchupFeaturedByMatchday();
 		} else if (matchday == 0 && competitionId > 0) {
-			matchups = footballunService.findMatchupByCompetitionId(competitionId);
+			matchups = footballunService.findLatestMatchupCalendar(competitionId);
 		} else {
-			matchups = footballunService.findAllMatchupMatchday();
+			return null;
 		}
 		
 		return groupMatchupByCompetition(matchups);

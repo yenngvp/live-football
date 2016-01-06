@@ -77,16 +77,19 @@ var ResultByDayController = ['$scope', '$stateParams', 'MatchDay','enableCache',
 
 var MatchdayPagedController = ["$scope", "MatchDay", function($scope, MatchDay) {
 
-	$scope.init = function(max) {
+	$scope.init = function(max, current) {
 		$scope.data = [];
 		for (var i = 1; i <= max; i++) {
 			$scope.data.push(i);
 		}
-        $scope.pageSize = max;
+        $scope.pageSize = 4;
+        var v = Math.floor(current / $scope.pageSize);
+        if (current == $scope.pageSize * v) {
+        	$scope.currentPage = v - 1;
+        } else {
+        	$scope.currentPage = v;
+        }
 	};
-
-    $scope.currentPage = 0;
-
 
     $scope.numberOfPages = function() {
         return Math.ceil($scope.data.length/$scope.pageSize);                

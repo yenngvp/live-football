@@ -40,21 +40,16 @@ public interface FootballunService {
 	/**
 	 * Matchup services
 	 */
+	// Matchup's schedules
 	List<Matchup> findMatchupByMatchdayAndCompetition(Integer matchday, Integer competitionId) throws DataAccessException;
-	List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException;
-	List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException;
+	List<Matchup> findLatestMatchupCalendar(Integer competitionId) throws DataAccessException;
 	void saveMatchup(Matchup matchup) throws DataAccessException;
 	Matchup findMatchupById(Integer id) throws DataAccessException;
 	List<Matchup> findMatchupByStartAtBetween(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException;
-	List<Matchup> findAllMatchupMatchday() throws DataAccessException;
-	List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException;
-	Matchup findMatchupByTodayAndCompetition(Integer competitionId) throws DataAccessException;
 	
 	// Matchup results
-	List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException;
-	List<Matchup> findMatchupLatestResults(Integer competitionId, Collection<String> statuses) throws DataAccessException;
-	List<Matchup> findMatchupLatestResults(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException;
+	List<Matchup> findMatchupLatestResults(Integer competitionId) throws DataAccessException;
 	
 	void onStartMatchup(Matchup matchup);
 	void onFinishMatchup(Matchup matchup);

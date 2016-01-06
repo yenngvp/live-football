@@ -63,6 +63,15 @@ public class Competition extends NamedEntity {
     @JsonSerialize(using = JsonDateSerializer.class)
 	private LocalDate endAt;
 	
+	@Column(name = "matchday_finished")
+    private boolean matchdayFinished;
+	
+	@Column(name = "matchday_started")
+    private boolean matchdayStarted;
+	
+	/**
+	 * Getters/Setters
+	 */
 	public String getType() {
 		return type;
 	}
@@ -135,5 +144,21 @@ public class Competition extends NamedEntity {
     public void setNameVn(String nameVn) {
         this.nameVn = nameVn;
     }
+
+	public boolean isMatchdayFinished() {
+		return matchdayFinished;
+	}
+
+	public void setMatchdayFinished(boolean matchdayFinished) {
+		this.matchdayFinished = matchdayFinished;
+	}
+
+	public boolean isMatchdayStarted() {
+		return matchdayStarted;
+	}
+
+	public void setMatchdayStarted(boolean matchdayStarted) {
+		this.matchdayStarted = matchdayStarted;
+	}
 
 }

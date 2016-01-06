@@ -66,23 +66,22 @@
 					
 					<!-- Footer -->
 		            <div class="panel-footer">
-		                <small>{{ 'common.allMatchdays' | i18n }}</small>
-		                <div ng-controller="MatchdayPagedController" ng-init="init(result[0].competition.totalMatchdays)">
-						    <ul class="list-inline" style="width: 100%">
-						        <li ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
-						           <a data-ui-sref="resultsByDay({matchday: item, giai_dau: result[0].competition.id})" ng-click="savePreferencesWhenClickedWith(result[0].competition.id)">{{item}}</a>
-						        </li>
-						    </ul>
-                            <!--
-						    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-						        <
-						    </button>
-						    {{currentPage+1}}/{{numberOfPages()}}
-						    <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-						        >
-						    </button>
-						    -->
-						</div>
+		                 <div ng-controller="MatchdayPagedController" ng-init="init(result[0].competition.totalMatchdays, result[0].matchday)">
+                            <ul class="list-inline matchdays-page" style="width: 100%">
+                                <li ng-class="item == result[0].matchday ? 'active' : ''"
+                                	ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
+                                    <a data-ui-sref="matchdays({day: item, giai_dau: result[0].competition.id})"
+                                    	ng-click="savePreferencesWhenClickedWith(result[0].competition.id)">{{'common.matchweek' | i18n}} {{item}}</a>
+                                </li>
+                            </ul>
+                            <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                <
+                            </button>
+                            {{currentPage+1}}/{{numberOfPages()}}
+                            <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                >
+                            </button>
+                        </div>
 		            </div>
           			<!-- /Footer -->
 

@@ -154,20 +154,13 @@ public class FootballunServiceImpl implements FootballunService {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
-	public List<Matchup> findMatchupByRound(String round, Integer competitionId) throws DataAccessException {
-		
-		return  null;
-	}
-	
-	@Override
 	public void saveMatchup(Matchup matchup) throws DataAccessException {
 		matchupRepository.save(matchup);
 	}
 	
 	@Override
-	public List<Matchup> findMatchupByCompetitionId(Integer competitionId) throws DataAccessException {
-		return matchupRepository.findByCompetitionIdOrderByStartAtAsc(competitionId);
+	public List<Matchup> findLatestMatchupCalendar(Integer competitionId) throws DataAccessException {
+		return matchupRepository.findLatestMatchupCalendar(competitionId);
 	}
 	
 	@Override
@@ -185,35 +178,10 @@ public class FootballunServiceImpl implements FootballunService {
 	public List<Matchup> findMatchupFeaturedByMatchday() throws DataAccessException {
 		return matchupRepository.findByFeaturedTrueOrderByCompetitionIdAscStartAtAscKickoffAsc();
 	}
-	
+
 	@Override
-	public List<Matchup> findAllMatchupMatchday() throws DataAccessException {
-		return matchupRepository.findAllByMatchday();
-	}
-	
-	@Override
-	public List<Matchup> findMatchupByMatchday(Integer matchday) throws DataAccessException {
-		return matchupRepository.findByMatchday(matchday);
-	}
-	
-	@Override
-	public List<Matchup> findMatchupLatestResults(Collection<String> statuses) throws DataAccessException {
-		return matchupRepository.findNearestTenResults();
-	}
-	
-	@Override
-	public List<Matchup> findMatchupLatestResults(Integer competitionId, Collection<String> statuses) throws DataAccessException {
-		return matchupRepository.findTop10ByCompetitionIdAndStatus_NameInOrderByStartAtDescKickoffDesc(competitionId, statuses);
-	}
-	
-	@Override
-	public List<Matchup> findMatchupLatestResults(Integer competitionId, Integer matchday, Collection<String> statuses) throws DataAccessException {
-		return matchupRepository.findByCompetitionIdAndMatchdayAndStatus_NameInOrderByStartAtDescKickoffDesc(competitionId, matchday, statuses);
-	}
-	
-	@Override
-	public Matchup findMatchupByTodayAndCompetition(Integer competitionId) throws DataAccessException {
-		return matchupRepository.findOneByTodayAndCompetitionId(competitionId);
+	public List<Matchup> findMatchupLatestResults(Integer competitionId) throws DataAccessException {
+		return matchupRepository.findMatchupLatestResults(competitionId);
 	}
 	
 	

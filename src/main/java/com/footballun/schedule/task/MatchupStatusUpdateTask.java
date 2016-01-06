@@ -38,7 +38,7 @@ public class MatchupStatusUpdateTask {
 		}
 		updating = true;
 		
-		List<Matchup> matchups = footballunService.findMatchupByCompetitionId(appConfigure.getCurrentCompetition());
+		List<Matchup> matchups = footballunService.findLatestMatchupCalendar(appConfigure.getCurrentCompetition());
 		for (Matchup matchup : matchups) {
 			
 			updateMatchupStatus(matchup);

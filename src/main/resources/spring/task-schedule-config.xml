@@ -31,21 +31,19 @@
 
 <!-- Tasks scheduler -->
 <task:scheduled-tasks scheduler="myScheduler">
-    <!--<task:scheduled ref="beanA" method="methodA" fixed-delay="5000" initial-delay="1000"/> -->
-    <!--<task:scheduled ref="beanB" method="methodB" fixed-rate="5000"/> -->
-    
-    <!-- Run every day at midnight (GMT) time cron="5 0 0 * * *" -->
-    <task:scheduled ref="matchdayMonitor"
-                    method="findAndUpdateCurrentMatchday"
-                    fixed-rate="#{ T(java.lang.Long).MAX_VALUE }"
-                    initial-delay="2000"/>
-    
-
+     <!--
     <task:scheduled ref="dataImporter"
     				method="importExcel" 
     				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
                     initial-delay="#{ T(java.lang.Long).MAX_VALUE }"/>
+	-->
+	    
+    <!-- Run every 10 minutes cron="5 0 0 * * *" -->
+    <task:scheduled ref="matchdayMonitor"
+                    method="findAndUpdateCurrentMatchday"
+                    cron="0 */10 * * * *"/>
 
+	<!-- Run every 30 seconds -->
 	<task:scheduled ref="livescoreSchedule"
     				method="updateMatchupResults" 
     				fixed-rate="6000000"

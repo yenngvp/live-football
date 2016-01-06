@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.footballun.model.Competition;
 import com.footballun.model.Matchup;
+import com.footballun.model.MatchupStatus.MatchupStatusCode;
 import com.footballun.service.FootballunService;
 
 /**
@@ -37,13 +38,39 @@ public class MatchdayMonitorTask {
 		List<Competition> competitions = footballunService.findAllCompetition(LocalDate.now(), "LEAGUE");
 		
 		// Gets a matchup of every competition that happening today with greatest matchday
+		List<Matchup> matchups;
+		boolean matchdayStarted;
+		boolean matchdayFinished;
 		for (Competition competition : competitions) {
-			Matchup matchup = footballunService.findMatchupByTodayAndCompetition(competition.getId());
-			if (matchup != null) {
-				// Updates current competition matchday as matchup's matchday
-				competition.setCurrentMatchday(matchup.getMatchday());
-				footballunService.save(competition);
+			matchups = footballunService.findMatchupByMatchdayAndCompetition(competition.getCurrentMatchday(), competition.getId());
+			matchdayStarted = false;
+			matchdayFinished = true;
+			for (Matchup matchup : matchups) {
+				if (!matchdayStarted && (matchup.getStatus().getCode() == MatchupStatusCode.LIVE 
+						|| matchup.getStatus().getCode() == MatchupStatusCode.FULL_TIME)) {
+					// At least a game has finished
+					matchdayStarted = true;
+				}
+				
+				if (matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME && matchdayFinished) {
+					// At least a game has NOT YET finished
+					matchdayFinished = false;
+				}
 			}
+			
+			// Updates competition
+			competition.setMatchdayStarted(matchdayStarted);
+			competition.setMatchdayFinished(matchdayFinished);
+			if (matchdayFinished) {
+				// All matchday's games has finished, go to the next matchday
+				if (competition.getCurrentMatchday() < competition.getTotalMatchdays()) {
+					competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
+					competition.setMatchdayStarted(false);
+					competition.setMatchdayFinished(false);
+				}				
+			}
+
+			footballunService.save(competition);
 		}
 		
 		logger.info("END findAndUpdateCurrentMatchday() method");

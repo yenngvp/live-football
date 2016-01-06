@@ -280,3 +280,9 @@ li.ng-enter-active {
     max-width: 200px;
     width: 200px;*/
 }
+
+ul.matchdays-page li.active {
+ 	-moz-box-shadow: 0 0 5px 5px #888;
+	-webkit-box-shadow: 0 0 5px 5px#888;
+	box-shadow: 0 0 5px 5px #888;
+}
