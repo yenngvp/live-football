@@ -496,7 +496,7 @@
 				<version>2.2</version>
 				<configuration>
 					<path>/footballun</path>
-					<url>http://localhost:8080/manager/text</url>
+					<url>http://localhost/manager/text</url>
 		        	<username>footballunking</username>
 		        	<password>theREdTig3#</password>
 				</configuration>
