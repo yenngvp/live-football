@@ -78,7 +78,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
     <servlet-mapping>
         <servlet-name>footballun</servlet-name>
-        <url-pattern>*.</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 <!--     Dandelion servlet definition and mapping -->

@@ -67,6 +67,7 @@
  *************** angular-timeline 
  ***************
  *************************************************************/
+ /*
  .timeline {
     position: relative;
     padding: 21px 0px 10px;
@@ -143,7 +144,7 @@
     display: none;
 }
  
-.timeline-footer { background-color: aliceblue; }
+.timeline-footer { background-color: aliceblue; } */
 
 /**
  * Matchup directive wrapper

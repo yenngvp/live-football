@@ -495,10 +495,17 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
+					<!-- Development -->
+					<server>tomcat-development-server</server>
+					<port>80</port>
+					<path>/footballun</path>
+					<!-- Deployment -->
+					<!-- 
 					<path>/footballun</path>
 					<url>http://localhost/manager/text</url>
 		        	<username>footballunking</username>
 		        	<password>theREdTig3#</password>
+		        	 -->
 				</configuration>
 			</plugin>
 			<plugin>
