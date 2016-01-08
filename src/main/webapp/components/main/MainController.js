@@ -85,9 +85,9 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
                function (value) {
                    localStorageService.set(key, value);
                    $scope.appPrefs = value;
+                   
                    // default one competition
-                   localStorageService.set("PREFERENCES_COMPETITION", value[0][0]);
-                   console.log("Just getting prefs: " + value + ", default competition: " + value[0][0]);
+                   $rootScope.saveSelectedCompetition(value[0][0].name);
                },
                //error
                function (error) {
@@ -150,7 +150,6 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
 	    		localStorageService.set("PREFERENCES_COMPETITION", competition);
 	    		$scope.selectedCompetition = competition;
 	    		$location.search({giai_dau: competition.id});
-	    		console.log("selected competition: " + localStorageService.get("PREFERENCES_COMPETITION").name);
     		}
     	}
     };

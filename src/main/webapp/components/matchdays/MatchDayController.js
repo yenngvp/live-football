@@ -8,7 +8,6 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 		}, 1000);
 	});*/
 
-	console.log($stateParams);
 	// Gets localStorage cached
 	var key = 'matchdaysCache'; 
 	if (enableCache) {

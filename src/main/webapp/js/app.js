@@ -9,7 +9,7 @@ var app = angular.module('footballun', ['ui.router',
                                         'timer',
                                     	'ngSanitize',
                                     	'angular-scroll-animate',
-                                    	'ui.bootstrap',
+                                    	/*'ui.bootstrap',*/
                                     	'LocalStorageModule',
                                     	'ngLocalize',
                                     	'ngLocalize.Config',
@@ -261,42 +261,12 @@ app.value('localeConf', {
 
 
 /** Custom filters **/
-/** Custom date filter  **/
-app.filter('smarterDate', function($filter) {
-	return function(input) {
-		if (input == null) { 
-			return "";
-		} 
 
-		console.log(input);
-		var smarterDate = $filter('date') (new Date(input));
-
-		return smarterDate;
-	};
-});
-app.filter('smarterTime', function($filter) {
-	return function(input) {
-		if (input == null) { 
-			return "";
-		} 
-
-		console.log(input);
-		var smarterDate = $filter('date') (new Date(input), "h:ss a");
-
-		return smarterDate;
-	};
-});
 app.filter('startFrom', function() {
   return function(input, start) {
       start = +start; //parse to int
       return input.slice(start);
   }
-});
-
-
-
-app.run(function(useMockData, MockService) {
-	MockService.mock(useMockData);
 });
 
 app.run([
