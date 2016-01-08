@@ -37,6 +37,36 @@
     }
 } */
 
+ @media (min-width: 858px) {
+	html {
+		font-size: 12px; font-size: 1.2rem;
+	}
+}
+
+@media ( min-width : 780px) {
+	html {
+		font-size: 11px; font-size: 11rem;
+	}
+}
+
+@media ( min-width : 702px) {
+	html {
+		font-size: 10px; font-size: 10rem;
+	}
+}
+
+@media ( min-width : 724px) {
+	html {
+		font-size: 9px; font-size: 9rem;
+	}
+}
+
+@media ( max-width : 623px) {
+	html {
+		font-size: 8px; font-size: 8rem;
+	}
+}
+
 .navbar-default {
 	background-color: #4C3C1C;
 	border-color: #4C3C1C;

@@ -19,7 +19,7 @@
 			<!-- /Page header -->
 
 			<!-- Timeline -->
-			<div class="timeline">
+			<div>
 
 				<!-- Line component -->
 				<div class="line text-muted"></div>
@@ -29,9 +29,10 @@
 				<div class="panel panel-primary" ng-repeat="result in results">
 
 					<!-- Icon -->
+					<!-- 
 					<div class="panel-heading thumbnail icon">
 						<i class="glyphicon glyphicon-registration-mark"></i>
-					</div>
+					</div>-->
 					<!-- /Icon -->
 
 
@@ -57,7 +58,7 @@
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
 						    <div class="table-cell cell-matchup-right2">
-						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{'common.viewMatchDetail'  | i18n}}</a></h5>
+						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)"><i class="glyphicon glyphicon-chevron-right"></i></a></h5>
 						    </div>
 						  </div>
 						</div>

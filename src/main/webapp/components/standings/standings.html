@@ -31,7 +31,7 @@
 	                </tr>
 	                <tr title="Click để xem thông tin đội bóng" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
-	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/150x150/{{p.squad.logo}}" class="img-circle img-responsive" style="width:30px;height:30px;"></td>
+	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/32x32/{{p.squad.logo}}" class="img-circle img-responsive" style="width:32px;height:32px;"></td>
 	                	<td>{{p.squad.team.name}}</td>
 	                	<td><b>{{p.point}}</b></td>
 	                	<td>{{p.played}}</td>
