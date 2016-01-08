@@ -179,6 +179,24 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
             Name: "AngularJS directives for social sharing buttons - Facebook, Google+, Twitter and Pinterest | Jason Watmore's Blog", 
             ImageUrl: 'http://www.jasonwatmore.com/pics/jason.jpg'
     };
+    
+    /*
+     * ui.bootstrap.dropdown
+     */
+    $scope.status = {
+    		isopen: false
+    };
+
+    $scope.toggled = function(open) {
+    	$log.log('Dropdown is now: ', open);
+    };
+
+    $scope.toggleDropdown = function($event) {
+    	$event.preventDefault();
+    	$event.stopPropagation();
+    	$scope.status.isopen = !$scope.status.isopen;
+    };
+
 
    /*
     * Initialises data for the main controller on page load
