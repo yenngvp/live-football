@@ -5677,7 +5677,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus,
 }
 
 .panel-body {
-	padding: 15px
+	padding: 0px
 }
 
 .panel-body:after, .panel-body:before {
@@ -6262,6 +6262,9 @@ button.close {
 	}
 	.modal-sm {
 		width: 300px
+	}
+	.panel-body {
+		padding: 15px;
 	}
 }
 

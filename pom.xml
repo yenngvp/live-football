@@ -496,20 +496,21 @@
 				<version>2.2</version>
 				<configuration>
 					<!-- Development -->
-					<!-- 
+					
 					<server>tomcat-development-server</server>
 					<port>80</port>
-					<path>/</path> -->
+					<path>/</path>
 					
 					<!-- Deployment -->
-					<!-- -->
+					<!-- 
 					<path>/</path>
 					<url>http://localhost/manager/text</url>
 		        	<username>footballunking</username>
 		        	<password>theREdTig3#</password>
-		        	 
+		        	 -->
 				</configuration>
 			</plugin>
+			<!-- 
 			<plugin>
 		  		<groupId>org.zeroturnaround</groupId>
 					<artifactId>jrebel-maven-plugin</artifactId>
@@ -524,6 +525,7 @@
 						</execution>	
 					</executions>
 			</plugin>
+			 -->
 		</plugins>
 	</build>
 

@@ -52,14 +52,16 @@
 						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >
-						    	<h5 ng-if="matchup.status.code==='FULL_TIME'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h5>
-						    	<h5 ng-if="matchup.status.code==='LIVE'">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</h5>
-						    	<h5 ng-if="matchup.status.code==='NOT_BEGIN'">vs</h5>
+						    	<h4 ng-if="matchup.status.code==='FULL_TIME'"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</a></h4>
+						    	<h4 ng-if="matchup.status.code==='LIVE'"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</a></h4>
+						    	<h4 ng-if="matchup.status.code==='NOT_BEGIN'"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">vs</a></h4>
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
+						    <!-- 
 						    <div class="table-cell cell-matchup-right2">
 						    	<a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)"><i class="glyphicon glyphicon-chevron-right"></i></a>
 						    </div>
+						    -->
 						  </div>
 						</div>
 					</div>

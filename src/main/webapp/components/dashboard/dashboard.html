@@ -62,12 +62,14 @@
 						  	<div class="table-cell cell-matchup-left0"><h5 class="caption-heading">{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >
-						    	<h5>vs</h5>
+						    	<h4><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">vs</a></h4>
 						    </div>
 						    <div class="table-cell cell-matchup-right"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.secondDetail.squad.id})" data-ng-bind="matchup.secondDetail.squad.team.name"></a></h4></h4></div>
+						    <!-- 
 						    <div class="table-cell cell-matchup-right2">
 						    	<h5 class="caption-heading"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)"><i class="glyphicon glyphicon-chevron-right"></i></a></h5>
 						    </div>
+						     -->
 						  </div>
 						</div>
 						<div style="text-align: center">

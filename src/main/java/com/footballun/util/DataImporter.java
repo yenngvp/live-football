@@ -477,15 +477,19 @@ public class DataImporter {
 								// Extracts cell values
 								String fixture = trimString(String.valueOf(cellValues.get(COL_NAME_FIXTURE)));
 								String fulltimeOrKickoff = trimString(String.valueOf(cellValues.get(COL_NAME_KICKOFF)));
-								if ("Dortmund 4-1 VfB Stuttgart".equals(fixture)) {
-									fulltime = true;
-								}
+								
 								if ("Full time".equals(fulltimeOrKickoff)) {
 									fulltime = true;
 								} else {
 									fulltime = false;
 									Date time = (Date) cellValues.get(COL_NAME_KICKOFF);
 									kickoff = LocalTime.of(time.getHours(), time.getMinutes());
+									
+									/*
+									 * supposed current time is at UTC,
+									 * so needs to convert to GMT+7
+									 */
+									
 								}
 								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff == null ? "" : kickoff.toString()));
 								
