@@ -9,9 +9,9 @@
 	<div class="col-md-12">
 		<div class="row" ng-repeat="standing in standings">
 	        <div class="col-xs-12">
-	            <div class="box box-info" style="margin-top: 20px;">
+	            <div class="box box-info">
 	            	<div class="box-header with-border">
-	             		<h3 class="box-title">{{ 'common.standings' | i18n }} {{standing[0].squad.competition.name}}</h3>
+	             		<h3 class="box-title">{{ 'common.standings' | i18n }} - {{standing[0].squad.competition.nameVn}}</h3>
 	           	  	</div><!-- /.box-header -->
 	
 	            <div class="box-body table-responsive no-padding">
@@ -31,7 +31,7 @@
 	                </tr>
 	                <tr title="Click de xem thong tin doi bong" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
-	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/32x32/{{p.squad.logo}}" class="img-circle img-responsive" style="width:32px;height:32px;"></td>
+	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/32x32/{{p.squad.logo}}" style="width:32px;height:32px;"></td>
 	                	<td>{{p.squad.team.name}}</td>
 	                	<td><b>{{p.point}}</b></td>
 	                	<td>{{p.played}}</td>

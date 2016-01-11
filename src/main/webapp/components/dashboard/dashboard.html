@@ -12,17 +12,17 @@
 	<div class="col-md-12">
 	
  	<!-- TODAY -->
- 	<div class="row" ng-if="soonestCountdown > 0">
-		<h3>{{ 'common.soonestMatch' | i18n }} 
-			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a>
+ 	<div class="row countdown" ng-if="soonestCountdown > 0">
+		<h4>{{ 'common.soonestMatch' | i18n }}
+			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a><br/>
 			<span class="timer-countdown"><timer end-time="soonestCountdown">
                 {{ddays}} {{'common.day' | i18n}}, {{hhours}} {{'common.hour' | i18n}}, {{mminutes}} {{'common.minute' | i18n}}, {{sseconds}} {{'common.second' | i18n}}</timer></span>
-		</h3>
+		</h4>
 	</div>
 
 	<div class="row">
 			<!-- Page header -->
-			<div class="page-header">
+			<div class="box-header"  style="margin-left: 5px;">
 				<h3>
 					<span>{{ 'common.noticableMatches' | i18n }}</span>
 					<span ng-if="thisWeekCounter > 0 && nextWeekCounter === 0">{{ 'common.thisWeek' | i18n }}</span>

@@ -24,7 +24,10 @@
       <!--</div>-->
     <!--</div>-->
 
-    <h2 class="sub-header">{{ 'common.teams' | i18n }} - {{competitionName}}</h2>
+    <div class="box-header with-border">
+        <h3 class="box-title">{{ 'common.teams' | i18n }} - {{competitionName}}</h3>
+    </div><!-- /.box-header -->
+
     <div class="row">
 		<div class="col-md-3 col-sm-6 col-xs-12"
 			data-ng-repeat="team in teams">

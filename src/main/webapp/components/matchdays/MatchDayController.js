@@ -76,7 +76,6 @@ var MatchDayController = ['$rootScope','$scope', '$stateParams', 'MatchDay','ena
                         $scope.soonestCountdown = 0;
                     }
 
-
                     $scope.hideSpinner = true;
 				},
 				//error

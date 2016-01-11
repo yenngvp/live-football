@@ -239,10 +239,10 @@ li.ng-enter-active {
 .table-row-even {background-color: #F2EFDF;}
 
 
-.cell-matchup-left0 {width: 20%; text-align: left !important;}
-.cell-matchup-left {width: 35%; text-align: right !important;}
-.cell-matchup-center {width: 10%; text-align: center !important;}
-.cell-matchup-right {width: 35%; text-align: left !important;}
+.cell-matchup-left0 {width: 20%; text-align: center !important;}
+.cell-matchup-left {width: 30%; text-align: right !important;}
+.cell-matchup-center {width: 20%; text-align: center !important;}
+.cell-matchup-right {width: 30%; text-align: left !important;}
 .cell-matchup-right2 {width: 0%; text-align: center !important;}
 .group {display: table-row-group; }
 
@@ -277,3 +277,28 @@ ul.matchdays-page li.active {
 	-webkit-box-shadow: 0 0 5px 5px#888;
 	box-shadow: 0 0 5px 5px #888;
 }
+
+ .menu-leagues {
+     color: white !important;
+ }
+
+ #mobile-menu>ul li {
+     padding-bottom: 5px;
+ }
+
+ .box-header .countdown{
+     padding-left: 5px !important;
+ }
+
+ .cell-matchup-center h4 {
+     background: #d9c406;
+     margin-left: 5px;
+     margin-right: 5px;
+ }
+
+ @media ( min-width :630px) {
+     .cell-matchup-center h4 {
+         margin-left:30%;
+         margin-right: 30%;
+     }
+ }

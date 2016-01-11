@@ -7,17 +7,16 @@
 	</div>          
 	 
  <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-12 col-xs-12">
 	
 	<div class="row">
-			<!-- Page header -->
-			<div class="page-header">
-				<h3>
-					<span>{{ 'common.results' | i18n }}</span>
-				</h3>
-			</div>
-			<!-- /Page header -->
-
+            <div class="box box-info">
+                <!-- Page header -->
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'common.results' | i18n }} - {{results[0][0].competition.nameVn}}</h3>
+                </div><!-- /.box-header -->
+                <!-- /Page header -->
+            </div>
 			<!-- Timeline -->
 			<div>
 
@@ -46,9 +45,13 @@
 					<!-- Body -->
 					<div class="panel-body">
 						<div class="table">
-						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in result" ng-if="!matchup.isToday">
+						  <div class="table-row"
+                               ng-class-odd="'table-row-odd'"
+                               ng-class-even="'table-row-even'"
+                               ng-repeat="matchup in result"
+                               ng-if="!matchup.isToday">
 						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >KT</h5></div>
-						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Phút {{matchup.updateMinute}}</h5></div>
+						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Phï¿½t {{matchup.updateMinute}}</h5></div>
 						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h4></div>
 						    <div class="table-cell cell-matchup-center" >

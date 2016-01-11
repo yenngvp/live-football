@@ -11,7 +11,7 @@ body {
 	margin: 0
 }
 
-article, aside, details, figcaption, figure, footer, header, hgroup,
+article, aside, details, figcaption, figure, footer, header,
 	main, menu, nav, section, summary {
 	display: block
 }
@@ -5332,8 +5332,7 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 	color: #843534
 }
 
-@
--webkit-keyframes progress-bar-stripes {
+@-webkit-keyframes progress-bar-stripes {
 	from {background-position: 40px 0
 }
 
@@ -5342,8 +5341,7 @@ to {
 }
 
 }
-@
-keyframes progress-bar-stripes {
+@keyframes progress-bar-stripes {
 	from {background-position: 40px 0
 }
 
@@ -6818,8 +6816,7 @@ button.close {
 	position: fixed
 }
 
-@
--ms-viewport {
+@-ms-viewport {
 	width: device-width
 }
 
@@ -7183,9 +7180,6 @@ input::-moz-focus-inner {
 	}
 }
 
-.jumbotron-appointment {
-	background: url(../images/bg-appointment.png) 0 0/cover #4C3C1C
-}
 
 .jumbotron-appointment .form-inline {
 	font-size: 0
@@ -7314,12 +7308,6 @@ input::-moz-focus-inner {
 .sections-bottom-nav {
 	height: auto;
 	padding: 0
-}
-
-.sections-testimonials {
-	background: url(../images/testimonial-tiles.png) #4C3C1C;
-	color: #fff;
-	padding: 50px 0
 }
 
 .sections-testimonials .section-heading {

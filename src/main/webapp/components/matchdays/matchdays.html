@@ -12,19 +12,19 @@
 	<div class="col-md-12">
 	
  	<!-- Countdown -->
- 	<div class="row" ng-if="soonestCountdown > 0">
-		<h3>{{ 'common.soonestMatch' | i18n }} 
-			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a>
+ 	<div class="row countdown" ng-if="soonestCountdown > 0">
+		<h4>{{ 'common.soonestMatch' | i18n }}
+			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a><br/>
 			<span class="timer-countdown"><timer end-time="soonestCountdown">
                 {{ddays}} {{'common.day' | i18n}}, {{hhours}} {{'common.hour' | i18n}}, {{mminutes}} {{'common.minute' | i18n}}, {{sseconds}} {{'common.second' | i18n}}</timer></span>
-		</h3>
+		</h4>
 	</div>
 	
 	<div class="row">
 			<!-- Page header -->
-			<div class="page-header">
+			<div class="box-header">
 				<h3>
-					<span>{{ 'common.matchdays' | i18n }}</span>
+					<span>{{ 'common.matchdays' | i18n }} - {{matchdays[0][0].competition.nameVn}}</span>
 					<span ng-if="thisWeekCounter > 0">{{ 'common.thisWeek' | i18n }}</span>
 					<span ng-if="nextWeekCounter > 0">{{ 'common.nextWeek' | i18n }}</span>
 				</h3>
@@ -61,7 +61,7 @@
 						<div class="table">
 						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
 						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >KT</h5></div>
-						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Phút {{matchup.updateMinute}}</h5></div>
+						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Phï¿½t {{matchup.updateMinute}}</h5></div>
 						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h5></div>
 						    <div class="table-cell cell-matchup-center" >
