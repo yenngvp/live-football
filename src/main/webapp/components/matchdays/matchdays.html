@@ -13,11 +13,11 @@
 	
  	<!-- Countdown -->
  	<div class="row" ng-if="soonestCountdown > 0">
-		<h4>{{ 'common.soonestMatch' | i18n }} 
+		<h3>{{ 'common.soonestMatch' | i18n }} 
 			<a data-ui-sref="matchRegister({id: soonestMatch.id})" ng-click="saveSelectedMatchup(matchup)">{{soonestMatch.name}}: </a>
 			<span class="timer-countdown"><timer end-time="soonestCountdown">
                 {{ddays}} {{'common.day' | i18n}}, {{hhours}} {{'common.hour' | i18n}}, {{mminutes}} {{'common.minute' | i18n}}, {{sseconds}} {{'common.second' | i18n}}</timer></span>
-		</h4>
+		</h3>
 	</div>
 	
 	<div class="row">

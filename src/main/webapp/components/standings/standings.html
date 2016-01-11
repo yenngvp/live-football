@@ -29,7 +29,7 @@
 	                  <th>{{ 'standing.goalAgainst' | i18n }}</th>
 	                  <th>{{ 'standing.goalDiff' | i18n }}</th>
 	                </tr>
-	                <tr title="Click để xem thông tin đội bóng" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
+	                <tr title="Click de xem thong tin doi bong" ng-repeat="p in standing  | orderBy:'currentPosition'" ng-click="goTeamDetail(p.squad.id)">
 	                	<td>{{p.currentPosition}}</td>
 	                	<td><img data-ng-src="images/teams/{{p.squad.competition.name}}/32x32/{{p.squad.logo}}" class="img-circle img-responsive" style="width:32px;height:32px;"></td>
 	                	<td>{{p.squad.team.name}}</td>

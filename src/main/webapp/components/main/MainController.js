@@ -184,12 +184,13 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
      * ui.bootstrap.dropdown
      */
     $scope.status = {
-    		isopen: false
+    		isopen: false,
+    		isopenMobileMenu: false,
     };
 
-    $scope.toggled = function(open) {
-    	$log.log('Dropdown is now: ', open);
-    };
+//    $scope.toggled = function(open) {
+//    	$log.log('Dropdown is now: ', open);
+//    };
 
     $scope.toggleDropdown = function($event) {
     	$event.preventDefault();
@@ -197,7 +198,12 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     	$scope.status.isopen = !$scope.status.isopen;
     };
 
-
+    $scope.toggleMobileMenuDropdown = function($event) {
+    	$event.preventDefault();
+    	$event.stopPropagation();
+    	$scope.status.isopenMobileMenu = !$scope.status.isopenMobileMenu;
+    };
+    
    /*
     * Initialises data for the main controller on page load
     */

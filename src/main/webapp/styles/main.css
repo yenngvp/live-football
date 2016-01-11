@@ -4318,7 +4318,7 @@ tbody.collapse.in {
 	content: " ";
 	display: table
 }
-
+	
 .navbar-header:after {
 	clear: both
 }
@@ -4326,6 +4326,9 @@ tbody.collapse.in {
 @media ( min-width :768px) {
 	.navbar-header {
 		float: left
+	}
+	#mobile-menu {
+		display: none
 	}
 }
 
