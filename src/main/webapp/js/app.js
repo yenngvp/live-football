@@ -134,9 +134,11 @@ app.controller('ResultByDayController', ResultByDayController);
 app.controller('MatchdayPagedController', MatchdayPagedController);
 
 
-app.controller('DashboardController', ['$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
-                                       function($scope, MatchDay, enableCache, localStorageService,locale) {
+app.controller('DashboardController', ['$rootScope', '$scope', 'MatchDay', 'enableCache', 'localStorageService','locale',
+                                       function($rootScope, $scope, MatchDay, enableCache, localStorageService,locale) {
 
+		$rootScope.pageTitle = "Trận đấu hấp dẫn nhất tuần";
+		
         // Query matchdays
         // Gets localStorage cached
         var key = 'matchdaysCache';

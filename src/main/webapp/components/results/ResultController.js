@@ -1,8 +1,10 @@
 /**
  * 
  */
-var ResultController = ['$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
-                          function($scope, $stateParams, MatchDay, enableCache, localStorageService) {
+var ResultController = ['$rootScope', '$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
+                          function($rootScope, $scope, $stateParams, MatchDay, enableCache, localStorageService) {
+	
+	$rootScope.pageTitle = "Kết quả bóng đá " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
 	
 	// Gets localStorage cached
 	var key = 'resultsCache'; 
@@ -38,8 +40,10 @@ var ResultController = ['$scope', '$stateParams', 'MatchDay','enableCache','loca
 	}	
 }];
 
-var ResultByDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
-                        function($scope, $stateParams, MatchDay, enableCache, localStorageService) {
+var ResultByDayController = ['$rootScope', '$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
+                        function($rootScope, $scope, $stateParams, MatchDay, enableCache, localStorageService) {
+	
+	$rootScope.pageTitle = "Kết quả bóng đá " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
 	
 	// Gets localStorage cached
 	var key = 'resultsCache'; 

@@ -1,6 +1,8 @@
-var StandingController = ['$scope','$http','Standing','enableCache','localStorageService','$stateParams',"$state","locale",
-						  function ($scope, $http, Standing, enableCache, localStorageService, $stateParams, $state, locale) {
-
+var StandingController = ['$rootScope','$scope','$http','Standing','enableCache','localStorageService','$stateParams',"$state","locale",
+						  function ($rootScope, $scope, $http, Standing, enableCache, localStorageService, $stateParams, $state, locale) {
+	
+	$rootScope.pageTitle = "Bảng xếp hạng bóng đá " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
+	
 	if (enableCache) {
 		// Gets localStorage cached
 		var key = 'standingsCache';

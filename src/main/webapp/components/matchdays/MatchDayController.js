@@ -1,6 +1,8 @@
-var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
-                          function($scope, $stateParams, MatchDay, enableCache, localStorageService) {
+var MatchDayController = ['$rootScope','$scope', '$stateParams', 'MatchDay','enableCache','localStorageService',
+                          function($rootScope, $scope, $stateParams, MatchDay, enableCache, localStorageService) {
 
+	$rootScope.pageTitle = "Lịch thi đấu bóng đá " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
+	
 	/*
 	$scope.$on('$viewContentLoaded', function(event){
 		$('html, body').animate({
@@ -91,6 +93,8 @@ var MatchDayController = ['$scope', '$stateParams', 'MatchDay','enableCache','lo
 
 var MatchupDetailController = ['$scope','$rootScope','$stateParams', 'MatchDay','localStorageService','locale', 
                                function($scope,$rootScope,$stateParams,MatchDay,localStorageService,locale) {
+	
+	$rootScope.pageTitle = "Đội hình ra sân, Tường thuật trận đấu " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
 	
 	$scope.matchup = MatchDay.getSelectedMatchup();
 	

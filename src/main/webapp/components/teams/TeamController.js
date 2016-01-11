@@ -1,7 +1,9 @@
-var TeamController = ['$scope','$state','Team','localStorageService', 'enableCache','$stateParams',
-                      function($scope,$state,Team,localStorageService,enableCache,$stateParams) {
-
-    // Gets localStorage cached
+var TeamController = ['$rootScope','$scope','$state','Team','localStorageService', 'enableCache','$stateParams',
+                      function($rootScope,$scope,$state,Team,localStorageService,enableCache,$stateParams) {
+	
+	$rootScope.pageTitle = "Danh sách đội bóng " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;
+    
+	// Gets localStorage cached
     var key = 'teamsCache';
     if (enableCache) {
         $scope.teams = localStorageService.get(key);
@@ -41,6 +43,8 @@ var TeamController = ['$scope','$state','Team','localStorageService', 'enableCac
 var TeamDetailsController = ['$scope','$rootScope','$stateParams', '$cacheFactory','Team','localStorageService','enableCache','Standing',
                              function($scope,$rootScope,$stateParams,$cacheFactory,Team,localStorageService,enableCache, Standing) {
 
+	$rootScope.pageTitle = "Thông tin đội bóng " + localStorageService.get('PREFERENCES_COMPETITION').nameVn;;
+	
     // Gets localStorage cached
     var key = 'teamMembersCache_' + $stateParams.id;
     if (enableCache) {
