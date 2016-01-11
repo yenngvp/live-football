@@ -8,12 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -280,25 +279,22 @@ public class DataImporter {
 //				logger.error("Importing teams data failed. Should stop further processing!");
 //				return;
 //			}
-//			
 //
-//			if (!importLeaguesCalendar(workbook)) {
-//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
-//				return;
-//			}
-//			
-//			if (!importMatchdays(workbook)) {
-//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
-//				return;
-//			}
-//			
-//			
-//			if (!importPlayers(workbook)) {
+// 			if (!importPlayers(workbook)) {
 //				logger.error("Importing leagues player failed. Should stop further processing!");
 //				return;
 //			}
-//           
 //			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
+
+            if (!importLeaguesCalendar(workbook)) {
+				logger.error("Importing leagues calenddar failed. Should stop further processing!");
+				return;
+			}
+
+			if (!importMatchdays(workbook)) {
+				logger.error("Importing leagues calenddar failed. Should stop further processing!");
+				return;
+			}
 
 			calculateStandings();
 
@@ -489,7 +485,9 @@ public class DataImporter {
 									 * supposed current time is at UTC,
 									 * so needs to convert to GMT+7
 									 */
-									
+                                    LocalDateTime adjustedDatetime = LocalDateTime.of(matchCal, kickoff).plusHours(7);
+                                    matchCal = adjustedDatetime.toLocalDate();
+                                    kickoff = adjustedDatetime.toLocalTime();
 								}
 								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff == null ? "" : kickoff.toString()));
 								

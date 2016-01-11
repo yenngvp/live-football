@@ -31,12 +31,12 @@
 
 <!-- Tasks scheduler -->
 <task:scheduled-tasks scheduler="myScheduler">
-<!-- 
+
     <task:scheduled ref="dataImporter"
     				method="importExcel" 
     				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
-                    initial-delay="5000"/>
-	  -->   
+                    initial-delay="2000000"/>
+
     <!-- Run every 10 minutes cron="5 0 0 * * *" -->
     <task:scheduled ref="matchdayMonitor"
                     method="findAndUpdateCurrentMatchday"
@@ -46,7 +46,7 @@
 	<task:scheduled ref="livescoreSchedule"
     				method="updateMatchupResults" 
     				fixed-rate="6000000"
-                    initial-delay="5000"/>
+                    initial-delay="5000000"/>
 </task:scheduled-tasks>
 
 <task:scheduler id="myScheduler" pool-size="10"/>

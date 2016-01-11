@@ -450,7 +450,7 @@ public class FootballunServiceImpl implements FootballunService {
 //				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
 //				return;
 //			}
-			
+            prevStanding = null;
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
 				// Counts played match
@@ -542,7 +542,7 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 
 		int latestMatchday = matchups.get(matchups.size() - 1).getMatchday();
-		
+
 		// Gets all squads
 		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
 		for (Squad squad : squads) {
@@ -573,7 +573,7 @@ public class FootballunServiceImpl implements FootballunService {
 				prev = standing;
 			}
 		}
-		
+
 		
 		int currentMatchday;
 		int previousMatchday = 0;
