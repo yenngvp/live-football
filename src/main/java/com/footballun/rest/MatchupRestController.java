@@ -92,17 +92,22 @@ public class MatchupRestController {
 	
 	private List<List<Matchup>> groupMatchupByCompetition(List<Matchup> matchups) {
 
+        if (matchups == null || matchups.size() <= 0) return  null;
+
 		List<List<Matchup>> groupedMatchupsByCompetition = new ArrayList<List<Matchup>>();
 		List<Matchup> grouped = new ArrayList<Matchup>();
 		Matchup prev = null;
-		
+
+        // Only do group matchups by date if they are in identical competition
+        boolean groupByDate = matchups.get(0).getCompetition() == matchups.get(matchups.size() - 1).getCompetition();
 	
 		// Group matches by competition
 		for (Matchup matchup : matchups) {
 			if (matchup.getDetails() != null && matchup.getStartAt() != null) {
 			
 				if (prev != null
-						&& !matchup.getCompetition().equals(prev.getCompetition())) {
+						&& ((!groupByDate && !matchup.getCompetition().equals(prev.getCompetition())
+                                || (groupByDate && !matchup.getStartAt().equals(prev.getStartAt()))))) {
 
 					// Adds the matchup to the new group
 					groupedMatchupsByCompetition.add(grouped);
@@ -120,7 +125,7 @@ public class MatchupRestController {
 			groupedMatchupsByCompetition.add(grouped);
 			grouped = null;
 		}
-		
+
 		// Adds matchups that haven't scheduled yet to the end of the list
 		
 		for (Matchup matchup : matchups) {

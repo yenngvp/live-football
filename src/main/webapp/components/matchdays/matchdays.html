@@ -24,9 +24,10 @@
 			<!-- Page header -->
 			<div class="box-header">
 				<h3>
-					<span>{{ 'common.matchdays' | i18n }} - {{matchdays[0][0].competition.nameVn}}</span>
+					<span>{{ 'common.matchdays' | i18n }} {{matchdays[0][0].competition.nameVn}}</span>
 					<span ng-if="thisWeekCounter > 0">{{ 'common.thisWeek' | i18n }}</span>
 					<span ng-if="nextWeekCounter > 0">{{ 'common.nextWeek' | i18n }}</span>
+                    <span> - {{ 'common.matchweek' | i18n }} {{matchdays[0][0].matchday}}</span>
 				</h3>
 			</div>
 			<!-- /Page header -->
@@ -39,7 +40,7 @@
 
 
 				<!-- Panel -->
-				<div class="panel panel-primary" ng-repeat="matchday in matchdays">
+				<div class="panel panel-primary" ng-repeat="matchday in matchdays track by $index">
 
 					<!-- Icon -->
 					<!-- 
@@ -51,7 +52,7 @@
 					<!-- Heading -->
 					<div class="panel-heading">
 						
-						<h2 class="panel-title">{{matchday[0].competition.nameVn}} {{ 'common.matchweek' | i18n }} {{matchday[0].matchday}} - {{matchday[0].startAt | date:dateFormatString}}</h2>
+						<h2 class="panel-title">{{matchday[0].startAt | date:dateFormatString}}</h2>
 						
 					</div>
 					<!-- /Heading -->
@@ -62,7 +63,7 @@
 						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
 						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >KT</h5></div>
 						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Ph�t {{matchup.updateMinute}}</h5></div>
-						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.startAt | date:'EEE'}} {{matchup.kickoff | date:"hh:mm"}}</h5></div>
+						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h5></div>
 						    <div class="table-cell cell-matchup-center" >
 						    	<h4 ng-if="matchup.status.code==='FULL_TIME'"><a data-ui-sref="matchRegister({id: matchup.id})" ng-click="saveSelectedMatchup(matchup)">{{matchup.firstDetail.goal}} - {{matchup.secondDetail.goal}}</a></h4>
@@ -81,7 +82,7 @@
 					<!-- /Body -->
 					
 					<!-- Footer -->
-		            <div class="panel-footer">
+		            <div class="panel-footer" ng-if="$index == numMatchdays - 1">
 		                 <div ng-controller="MatchdayPagedController" ng-init="init(matchday[0].competition.totalMatchdays, matchday[0].matchday)">
                             <ul class="list-inline matchdays-page" style="width: 100%">
                                 <li ng-class="item == matchday[0].matchday ? 'active' : ''"

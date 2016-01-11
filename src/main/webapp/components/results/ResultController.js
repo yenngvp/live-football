@@ -26,7 +26,8 @@ var ResultController = ['$rootScope', '$scope', '$stateParams', 'MatchDay','enab
 					}
 
 					$scope.results = value;
-					
+                    $scope.numMatchdays = value.length;
+
 					$scope.hideSpinner = true;
 				},
 				//error
@@ -64,6 +65,7 @@ var ResultByDayController = ['$rootScope', '$scope', '$stateParams', 'MatchDay',
 					}
 
 					$scope.results = value;
+                    $scope.numMatchdays = value.length;
 					
 					$scope.hideSpinner = true;
 				},
