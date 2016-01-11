@@ -34,6 +34,7 @@ public interface FootballunService {
 	List<Squad> findSquadByCompetitionAndGeneration(Integer competitionId, String generation) throws DataAccessException;
 	Squad findSquadById(Integer id) throws DataAccessException;
 	Squad findSquadByName(String name, Integer competitionId) throws DataAccessException;
+	Squad findSquadByAlias(String name, Integer competitionId) throws DataAccessException;
 	Squad findSquadByFullName(String fullname, Integer competitionId) throws DataAccessException;
 	Squad saveSquad(Squad squad) throws DataAccessException;
 	

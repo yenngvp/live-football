@@ -14,8 +14,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +24,6 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellReference;
@@ -121,10 +118,13 @@ public class DataImporter {
 	private static final String COL_NAME_SHIRTSPONSOR = "Shirt sponsor";
 	private static final String COL_NAME_LOGO = "Logo";
 	private static final String COL_NAME_PRESIDENTCHAIRMAN = "President/Chairman";
+	private static final String COL_NAME_ALIAS_OLEVN = "Alias ole.vn";
+	private static final String COL_NAME_ALIAS_BBCS = "Alias BBCS";
 	private static final String[] TEAM_PERSKIT_COL_HEADERS = {
 		KEY_COL_NAME,
 		COL_NAME_FULLNAME, COL_NAME_MANAGER, COL_NAME_CAPTAIN, COL_NAME_KITMANUFACTURER,
-		COL_NAME_SHIRTSPONSOR, COL_NAME_LOGO, COL_NAME_PRESIDENTCHAIRMAN, COL_NAME_SHORTNAME
+		COL_NAME_SHIRTSPONSOR, COL_NAME_LOGO, COL_NAME_PRESIDENTCHAIRMAN, COL_NAME_SHORTNAME,
+		COL_NAME_ALIAS_OLEVN, COL_NAME_ALIAS_BBCS
 	};
 	
 	// CALENDARS: IE: Date	Match	Kick-off	Status
@@ -297,7 +297,8 @@ public class DataImporter {
 //				logger.error("Importing leagues player failed. Should stop further processing!");
 //				return;
 //			}
-//          logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
+//           
+//			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 
 			calculateStandings();
 
@@ -383,11 +384,12 @@ public class DataImporter {
 							String shirtSponsor = trimString(String.valueOf(cellValues.get(COL_NAME_SHIRTSPONSOR)));
 							String president = trimString(String.valueOf(cellValues.get(COL_NAME_PRESIDENTCHAIRMAN)));
 							String logo = trimString(String.valueOf(cellValues.get(COL_NAME_LOGO)));
+							String aliasBbcs = trimString(String.valueOf(cellValues.get(COL_NAME_ALIAS_BBCS)));
 							logger.info(String.format("Reading cell [%s, %s, %s, %s,%s, %s, %s, %s]", 
 									fullName, shortName, manager, captain, kitManufacturer, shirtSponsor, president, logo));
 
 							// Creates objects
-							Squad squad = createSquad(fullName, shortName, kitManufacturer, shirtSponsor, logo);
+							Squad squad = createSquad(fullName, shortName, kitManufacturer, shirtSponsor, logo, aliasBbcs);
 							
 							// Creates the squad's manager and president
 							if (manager != null && !"null".equals(manager) && manager.length() > 0) {
@@ -556,15 +558,39 @@ public class DataImporter {
 		/*
 		 * Finds squads
 		 */
-		Squad squad1 = footballunService.findSquadByName(team1, currentCompetition.getId());
-		Squad squad2 = footballunService.findSquadByName(team2, currentCompetition.getId());
+		Squad squad1 = footballunService.findSquadByAlias(team1, currentCompetition.getId());
+		Squad squad2 = footballunService.findSquadByAlias(team2, currentCompetition.getId());
 
 		if (squad1 != null && squad2 != null) {
+			// Finds and update existing matchup by name
+			String matchName = String.format("%s vs %s", team1, team2);
+			Matchup matchup = null; //footballunService.findMatchupByName(matchName);
+			MatchupDetail detail1, detail2;
+			if (matchup == null) {
 			// Creates matchup
-			Matchup matchup = new Matchup();
+				matchup = new Matchup();
+				matchup.setName(matchName);
+				
+				detail1 = new MatchupDetail();
+				detail1.setSquad(squad1);
+				detail1.setMatchup(matchup);
+				
+				detail2 = new MatchupDetail();
+				detail2.setSquad(squad2);
+				detail2.setMatchup(matchup);
+				
+
+				LinkedHashSet<MatchupDetail> details = new LinkedHashSet<MatchupDetail>();
+				details.add(detail1);
+				details.add(detail2);
+				matchup.setDetails(details);
+			} else {
+				detail1 = matchup.getFirstDetail();
+				detail2 = matchup.getSecondDetail();
+			}
+			
 			matchup.setCompetition(currentCompetition);
 			matchup.setMatchday(week);
-			matchup.setName(String.format("%s vs %s", team1, team2));
 			
 			matchup.setStartAt(matchCal);
 			matchup.setEndAt(matchup.getStartAt());
@@ -578,24 +604,13 @@ public class DataImporter {
 			}
 
 			// Creates matchup details
-			MatchupDetail detail1 = new MatchupDetail();
-			detail1.setSquad(squad1);
 			detail1.setGoal(goals1);
-			detail1.setMatchup(matchup);
-
-			MatchupDetail detail2 = new MatchupDetail();
-			detail2.setSquad(squad2);
 			detail2.setGoal(goals2);
-			detail2.setMatchup(matchup);
-
-			LinkedHashSet<MatchupDetail> details = new LinkedHashSet<MatchupDetail>();
-			details.add(detail1);
-			details.add(detail2);
-			matchup.setDetails(details);
 
 			footballunService.saveMatchup(matchup);
 			footballunService.saveMatchupDetail(detail1);
 			footballunService.saveMatchupDetail(detail2);
+			
 		} else if (squad1 == null) {
 			logger.error("Cannot find squad for the squad:  " + team1);
 		} else {
@@ -985,7 +1000,7 @@ public class DataImporter {
 		}
 	}
 	
-	private Squad createSquad(String fullName, String shortName, String kitManufacturer, String shirtSponsor, String logo) {
+	private Squad createSquad(String fullName, String shortName, String kitManufacturer, String shirtSponsor, String logo, String alias) {
 		Competition competition = currentCompetition;
 		Squad squad;
 		Team team = footballunService.findTeamByName(shortName);
@@ -1014,6 +1029,7 @@ public class DataImporter {
 			squad.setTeam(team);
 			squad.setKitManufacturer(kitManufacturer);
 			squad.setShirtSponsor(shirtSponsor);
+			squad.setAlias(alias);
 			footballunService.saveSquad(squad);
 
 			footballunService.saveSquad(squad);

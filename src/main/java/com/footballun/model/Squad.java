@@ -62,6 +62,9 @@ public class Squad extends NamedEntity implements Serializable {
 	@Column(name = "logo")
 	private String logo;
 	
+	@Column(name = "alias")
+	private String alias;
+	
 	
 	/**
 	 * Getters/Setters
@@ -136,6 +139,14 @@ public class Squad extends NamedEntity implements Serializable {
 
 	public void setLogo(String logo) {
 		this.logo = logo;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	@Override

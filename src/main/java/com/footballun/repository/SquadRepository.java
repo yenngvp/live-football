@@ -43,6 +43,7 @@ public interface SquadRepository {
      */
     Squad findById(Integer id) throws DataAccessException;
     Squad findByNameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
+    Squad findByAliasAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
     Squad findByFullNameAndCompetitionId(String fullname, Integer competitionId) throws DataAccessException;
     Squad save(Squad squad) throws DataAccessException;
 }

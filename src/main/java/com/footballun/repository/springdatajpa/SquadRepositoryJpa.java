@@ -24,6 +24,10 @@ public interface SquadRepositoryJpa extends SquadRepository, CrudRepository<Squa
 	Squad findByNameAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
 	
 	@Override
+	Squad findByAliasAndCompetitionId(String name, Integer competitionId) throws DataAccessException;
+	
+	
+	@Override
 	Squad findByFullNameAndCompetitionId(String fullname, Integer competitionId) throws DataAccessException;
 	
 	@SuppressWarnings("unchecked")

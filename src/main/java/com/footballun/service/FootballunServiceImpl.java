@@ -134,6 +134,12 @@ public class FootballunServiceImpl implements FootballunService {
 	
 	@Override
 	@Transactional(readOnly = true)
+	public Squad findSquadByAlias(String name, Integer competitionId) throws DataAccessException {
+		return squadRepository.findByAliasAndCompetitionId(name, competitionId);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public Squad findSquadByFullName(String fullname, Integer competitionId) throws DataAccessException {
 		return squadRepository.findByFullNameAndCompetitionId(fullname, competitionId);
 	}
@@ -440,10 +446,10 @@ public class FootballunServiceImpl implements FootballunService {
 				prevStanding = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday() - 1);
 			}
 			
-			if (standing == null || !standing.isAllowUpdate()) {
-				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
-				return;
-			}
+//			if (standing == null || !standing.isAllowUpdate()) {
+//				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
+//				return;
+//			}
 			
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
