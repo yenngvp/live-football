@@ -32,7 +32,6 @@ import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
-import com.footballun.model.StandingLive;
 import com.footballun.model.Team;
 import com.footballun.repository.CompetitionRepository;
 import com.footballun.repository.CountryRepository;
@@ -50,9 +49,8 @@ import com.footballun.repository.ScrapedDataResultRepository;
 import com.footballun.repository.SettingRepository;
 import com.footballun.repository.SquadMemberRepository;
 import com.footballun.repository.SquadRepository;
+import com.footballun.repository.StandingRepository;
 import com.footballun.repository.TeamRepository;
-import com.footballun.repository.springdatajpa.StandingLiveRepository;
-import com.footballun.repository.springdatajpa.StandingRepository;
 import com.footballun.util.PositionComparator;
 
 @Service
@@ -71,8 +69,6 @@ public class FootballunServiceImpl implements FootballunService {
 	private SquadMemberRepository squadMemberRepository;
 	@Autowired
 	private StandingRepository standingRepository;
-	@Autowired
-	private StandingLiveRepository standingLiveRepository;
 	@Autowired
 	private MatchupDetailRepository matchupDetailRepository;
 	@Autowired
@@ -244,38 +240,32 @@ public class FootballunServiceImpl implements FootballunService {
 	 * Standing services
 	 */
 	@Override
-	@Transactional(readOnly = true)
 	public List<Standing> findCurrentStandingsByCompetition(Integer competitionId) throws DataAccessException {
 		
-		return standingRepository.findBySquad_CompetitionIdWithMaxMatchdayOrderByCurrentPositionAsc(competitionId);
+		return standingRepository.findCurrentStandingsByCompetition(competitionId);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public Standing findStandingBySquadAndMatchday(Squad squad, int matchday) throws DataAccessException {
-		return standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
+		return standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
 	}
 
     @Override
-    @Transactional(readOnly = true)
     public Standing findCurrentStandingBySquad(Integer squadId) throws DataAccessException {
         return standingRepository.findBySquadIdAndAllowUpdateTrueOrderByCurrentPositionAsc(squadId);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Standing> findAllStandingsBySquad(Squad squad) throws DataAccessException {
-        return standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squad.getId());
+        return standingRepository.findAllBySquadIdOrderByMatchdayAscCurrentPositionAsc(squad.getId());
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Standing> findAllStandingsBySquad(Integer squadId) throws DataAccessException {
-        return standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squadId);
+        return standingRepository.findAllBySquadIdOrderByMatchdayAscCurrentPositionAsc(squadId);
     }
 
 	@Override
-	@Transactional(readOnly = false)
 	public void saveStanding(Standing standing) throws DataAccessException {
 		standingRepository.save(standing);
 	}
@@ -391,25 +381,14 @@ public class FootballunServiceImpl implements FootballunService {
 	public Standing createStandingForSquad(Squad squad, int matchday) {
 		
 		// Creates main standing table
-		Standing standing = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
+		Standing standing = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
 		if (standing == null) {
 			standing = new Standing();
 			standing.setSquad(squad);
 			standing.setMatchday(matchday);
 			standing = standingRepository.save(standing);
 		}
-		
-		// Also creates live standing table
-		StandingLive standingLive = standingLiveRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
-		if (standingLive == null) {
-			standingLive = new StandingLive();
-			standingLive.setStanding(standing);
-			standingLive.setSquad(squad);
-			standing.setMatchday(matchday);
-			standing.setStandingLive(standingLive);
-			standingLiveRepository.save(standingLive);
-		}
-		
+				
 		return standing;
 	}
 	
@@ -437,13 +416,13 @@ public class FootballunServiceImpl implements FootballunService {
 		for (Squad squad : squads) {
 			
 			// Current standing
-			Standing standing = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
+			Standing standing = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
 			// Previous matchday standing
 			Standing prevStanding;
 			if (matchup.getMatchday() == 1) {
 				prevStanding = null;
 			} else {
-				prevStanding = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday() - 1);
+				prevStanding = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday() - 1);
 			}
 			
 //			if (standing == null || !standing.isAllowUpdate()) {
@@ -487,9 +466,9 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
 		for (Squad squad : squads) {
-
+			
 			// Current standing
-			Standing standing = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
+			Standing standing = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
 
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
@@ -586,44 +565,46 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 
 		// Gets all squads
-//		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
-//
-//
-//		for (Squad squad : squads) {
-//			// Gets all standings from matchdays by squad
-//			Standing prev = null;
-//			standings = standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squad.getId());
-//			for (Standing standing : standings) {
-//				if (standing.getMatchday() > currentMatchday) {
-//					break;
-//				}
-//				if (prev != null) {
-//					// Counts played match
-//					standing.setPlayed(prev.getPlayed() + standing.getPlayed());
-//					standing.setWon(prev.getWon() + standing.getWon());
-//					standing.setDrawn(prev.getDrawn() + standing.getDrawn());
-//					standing.setLost(prev.getLost() + standing.getLost());
-//					standing.setPoint(prev.getPoint() + standing.getPoint());					
-//					standing.setGoalsScored(prev.getGoalsScored() + standing.getGoalsScored());
-//					standing.setGoalsAgainst(prev.getGoalsAgainst() + standing.getGoalsAgainst());
-//                    if (standing.getMatchday() < currentMatchday) {
-//                        standing.setAllowUpdate(false);
-//                    } else {
-//                        standing.setAllowUpdate(true);
-//                    }
-//
-//					standing = standingRepository.save(standing);
-//				}
-//				prev = standing;
-//			}
-//		}
-//
-//		
-//		// Sorts positions for each of the matchdays
-//		for (int day = 1; day <= currentMatchday; day++) {
-//			standings = standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, day);
-//			sortAndSaveStandings(competitionId, standings);
-//		}
+		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
+
+
+		for (Squad squad : squads) {
+			// Gets all standings from matchdays by squad
+			Standing prev = null;
+			
+			List<Standing> standings = standingRepository.findAllBySquadIdOrderByMatchdayAscCurrentPositionAsc(squad.getId());
+			for (Standing standing : standings) {
+				if (standing.getMatchday() > currentMatchday) {
+					break;
+				}
+				if (prev != null) {
+					// Counts played match
+					standing.setPlayed(prev.getPlayed() + standing.getPlayed());
+					standing.setWon(prev.getWon() + standing.getWon());
+					standing.setDrawn(prev.getDrawn() + standing.getDrawn());
+					standing.setLost(prev.getLost() + standing.getLost());
+					standing.setPoint(prev.getPoint() + standing.getPoint());					
+					standing.setGoalsScored(prev.getGoalsScored() + standing.getGoalsScored());
+					standing.setGoalsAgainst(prev.getGoalsAgainst() + standing.getGoalsAgainst());
+                    if (standing.getMatchday() < currentMatchday) {
+                        standing.setAllowUpdate(false);
+                    } else {
+                        standing.setAllowUpdate(true);
+                    }
+
+					standing = standingRepository.save(standing);
+				}
+				prev = standing;
+			}
+		}
+
+		
+		// Sorts positions for each of the matchdays
+		for (int day = 1; day <= currentMatchday; day++) {
+			List<Standing> standings = standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, day);
+			sortAndSaveStandings(competitionId, standings);
+		}
+		
 	}
 	
 	
@@ -641,25 +622,7 @@ public class FootballunServiceImpl implements FootballunService {
 	public List<Standing> findShortList() throws DataAccessException {
 		return standingRepository.findShortList();
 	}
-	
-	/**
-	 * Standing Live services
-	 */
-	@Override
-	public List<StandingLive> findStandingLiveByCompetition(Integer competitionId, int matchday) throws DataAccessException {
-		return standingLiveRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, matchday);
-	}
-	
-	@Override
-	public StandingLive findStandingLiveBySquad(Squad squad, int matchday) throws DataAccessException {
-		return standingLiveRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchday);
-	}
-	
-	@Override
-	public void saveStandingLive(StandingLive standing) throws DataAccessException {
-		standingLiveRepository.save(standing);
-	}
-	
+		
 
 	/**
 	 * Event's repo APIs

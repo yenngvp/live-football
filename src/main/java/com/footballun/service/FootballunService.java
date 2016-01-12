@@ -23,7 +23,6 @@ import com.footballun.model.Setting;
 import com.footballun.model.Squad;
 import com.footballun.model.SquadMember;
 import com.footballun.model.Standing;
-import com.footballun.model.StandingLive;
 import com.footballun.model.Team;
 
 public interface FootballunService {
@@ -105,13 +104,6 @@ public interface FootballunService {
 	void recalculateStandingForTheCompetition(int competitionId)  throws DataAccessException;
 	List<Standing> findShortList() throws DataAccessException;
 	void accumulateStandingForMatchup(Matchup matchup);
-
-	/**
-	 * Standing Live services
-	 */
-	List<StandingLive> findStandingLiveByCompetition(Integer competitionId, int matchday) throws DataAccessException;
-	StandingLive findStandingLiveBySquad(Squad squad, int matchday) throws DataAccessException;
-	void saveStandingLive(StandingLive standing) throws DataAccessException;
 	
 	/**
 	 * Event services

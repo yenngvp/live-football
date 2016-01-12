@@ -6,16 +6,16 @@ package com.footballun.util;
 
 import java.util.Comparator;
 
-import com.footballun.model.StandingBase;
+import com.footballun.model.Standing;
 
 /**
  * @author yen.nt
  *
  */
-public class PositionComparator implements Comparator<StandingBase> {
+public class PositionComparator implements Comparator<Standing> {
 
 	@Override
-	public int compare(StandingBase s1, StandingBase s2) {
+	public int compare(Standing s1, Standing s2) {
 		return PositionComparator.doCompare(s1, s2);
 	}
 	
@@ -25,7 +25,7 @@ public class PositionComparator implements Comparator<StandingBase> {
 	 * @param s2
 	 * @return
 	 */
-	public static int doCompare(StandingBase s1, StandingBase s2) {
+	public static int doCompare(Standing s1, Standing s2) {
 		// Compares point first
 		if (s1.getPoint() > s2.getPoint()) {
 			return -1;

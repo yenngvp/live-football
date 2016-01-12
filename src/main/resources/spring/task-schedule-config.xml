@@ -31,12 +31,12 @@
 
 <!-- Tasks scheduler -->
 <task:scheduled-tasks scheduler="myScheduler">
-
+<!-- 
     <task:scheduled ref="dataImporter"
     				method="importExcel" 
     				fixed-rate="#{ T(java.lang.Long).MAX_VALUE }" 
                     initial-delay="2000"/>
-
+ -->
     <!-- Run every 10 minutes cron="5 0 0 * * *" -->
     <task:scheduled ref="matchdayMonitor"
                     method="findAndUpdateCurrentMatchday"

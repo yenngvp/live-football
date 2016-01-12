@@ -296,7 +296,7 @@ public class DataImporter {
 //				return;
 //			}
 
-			calculateStandings();
+//			calculateStandings();
 
             logger.info("Finished importing excel data");
 
@@ -1005,7 +1005,6 @@ public class DataImporter {
 		for (Map.Entry<String, Competition> entry : COMPETITIONS_LIST.entrySet()) {
 			System.out.println(entry.getKey() + "/" + entry.getValue());
 			Competition competition = entry.getValue();
-			if (competition.getId() == 72)
 			footballunService.recalculateStandingForTheCompetition(competition.getId());
 		}
 	}
