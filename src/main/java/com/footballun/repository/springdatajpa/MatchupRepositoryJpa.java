@@ -45,15 +45,18 @@ public interface MatchupRepositoryJpa extends MatchupRepository, CrudRepository<
 	List<Matchup> findByCompetitionIdAndStartAtBetweenOrderByStartAtAsc(Integer competitionId, LocalDate from, LocalDate to) throws DataAccessException;
 	
 	@Override
-	@Query(value = "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1 and competition_id = 9 order by start_at asc,kickoff asc  limit 0, 4) "
-			+ "union "
-			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1  and competition_id = 72 order by start_at asc,kickoff asc limit 0, 4) "
-			+ "union   "
-			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1 and competition_id = 73 order by start_at asc,kickoff asc limit 0, 4) "
-			+ "union   "
-			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1  and competition_id = 74 order by start_at asc,kickoff asc limit 0, 4) "
-			+ "union   "
-			+ "(SELECT * from matchup where featured and start_at <= CURDATE() and status = 1 and competition_id = 75 order by start_at asc,kickoff asc limit 0, 4)", nativeQuery = true)
+//	@Query(value = "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1 and competition_id = 9 order by start_at asc,kickoff asc  limit 0, 4) "
+//			+ "union "
+//			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1  and competition_id = 72 order by start_at asc,kickoff asc limit 0, 4) "
+//			+ "union   "
+//			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1 and competition_id = 73 order by start_at asc,kickoff asc limit 0, 4) "
+//			+ "union   "
+//			+ "(SELECT * from matchup where featured and start_at >= CURDATE() and status = 1  and competition_id = 74 order by start_at asc,kickoff asc limit 0, 4) "
+//			+ "union   "
+//			+ "(SELECT * from matchup where featured and start_at <= CURDATE() and status = 1 and competition_id = 75 order by start_at asc,kickoff asc limit 0, 4)", nativeQuery = true)
+	@Query(value = "select m.* from matchup m inner join competition c on m.competition_id=c.id and m.matchday=c.current_matchday "
+			+ " where m.featured=1  and m.status != 6"
+			+ " order by m.competition_id, m.start_at, m.kickoff", nativeQuery = true)
 	List<Matchup> findByFeaturedTrueOrderByCompetitionIdAscStartAtAscKickoffAsc() throws DataAccessException;
 
 	/*

@@ -286,15 +286,15 @@ public class DataImporter {
 //			}
 //			logger.info(String.format("FINAL RESULT: Found %d players, Saved %d players", playersCounter, createdPlayersCounter));
 
-            if (!importLeaguesCalendar(workbook)) {
-				logger.error("Importing leagues calenddar failed. Should stop further processing!");
-				return;
-			}
-
-			if (!importMatchdays(workbook)) {
-				logger.error("Importing leagues calenddar failed. Should stop further processing!");
-				return;
-			}
+//            if (!importLeaguesCalendar(workbook)) {
+//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
+//				return;
+//			}
+//
+//			if (!importMatchdays(workbook)) {
+//				logger.error("Importing leagues calenddar failed. Should stop further processing!");
+//				return;
+//			}
 
 			calculateStandings();
 
@@ -435,6 +435,7 @@ public class DataImporter {
 			if (!getCurrentCountryAndCompetitionBySheet(sheetName)) return false; // Unknown sheet name
 			
 			LocalDate matchCal = null;
+			LocalDate convertedMatchCal = null;
 			LocalTime kickoff = null;
 			boolean fulltime = false;
 
@@ -465,6 +466,7 @@ public class DataImporter {
 								if (isDateString(string)) {
 									// Date cell
 									matchCal = parseDateString(string);
+									convertedMatchCal = matchCal;
 								} else {
 									logger.error("Unknown cell value");
 									return false;
@@ -485,14 +487,19 @@ public class DataImporter {
 									 * supposed current time is at UTC,
 									 * so needs to convert to GMT+7
 									 */
-                                    LocalDateTime adjustedDatetime = LocalDateTime.of(matchCal, kickoff).plusHours(7);
-                                    matchCal = adjustedDatetime.toLocalDate();
-                                    kickoff = adjustedDatetime.toLocalTime();
+									if ("Liverpool V Arsenal".equals(fixture)) {
+										logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff == null ? "" : kickoff.toString()));
+									}
+									if (matchCal != null && kickoff != null) {
+										LocalDateTime adjustedDatetime = LocalDateTime.of(matchCal, kickoff).plusHours(7);
+										convertedMatchCal = adjustedDatetime.toLocalDate();
+										kickoff = adjustedDatetime.toLocalTime();
+									}
 								}
 								logger.info(String.format("Reading cell [%s, %s, %s]", fixture, fulltimeOrKickoff, kickoff == null ? "" : kickoff.toString()));
 								
 								// Parses fixture
-								parseAndSaveSchedule(1, matchCal, kickoff, fixture, fulltime);							
+								parseAndSaveSchedule(1, convertedMatchCal, kickoff, fixture, fulltime);							
 
 							} else {
 								logger.error("Reading cell error: Number of columns is not identical with expected. Ignore row!");
@@ -998,6 +1005,7 @@ public class DataImporter {
 		for (Map.Entry<String, Competition> entry : COMPETITIONS_LIST.entrySet()) {
 			System.out.println(entry.getKey() + "/" + entry.getValue());
 			Competition competition = entry.getValue();
+			if (competition.getId() == 72)
 			footballunService.recalculateStandingForTheCompetition(competition.getId());
 		}
 	}

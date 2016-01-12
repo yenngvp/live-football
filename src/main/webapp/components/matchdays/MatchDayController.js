@@ -45,7 +45,7 @@ var MatchDayController = ['$rootScope','$scope', '$stateParams', 'MatchDay','ena
                     var secondsNow = Date.now() / 1000;
 
                     $scope.numMatchdays = $scope.matchdays.length;
-					for (var i = 0; i < $scope.matchdays.length; i++) {
+                    for (var i = 0; i < $scope.matchdays.length; i++) {
 
                         var matchups = $scope.matchdays[i];
 
@@ -78,6 +78,7 @@ var MatchDayController = ['$rootScope','$scope', '$stateParams', 'MatchDay','ena
                     }
 
                     $scope.hideSpinner = true;
+                    console.log($scope.numMatchdays);
 				},
 				//error
 				function( error ) {

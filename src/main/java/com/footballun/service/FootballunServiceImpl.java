@@ -478,6 +478,47 @@ public class FootballunServiceImpl implements FootballunService {
 		}
 	}
 	
+	private void sumStandingsForMatchup(Matchup matchup) {
+		
+		if (matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME) {
+			logger.error("Matchup " + matchup.getName() + " is not fulltime");
+			return;
+		}
+		
+		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
+		for (Squad squad : squads) {
+
+			// Current standing
+			Standing standing = standingRepository.findBySquadAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
+
+			MatchupResult result = matchup.getResultBySquad(squad);
+			if (result != MatchupResult.UNKNOWN) {
+				// Counts played match
+				standing.setPlayed(standing.getPlayed() + 1);
+				if (result == MatchupResult.WIN) {
+					// Counts WON match
+					standing.setWon(standing.getWon() + 1);
+					standing.setPoint(standing.getPoint() + 3); // 3 points for a win game
+				} else if (result == MatchupResult.DRAW) {
+					// Counts DRAWN match
+					standing.setDrawn(standing.getDrawn() + 1);
+					standing.setPoint(standing.getPoint() + 1); // 1 point for a draw game
+				} else {
+					// Counts LOST match
+					standing.setLost(standing.getLost() + 1);
+				}
+			
+				standing.setGoalsScored(standing.getGoalsScored() + matchup.getGoalsScoredBySquad(squad));
+				standing.setGoalsAgainst(standing.getGoalsAgainst() + matchup.getGoalsAgainstBySquad(squad));
+			} else {
+				logger.error("Matchup " + matchup.getName() + " is unknown result");
+				return;
+			}
+			
+			standingRepository.save(standing);
+		}
+	}
+	
 
 	private void sortAndSaveStandings(Integer competitionId, List<Standing> standings) {
 		/**
@@ -526,80 +567,63 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		List<Matchup> matchups = matchupRepository.findByCompetitionIdAndStatus_NameInOrderByMatchdayAsc(competitionId, matchupStatus);
 			
-		List<Standing> standings = standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, 1);
-		if (standings == null || standings.size() == 0) {
-			createStandingForCompetition(competitionId);
-		} else {
-			for (Standing standing : standings) {
-				standing.resetAll();
-				standingRepository.save(standing);
+		int currentMatchday = matchups.get(0).getCompetition().getCurrentMatchday();
+		for (int matchday = 1; matchday <= currentMatchday; matchday++) {
+			List<Standing> standings = standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, matchday);
+			if (standings == null || standings.size() == 0) {
+				createStandingForCompetition(competitionId);
+			} else {
+				for (Standing standing : standings) {
+					standing.resetAll();
+					standingRepository.save(standing);
+				}
 			}
 		}
-		
+
 		for (Matchup matchup : matchups) {
 			
-			accumulateStandingForMatchup(matchup);
+			sumStandingsForMatchup(matchup);
 		}
-
-		int latestMatchday = matchups.get(matchups.size() - 1).getMatchday();
 
 		// Gets all squads
-		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
-		for (Squad squad : squads) {
-			// Gets all standings from matchdays by squad
-			Standing prev = null;
-			standings = standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squad.getId());
-			for (Standing standing : standings) {
-				if (standing.getMatchday() > latestMatchday) {
-					break;
-				}
-				if (prev != null) {
-					// Counts played match
-					standing.setPlayed(prev.getPlayed() + standing.getPlayed());
-					standing.setWon(prev.getWon() + standing.getWon());
-					standing.setDrawn(prev.getDrawn() + standing.getDrawn());
-					standing.setLost(prev.getLost() + standing.getLost());
-					standing.setPoint(prev.getPoint() + standing.getPoint());					
-					standing.setGoalsScored(prev.getGoalsScored() + standing.getGoalsScored());
-					standing.setGoalsAgainst(prev.getGoalsAgainst() + standing.getGoalsAgainst());
-                    if (standing.getMatchday() < latestMatchday) {
-                        standing.setAllowUpdate(false);
-                    } else {
-                        standing.setAllowUpdate(true);
-                    }
-
-					standing = standingRepository.save(standing);
-				}
-				prev = standing;
-			}
-		}
-
-		
-		int currentMatchday;
-		int previousMatchday = 0;
-		List<Standing> currMatchdayStandings = new ArrayList<Standing>();
-		
-		// Sorts positions for each of the matchdays
-		standings = standingRepository.findBySquad_CompetitionIdOrderByMatchdayAscCurrentPositionAsc(competitionId);
-		for (Standing standing : standings) {
-			if (standing.getMatchday() > latestMatchday) {
-				break;
-			}
-			currentMatchday = standing.getMatchday();
-			if (currentMatchday != previousMatchday && previousMatchday > 0) {
-				sortAndSaveStandings(competitionId, currMatchdayStandings);
-				currMatchdayStandings.removeAll(currMatchdayStandings);
-			}
-
-			currMatchdayStandings.add(standing);
-
-			previousMatchday = currentMatchday;
-		}
-
-		// The last group
-		if (currMatchdayStandings.size() > 0) {
-			sortAndSaveStandings(competitionId, currMatchdayStandings);
-		}
+//		List<Squad> squads = squadRepository.findByCompetitionIdAndGeneration(competitionId, "First Team");
+//
+//
+//		for (Squad squad : squads) {
+//			// Gets all standings from matchdays by squad
+//			Standing prev = null;
+//			standings = standingRepository.findAllBySquadOrderByMatchdayAscCurrentPositionAsc(squad.getId());
+//			for (Standing standing : standings) {
+//				if (standing.getMatchday() > currentMatchday) {
+//					break;
+//				}
+//				if (prev != null) {
+//					// Counts played match
+//					standing.setPlayed(prev.getPlayed() + standing.getPlayed());
+//					standing.setWon(prev.getWon() + standing.getWon());
+//					standing.setDrawn(prev.getDrawn() + standing.getDrawn());
+//					standing.setLost(prev.getLost() + standing.getLost());
+//					standing.setPoint(prev.getPoint() + standing.getPoint());					
+//					standing.setGoalsScored(prev.getGoalsScored() + standing.getGoalsScored());
+//					standing.setGoalsAgainst(prev.getGoalsAgainst() + standing.getGoalsAgainst());
+//                    if (standing.getMatchday() < currentMatchday) {
+//                        standing.setAllowUpdate(false);
+//                    } else {
+//                        standing.setAllowUpdate(true);
+//                    }
+//
+//					standing = standingRepository.save(standing);
+//				}
+//				prev = standing;
+//			}
+//		}
+//
+//		
+//		// Sorts positions for each of the matchdays
+//		for (int day = 1; day <= currentMatchday; day++) {
+//			standings = standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, day);
+//			sortAndSaveStandings(competitionId, standings);
+//		}
 	}
 	
 	

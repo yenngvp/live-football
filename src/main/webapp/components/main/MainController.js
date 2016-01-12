@@ -76,27 +76,43 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
 
    var init = function() {
 
-       // Gets server preferences
-       var key = "_APP_PREFERENCES_";
-       $scope.appPrefs = localStorageService.get(key);
-       if ($scope.appPrefs == null) {
-           Preferences.pref.query().$promise.then(
+	   Preferences.pref.query().$promise.then(
                //success
                function (value) {
-                   localStorageService.set(key, value);
-                   $scope.appPrefs = value;
-                   
-                   // default one competition
-                   $rootScope.saveSelectedCompetition(value[0][0].name);
+            	   
+            	   var key = "_APP_PREFERENCES_";
+            	   
+            	   var clearFlags = value[0];
+            	   if (clearFlags[0]) {
+            		   // backup user selected competition
+            		   var savedComp = localStorageService.get("PREFERENCES_COMPETITION");
+            		   var competitionName = null;
+       	    		   if (savedComp != null) {
+       	    			   competitionName = savedComp.name;
+       	    		   }
+            		   
+            		   localStorageService.clearAll();
+            		   localStorageService.set(key, value);
+                       $scope.appPrefs = value;
+                       
+                       if (competitionName == null) {
+                    	   competitionName = value[1][0].name;
+                       }
+                       // default one competition
+                       $rootScope.saveSelectedCompetition(competitionName);
+                       
+                       console.log("LOADING_APP_PREFS_CLEAR_ALL");
+            	   } else {
+            		   $scope.appPrefs = localStorageService.get(key);
+            		   console.log("LOADING_APP_PREFS_CACHED");
+            	   }                   
                },
                //error
                function (error) {
                    // TODO: Handle request returns error
                    console.log("Network error: " + error);
                }
-           );
-
-       }
+	   );
    };
 
 	/*
@@ -155,8 +171,8 @@ var MainController =  ['$scope','$rootScope','$state','$sessionStorage','$locati
     };
     
     var findCompetitionByName = function(name) {
-    	if (!angular.isUndefined($scope.appPrefs)) {
-    		var competitions = $scope.appPrefs[0];
+    	if (!angular.isUndefined($scope.appPrefs[1])) {
+    		var competitions = $scope.appPrefs[1];
 
     		for (var index in competitions) {
     			if (competitions[index].name == name) {
