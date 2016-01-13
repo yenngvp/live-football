@@ -9,12 +9,16 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.footballun.model.Competition;
 import com.footballun.model.Matchup;
+import com.footballun.model.Squad;
 import com.footballun.model.MatchupStatus.MatchupStatusCode;
+import com.footballun.model.Standing;
 import com.footballun.service.FootballunService;
 
 /**
@@ -67,7 +71,23 @@ public class MatchdayMonitorTask {
 					competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
 					competition.setMatchdayStarted(false);
 					competition.setMatchdayFinished(false);
-				}				
+				}
+				
+				List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
+				for (Squad squad : squads) {
+					// Copy standings for the current matchday as previous matchday
+					Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
+					Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
+					Integer curId = currStanding.getId();
+					BeanUtils.copyProperties(prevStanding, currStanding, Standing.class);
+					currStanding.setId(curId);
+
+					prevStanding.setAllowUpdate(false);
+					currStanding.setAllowUpdate(true);
+					
+					footballunService.saveStanding(prevStanding);
+					footballunService.saveStanding(currStanding);
+				}
 			}
 
 			footballunService.save(competition);

@@ -43,7 +43,7 @@ public interface StandingRepositoryJpa extends  StandingRepository, CrudReposito
     Standing findBySquadIdAndAllowUpdateTrueOrderByCurrentPositionAsc(Integer squadId) throws DataAccessException;
 	
 	@Override
-	List<Standing> findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(Integer id, Integer matchday) throws DataAccessException;
+	List<Standing> findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(Integer competitionId, Integer matchday) throws DataAccessException;
 	
 	@Override
 	Standing findBySquadIdAndMatchdayOrderByCurrentPositionAsc(Integer squadId, Integer matchday) throws DataAccessException;
@@ -54,4 +54,5 @@ public interface StandingRepositoryJpa extends  StandingRepository, CrudReposito
 			+ " where sq.id=?1 and st.matchday<=c.current_matchday"
 			+ " order by st.matchday,st.current_position", nativeQuery = true)
     List<Standing> findAllBySquadIdOrderByMatchdayAscCurrentPositionAsc(Integer squadId) throws DataAccessException;
+	
 }

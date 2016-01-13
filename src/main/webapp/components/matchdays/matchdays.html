@@ -62,7 +62,7 @@
 						<div class="table">
 						  <div class="table-row" ng-class-odd="'table-row-odd'" ng-class-even="'table-row-even'" ng-repeat="matchup in matchday">
 						  	<div ng-if="matchup.status.code === 'FULL_TIME'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >KT</h5></div>
-						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >Ph�t {{matchup.updateMinute}}</h5></div>
+						  	<div ng-if="matchup.status.code === 'LIVE' && matchup.updateMinute > 0" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.updateMinute}}'</h5></div>
 						  	<div ng-if="matchup.status.code === 'NOT_BEGIN'" class="table-cell cell-matchup-left0"><h5 class="caption-heading" >{{matchup.kickoff | date:"hh:mm"}}</h5></div>
 						    <div class="table-cell cell-matchup-left"><h4 class="caption-heading"><a data-ui-sref="teamDetails({id: matchup.firstDetail.squad.id})" data-ng-bind="matchup.firstDetail.squad.team.name"></a></h5></div>
 						    <div class="table-cell cell-matchup-center" >

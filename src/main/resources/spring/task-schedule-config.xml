@@ -42,11 +42,11 @@
                     method="findAndUpdateCurrentMatchday"
                     cron="0 */10 * * * *"/>
 
-	<!-- Run every 30 seconds -->
+	<!-- Run every minute -->
 	<task:scheduled ref="livescoreSchedule"
     				method="updateMatchupResults" 
-    				fixed-rate="6000000"
-                    initial-delay="5000000"/>
+    				cron="0 */1 * * * *"/>
+    				
 </task:scheduled-tasks>
 
 <task:scheduler id="myScheduler" pool-size="10"/>

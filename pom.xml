@@ -496,18 +496,18 @@
 				<version>2.2</version>
 				<configuration>
 					<!-- Development -->
-					<!-- 
+
 					<server>tomcat-development-server</server>
 					<port>8080</port>
 					<path>/</path>
-					 -->
+					
 					<!-- Deployment -->
-					 
+					 <!-- 
 					<path>/</path>
 					<url>http://localhost/manager/text</url>
 		        	<username>footballunking</username>
 		        	<password>theREdTig3#</password>
-		        	
+		        	 -->
 				</configuration>
 			</plugin>
 			<!-- 

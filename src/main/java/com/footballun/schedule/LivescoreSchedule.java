@@ -48,9 +48,9 @@ public class LivescoreSchedule {
 		
 		for (ScrapedDataResult result : results) {
 			matchup = result.getMatchup();
-			if (matchup != null && result.isJustUpdate()) {
-				result.setJustUpdate(false);
-				footballunService.saveScrapedDataResult(result);
+			if (matchup != null 
+					&& matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME 
+					&& result.isJustUpdate()) {
 				
 				goals = parseGoalsString(result.getResult());
 				if (goals[0] > -1) {
@@ -76,6 +76,9 @@ public class LivescoreSchedule {
 					footballunService.accumulateStandingForMatchup(matchup);			
 				}
 			}
+
+			result.setJustUpdate(false);
+			footballunService.saveScrapedDataResult(result);
 		}
 		
 		// Refresh standings for current matchday

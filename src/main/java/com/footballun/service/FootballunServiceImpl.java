@@ -264,6 +264,12 @@ public class FootballunServiceImpl implements FootballunService {
     public List<Standing> findAllStandingsBySquad(Integer squadId) throws DataAccessException {
         return standingRepository.findAllBySquadIdOrderByMatchdayAscCurrentPositionAsc(squadId);
     }
+    
+    @Override
+    public List<Standing> findStandingsByCompetitionAndMatchday(Integer competitionId, Integer matchday) throws DataAccessException {
+        return standingRepository.findBySquad_CompetitionIdAndMatchdayOrderByCurrentPositionAsc(competitionId, matchday);
+    }
+    
 
 	@Override
 	public void saveStanding(Standing standing) throws DataAccessException {
@@ -288,7 +294,7 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
 		for (Squad squad : squads) {
-			copyStandingToStandingLive(squad);
+			
 		}
 		
 		// Update matchup's status
@@ -313,7 +319,6 @@ public class FootballunServiceImpl implements FootballunService {
 		
 		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
 		for (Squad squad : squads) {
-			copyStandingToStandingLive(squad);
 		}
 		
 		matchup.setStatus(getMatchupStatusFullTime());
@@ -332,18 +337,7 @@ public class FootballunServiceImpl implements FootballunService {
 		accumulateStandingForMatchup(matchup);
 		refreshStanding(matchup.getCompetition().getId(), null, matchup.getMatchday());
 	}
-	
-	private void copyStandingToStandingLive(Squad squad) {
-//		Standing standing = standingRepository.findBySquad(squad);
-//		if (standing != null && standing.getStandingLive() != null) {
-//			// Syncs
-//			Integer id = standing.getStandingLive().getId(); // don't want to copy its ID, keeps a backup
-//			BeanUtils.copyProperties(standing, standing.getStandingLive(), StandingBase.class);
-//			standing.getStandingLive().setId(id);
-//			standingLiveRepository.save(standing.getStandingLive());
-//		}
-	}
-	
+		
 	@Override
 	@Transactional
 	public List<Standing> refreshStanding(int competitionId, List<Standing> standings, int matchday) throws DataAccessException {
@@ -413,23 +407,24 @@ public class FootballunServiceImpl implements FootballunService {
 	public void accumulateStandingForMatchup(Matchup matchup) {
 		
 		Squad[] squads = {matchup.getFirstDetail().getSquad(), matchup.getSecondDetail().getSquad()};
+		int currentMatchday = squads[0].getCompetition().getCurrentMatchday();
 		for (Squad squad : squads) {
 			
 			// Current standing
-			Standing standing = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday());
+			Standing standing = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), currentMatchday);
 			// Previous matchday standing
 			Standing prevStanding;
-			if (matchup.getMatchday() == 1) {
+			if (currentMatchday == 1) {
 				prevStanding = null;
 			} else {
 				prevStanding = standingRepository.findBySquadIdAndMatchdayOrderByCurrentPositionAsc(squad.getId(), matchup.getMatchday() - 1);
 			}
 			
-//			if (standing == null || !standing.isAllowUpdate()) {
-//				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
-//				return;
-//			}
-            prevStanding = null;
+			if (standing == null || !standing.isAllowUpdate()) {
+				logger.error("Cannot find or update standing for squad: " + squad.getFullName() + " and matchday: " + matchup.getMatchday());
+				return;
+			}
+			
 			MatchupResult result = matchup.getResultBySquad(squad);
 			if (result != MatchupResult.UNKNOWN) {
 				// Counts played match
