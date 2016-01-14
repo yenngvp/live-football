@@ -56,7 +56,7 @@ public class MatchdayMonitorTask {
 					matchdayStarted = true;
 				}
 				
-				if (matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME && matchdayFinished) {
+				if (matchdayFinished && matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME) {
 					// At least a game has NOT YET finished
 					matchdayFinished = false;
 				}
@@ -78,33 +78,33 @@ public class MatchdayMonitorTask {
 						competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
 						competition.setMatchdayStarted(false);
 						competition.setMatchdayFinished(false);
-					}
 
-					List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
-					for (Squad squad : squads) {
-						// Copy standings for the current matchday as previous matchday
-						Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
-						Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
-						if (currStanding == null) {
-							currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+						List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
+						for (Squad squad : squads) {
+							// Copy standings for the current matchday as previous matchday
+							Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
+							Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
+							if (currStanding == null) {
+								currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+							}
+
+							currStanding.setPlayed(prevStanding.getPlayed());
+							currStanding.setWon(prevStanding.getWon());
+							currStanding.setDrawn(prevStanding.getDrawn());
+							currStanding.setLost(prevStanding.getLost());
+							currStanding.setPoint(prevStanding.getPoint());
+							currStanding.setGoalsScored(prevStanding.getGoalsScored());
+							currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
+							currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
+							currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
+
+							prevStanding.setAllowUpdate(false);
+							currStanding.setAllowUpdate(true);
+
+
+							footballunService.saveStanding(prevStanding);
+							footballunService.saveStanding(currStanding);
 						}
-
-						currStanding.setPlayed(prevStanding.getPlayed());
-						currStanding.setWon(prevStanding.getWon());
-						currStanding.setDrawn(prevStanding.getDrawn());
-						currStanding.setLost(prevStanding.getLost());
-						currStanding.setPoint(prevStanding.getPoint());
-						currStanding.setGoalsScored(prevStanding.getGoalsScored());
-						currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
-						currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
-						currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
-
-						prevStanding.setAllowUpdate(false);
-						currStanding.setAllowUpdate(true);
-
-
-						footballunService.saveStanding(prevStanding);
-						footballunService.saveStanding(currStanding);
 					}
 				}
 			}
