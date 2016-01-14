@@ -572,7 +572,7 @@ public class DataImporter {
 
 		if (squad1 != null && squad2 != null) {
 			// Finds and update existing matchup by name
-			String matchName = String.format("%s vs %s", team1, team2);
+			String matchName = String.format("%s vs %s", squad1.getName(), squad2.getName());
 			Matchup matchup = null; //footballunService.findMatchupByName(matchName);
 			MatchupDetail detail1, detail2;
 			if (matchup == null) {
