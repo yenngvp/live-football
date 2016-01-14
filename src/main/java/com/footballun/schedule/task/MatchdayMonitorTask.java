@@ -63,41 +63,49 @@ public class MatchdayMonitorTask {
 			}
 			
 			// Updates competition
-			competition.setMatchdayStarted(matchdayStarted);
-			competition.setMatchdayFinished(matchdayFinished);
-			if (matchdayFinished) {
-				// All matchday's games has finished, go to the next matchday
-				if (competition.getCurrentMatchday() < competition.getTotalMatchdays()) {
-					competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
-					competition.setMatchdayStarted(false);
-					competition.setMatchdayFinished(false);
-				}
+			if (matchdayStarted != competition.isMatchdayStarted()) {
+				competition.setMatchdayStarted(matchdayStarted);
+			}
+			
+			if (matchdayFinished != competition.isMatchdayFinished()) {
 				
-				List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
-				for (Squad squad : squads) {
-					// Copy standings for the current matchday as previous matchday
-					Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
-					Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
-					if (currStanding == null) {
-						currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+				competition.setMatchdayFinished(matchdayFinished);
+			
+				// Just finished the matchday
+				if (matchdayFinished) {
+					// All matchday's games has finished, go to the next matchday
+					if (competition.getCurrentMatchday() < competition.getTotalMatchdays()) {
+						competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
+						competition.setMatchdayStarted(false);
+						competition.setMatchdayFinished(false);
 					}
-					
-					currStanding.setPlayed(prevStanding.getPlayed());
-					currStanding.setWon(prevStanding.getWon());
-					currStanding.setDrawn(prevStanding.getDrawn());
-					currStanding.setLost(prevStanding.getLost());
-					currStanding.setPoint(prevStanding.getPoint());
-					currStanding.setGoalsScored(prevStanding.getGoalsScored());
-					currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
-					currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
-					currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
-					
-					prevStanding.setAllowUpdate(false);
-					currStanding.setAllowUpdate(true);
-					
-										
-					footballunService.saveStanding(prevStanding);
-					footballunService.saveStanding(currStanding);
+
+					List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
+					for (Squad squad : squads) {
+						// Copy standings for the current matchday as previous matchday
+						Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
+						Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
+						if (currStanding == null) {
+							currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+						}
+
+						currStanding.setPlayed(prevStanding.getPlayed());
+						currStanding.setWon(prevStanding.getWon());
+						currStanding.setDrawn(prevStanding.getDrawn());
+						currStanding.setLost(prevStanding.getLost());
+						currStanding.setPoint(prevStanding.getPoint());
+						currStanding.setGoalsScored(prevStanding.getGoalsScored());
+						currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
+						currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
+						currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
+
+						prevStanding.setAllowUpdate(false);
+						currStanding.setAllowUpdate(true);
+
+
+						footballunService.saveStanding(prevStanding);
+						footballunService.saveStanding(currStanding);
+					}
 				}
 			}
 
