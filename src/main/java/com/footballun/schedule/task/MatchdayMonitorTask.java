@@ -78,13 +78,23 @@ public class MatchdayMonitorTask {
 					// Copy standings for the current matchday as previous matchday
 					Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
 					Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
-					Integer curId = currStanding.getId();
-					BeanUtils.copyProperties(prevStanding, currStanding, Standing.class);
-					currStanding.setId(curId);
-
+					if (currStanding == null) {
+						currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+					}
+					
+					currStanding.setPlayed(prevStanding.getPlayed());
+					currStanding.setWon(prevStanding.getWon());
+					currStanding.setDrawn(prevStanding.getDrawn());
+					currStanding.setLost(prevStanding.getLost());
+					currStanding.setPoint(prevStanding.getPoint());
+					currStanding.setGoalsScored(prevStanding.getGoalsScored());
+					currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
+					currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
+					currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
+					
 					prevStanding.setAllowUpdate(false);
 					currStanding.setAllowUpdate(true);
-					
+										
 					footballunService.saveStanding(prevStanding);
 					footballunService.saveStanding(currStanding);
 				}
