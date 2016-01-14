@@ -94,6 +94,7 @@ public class MatchdayMonitorTask {
 					
 					prevStanding.setAllowUpdate(false);
 					currStanding.setAllowUpdate(true);
+					
 										
 					footballunService.saveStanding(prevStanding);
 					footballunService.saveStanding(currStanding);
