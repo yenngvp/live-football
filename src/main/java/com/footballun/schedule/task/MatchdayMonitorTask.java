@@ -40,78 +40,82 @@ public class MatchdayMonitorTask {
 		logger.info("BEGIN findAndUpdateCurrentMatchday() method");
 		
 		List<Competition> competitions = footballunService.findAllCompetition(LocalDate.now(), "LEAGUE");
-		
-		// Gets a matchup of every competition that happening today with greatest matchday
-		List<Matchup> matchups;
-		boolean matchdayStarted;
-		boolean matchdayFinished;
 		for (Competition competition : competitions) {
-			matchups = footballunService.findMatchupByMatchdayAndCompetition(competition.getCurrentMatchday(), competition.getId());
-			matchdayStarted = false;
-			matchdayFinished = true;
-			for (Matchup matchup : matchups) {
-				if (!matchdayStarted && (matchup.getStatus().getCode() == MatchupStatusCode.LIVE 
-						|| matchup.getStatus().getCode() == MatchupStatusCode.FULL_TIME)) {
-					// At least a game has finished
-					matchdayStarted = true;
-				}
-				
-				if (matchdayFinished && matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME) {
-					// At least a game has NOT YET finished
-					matchdayFinished = false;
-				}
-			}
-			
-			// Updates competition
-			if (matchdayStarted != competition.isMatchdayStarted()) {
-				competition.setMatchdayStarted(matchdayStarted);
-			}
-			
-			if (matchdayFinished != competition.isMatchdayFinished()) {
-				
-				competition.setMatchdayFinished(matchdayFinished);
-			
-				// Just finished the matchday
-				if (matchdayFinished) {
-					// All matchday's games has finished, go to the next matchday
-					if (competition.getCurrentMatchday() < competition.getTotalMatchdays()) {
-						competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
-						competition.setMatchdayStarted(false);
-						competition.setMatchdayFinished(false);
-
-						List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
-						for (Squad squad : squads) {
-							// Copy standings for the current matchday as previous matchday
-							Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
-							Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
-							if (currStanding == null) {
-								currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
-							}
-
-							currStanding.setPlayed(prevStanding.getPlayed());
-							currStanding.setWon(prevStanding.getWon());
-							currStanding.setDrawn(prevStanding.getDrawn());
-							currStanding.setLost(prevStanding.getLost());
-							currStanding.setPoint(prevStanding.getPoint());
-							currStanding.setGoalsScored(prevStanding.getGoalsScored());
-							currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
-							currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
-							currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
-
-							prevStanding.setAllowUpdate(false);
-							currStanding.setAllowUpdate(true);
-
-
-							footballunService.saveStanding(prevStanding);
-							footballunService.saveStanding(currStanding);
-						}
-					}
-				}
-			}
-
-			footballunService.save(competition);
+            updateCompetitionMatchday(competition);
 		}
 		
 		logger.info("END findAndUpdateCurrentMatchday() method");
 	}
+
+    public void updateCompetitionMatchday(Competition competition) {
+        // Gets a matchup of every competition that happening today with greatest matchday
+        List<Matchup> matchups;
+        boolean matchdayStarted;
+        boolean matchdayFinished;
+
+        matchups = footballunService.findMatchupByMatchdayAndCompetition(competition.getCurrentMatchday(), competition.getId());
+        matchdayStarted = false;
+        matchdayFinished = true;
+        for (Matchup matchup : matchups) {
+            if (!matchdayStarted && (matchup.getStatus().getCode() == MatchupStatusCode.LIVE
+                    || matchup.getStatus().getCode() == MatchupStatusCode.FULL_TIME)) {
+                // At least a game has finished
+                matchdayStarted = true;
+            }
+
+            if (matchdayFinished && matchup.getStatus().getCode() != MatchupStatusCode.FULL_TIME) {
+                // At least a game has NOT YET finished
+                matchdayFinished = false;
+            }
+        }
+
+        // Updates competition
+        if (matchdayStarted != competition.isMatchdayStarted()) {
+            competition.setMatchdayStarted(matchdayStarted);
+        }
+
+        if (matchdayFinished != competition.isMatchdayFinished()) {
+
+            competition.setMatchdayFinished(matchdayFinished);
+
+            // Just finished the matchday
+            if (matchdayFinished) {
+                // All matchday's games has finished, go to the next matchday
+                if (competition.getCurrentMatchday() < competition.getTotalMatchdays()) {
+                    competition.setCurrentMatchday(competition.getCurrentMatchday() + 1);
+                    competition.setMatchdayStarted(false);
+                    competition.setMatchdayFinished(false);
+
+                    List<Squad> squads = footballunService.findSquadByCompetitionAndGeneration(competition.getId(), "First Team");
+                    for (Squad squad : squads) {
+                        // Copy standings for the current matchday as previous matchday
+                        Standing prevStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday() - 1);
+                        Standing currStanding = footballunService.findStandingBySquadAndMatchday(squad, competition.getCurrentMatchday());
+                        if (currStanding == null) {
+                            currStanding = footballunService.createStandingForSquad(squad, competition.getCurrentMatchday());
+                        }
+
+                        currStanding.setPlayed(prevStanding.getPlayed());
+                        currStanding.setWon(prevStanding.getWon());
+                        currStanding.setDrawn(prevStanding.getDrawn());
+                        currStanding.setLost(prevStanding.getLost());
+                        currStanding.setPoint(prevStanding.getPoint());
+                        currStanding.setGoalsScored(prevStanding.getGoalsScored());
+                        currStanding.setGoalsAgainst(prevStanding.getGoalsAgainst());
+                        currStanding.setCurrentPosition(prevStanding.getCurrentPosition());
+                        currStanding.setPreviousPosition(prevStanding.getPreviousPosition());
+
+                        prevStanding.setAllowUpdate(false);
+                        currStanding.setAllowUpdate(true);
+
+
+                        footballunService.saveStanding(prevStanding);
+                        footballunService.saveStanding(currStanding);
+                    }
+                }
+            }
+        }
+
+        footballunService.save(competition);
+    }
 }

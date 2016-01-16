@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.footballun.schedule.task.MatchdayMonitorTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class LivescoreSchedule {
 		
 	@Autowired
 	private FootballunService footballunService;
+
+    @Autowired
+    private MatchdayMonitorTask matchdayMonitorTask;
 	
 	/**
 	 * Reads scraped live match results from scraped_data_result table which is populating by the Spider and then update the Matchups accordingly
@@ -85,8 +89,13 @@ public class LivescoreSchedule {
 		if (foundCompetitions.size() > 0) {
 			Iterator<Competition> itr = foundCompetitions.iterator();
 			while (itr.hasNext()) {
-				footballunService.refreshStanding(itr.next().getId(), null, itr.next().getCurrentMatchday());
+                Competition competition = itr.next();
+				footballunService.refreshStanding(competition.getId(), null, competition.getCurrentMatchday());
+
+                // Updates competition matchday
+                matchdayMonitorTask.updateCompetitionMatchday(competition);
 			}
+
 		}
 		
 	}
