@@ -1,4 +1,7 @@
-# Bong Da Toi Nay Website
+### Bong Da Toi Nay Website
+
+## Author
+Yen Nguyen - mongooselabs@gmail.com
 
 ## Website address
 http://bongdatoinay.com/
