@@ -4,7 +4,7 @@
 Yen Nguyen - mongooselabs@gmail.com
 
 ## Website address
-http://bongdatoinay.com/
+http://bongdatoinay.com/ (Temporary down for switching to new server)
 
 ## Features
 * Super fun and excited for busy football lovers
