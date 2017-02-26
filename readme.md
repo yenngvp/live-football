@@ -1,10 +1,10 @@
-### Bong Da Toi Nay Website
+### bongdatoinay.com Website
 
 ## Author
 Yen Nguyen - mongooselabs@gmail.com
 
 ## Website address
-http://bongdatoinay.com/ (Temporary down for switching to new server)
+http://bongdatoinay.com/ (temporary halt)
 
 ## Features
 * Super fun and excited for busy football lovers
@@ -13,6 +13,7 @@ http://bongdatoinay.com/ (Temporary down for switching to new server)
 * Standings
 * Players and Clubs information
 * Intending to build a real time football statistically system.
+* Automatic live scores update
 
 ## Technology
 * Spring RESTful
