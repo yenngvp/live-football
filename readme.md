@@ -24,3 +24,6 @@ http://bongdatoinay.com/ (temporary halt)
 
 ## Database design
 ![footballun.png](https://bitbucket.org/repo/KKjRqq/images/2558231711-footballun.png)
+
+## LICENSE
+The GNU General Public License v3.0: https://www.gnu.org/licenses/gpl-3.0.en.html
