@@ -69,7 +69,7 @@
 		<mysql.version>5.1.22</mysql.version>
 
 		<!-- Jackson -->
-		<com.fasterxml.jackson-version>2.3.1</com.fasterxml.jackson-version>
+		<com.fasterxml.jackson-version>2.11.2</com.fasterxml.jackson-version>
 	</properties>
 
 	<dependencies>
